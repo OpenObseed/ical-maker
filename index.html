@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ICS Maker — create a calendar event file (.ics), no signup</title>
+    <meta name="description" content="Create an .ics calendar event and download it, or add it straight to Google, Outlook, Office 365, or Yahoo. Nothing is uploaded — the file is built in your browser." />
+    <!--
+      The site is a static bundle that talks to nobody: no analytics, no fonts, no CDN. The
+      policy says exactly that, so an injected script has nowhere to load from and nowhere to
+      send to. `style-src 'unsafe-inline'` is required because the component injects its
+      stylesheet as a <style> element (that's what makes the embed bundler-free); scripts stay
+      strictly same-origin. GitHub Pages can't send headers, so the policy rides in a meta tag.
+      A deployment that sets VITE_LLM_ENDPOINT must add that origin to connect-src. There's no
+      frame-ancestors here on purpose: browsers ignore it in a meta tag, and GitHub Pages can't
+      send headers — the site holds no session or stored data, so framing it gains an attacker
+      nothing anyway.
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'sha256-Qar8sOMJo5xOLdOSlQANJJykXtxII/LlbPmqIN3JAfY='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <link rel="canonical" href="https://icsmaker.com/" />
+
+    <!--
+      Link previews. Without these a shared link renders as a bare grey rectangle in Slack,
+      iMessage, and every chat app in between — which is most of how a tool like this travels.
+      The image is committed artwork, generated from the same palette the site uses
+      (`node apps/ical/scripts/make-icons.mjs`); absolute URLs because scrapers do not resolve
+      relative ones. og:title is deliberately shorter than <title>, which carries the SEO tail.
+    -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="ICS Maker" />
+    <meta property="og:title" content="ICS Maker — create a calendar event file (.ics), no signup" />
+    <meta property="og:description" content="Create an .ics calendar event and download it, or add it straight to Google, Outlook, Office 365, or Yahoo. Nothing is uploaded — the file is built in your browser." />
+    <meta property="og:url" content="https://icsmaker.com/" />
+    <meta property="og:image" content="https://icsmaker.com/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="ICS Maker — create a calendar event file, no signup" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- SVG for browsers, PNG for the iOS home screen, which ignores SVG favicons. -->
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#2f5bea" />
+    <script type="module" crossorigin src="/assets/index-DAB3d76_.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CG77pFVO.css">
+    <style id="ec-tokens">:root {
+  --ec-fg: #16181d;
+  --ec-muted: #626a7a;
+  --ec-bg: #ffffff;
+  --ec-page: #f2f4f8;
+  --ec-surface: #f6f7f9;
+  --ec-border: #d9dde5;
+  --ec-accent: #2f5bea;
+  --ec-accent-soft: #eef2fe;
+  --ec-accent-fg: #ffffff;
+  --ec-danger: #b42318;
+  --ec-code-bg: #16181d;
+  --ec-code-fg: #e9edf5;
+  --ec-caret: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%23626a7a' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  /* The widest the creator lets itself get before it centres in the space it's given. Past
+     this, fields keep growing but nothing reads better — a 540px-wide text input is harder to
+     scan, not easier — and the short side column leaves a void on one side. A host that wants
+     it edge-to-edge can raise this like any other token. */
+  --ec-max-width: 860px;
+  --ec-radius: 10px;
+  --ec-radius-lg: 14px;
+  --ec-shadow: 0 1px 2px rgb(16 24 40 / 6%);
+  --ec-font: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ec-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+  --ec-fg: #e8eaf0;
+  --ec-muted: #9aa3b5;
+  --ec-bg: #14161b;
+  --ec-page: #0e1015;
+  --ec-surface: #1c1f27;
+  --ec-border: #333846;
+  --ec-accent: #7c9bff;
+  --ec-accent-soft: #22283a;
+  --ec-accent-fg: #10131a;
+  --ec-danger: #ff8b80;
+  --ec-code-bg: #0b0d12;
+  --ec-code-fg: #e9edf5;
+  --ec-caret: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%239aa3b5' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  color-scheme: dark;
+}
+}</style>
+    <style id="ec-styles">
+.ec-root {
+  --ec-fg: #16181d;
+  --ec-muted: #626a7a;
+  --ec-bg: #ffffff;
+  --ec-page: #f2f4f8;
+  --ec-surface: #f6f7f9;
+  --ec-border: #d9dde5;
+  --ec-accent: #2f5bea;
+  --ec-accent-soft: #eef2fe;
+  --ec-accent-fg: #ffffff;
+  --ec-danger: #b42318;
+  --ec-code-bg: #16181d;
+  --ec-code-fg: #e9edf5;
+  --ec-caret: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%23626a7a' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  /* The widest the creator lets itself get before it centres in the space it's given. Past
+     this, fields keep growing but nothing reads better — a 540px-wide text input is harder to
+     scan, not easier — and the short side column leaves a void on one side. A host that wants
+     it edge-to-edge can raise this like any other token. */
+  --ec-max-width: 860px;
+  --ec-radius: 10px;
+  --ec-radius-lg: 14px;
+  --ec-shadow: 0 1px 2px rgb(16 24 40 / 6%);
+  --ec-font: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ec-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  .ec-root {
+  --ec-fg: #e8eaf0;
+  --ec-muted: #9aa3b5;
+  --ec-bg: #14161b;
+  --ec-page: #0e1015;
+  --ec-surface: #1c1f27;
+  --ec-border: #333846;
+  --ec-accent: #7c9bff;
+  --ec-accent-soft: #22283a;
+  --ec-accent-fg: #10131a;
+  --ec-danger: #ff8b80;
+  --ec-code-bg: #0b0d12;
+  --ec-code-fg: #e9edf5;
+  --ec-caret: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%239aa3b5' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  color-scheme: dark;
+}
+}
+.ec-root {
+  color: var(--ec-fg);
+  background: var(--ec-bg);
+  font-family: var(--ec-font);
+  font-size: 15px;
+  line-height: 1.45;
+  display: grid;
+  gap: 20px;
+  /* minmax(0, …) — without it a long preview line makes the whole grid overflow its host. */
+  grid-template-columns: minmax(0, 1fr);
+  /* Centre in whatever container it's handed: a wide card, a wide embed host, the page. */
+  max-width: var(--ec-max-width);
+  margin-inline: auto;
+}
+/* Fallback for browsers without container queries (Safari < 16, Firefox < 110). */
+@supports not (container-type: inline-size) {
+  @media (min-width: 860px) {
+    .ec-root[data-preview='on'] { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
+  }
+}
+/* minmax(0, 1fr), not the default auto: a <select> is sized by its widest option in WebKit, so
+   without this the time-zone list pushes the whole form wider than its container (it overflowed
+   a 320px viewport by 12px). The fields track the container; the option text scrolls. */
+.ec-fields { display: grid; gap: 14px; align-content: start; grid-template-columns: minmax(0, 1fr); }
+/* The date and time pair fills the row, so it measures the same as the selects below it: same
+   left edge, same right edge, one column of controls rather than a short row above wide ones.
+
+   200px is the basis, not the cap — they grow to share whatever the row has and wrap before
+   they shrink past it, because below ~180px Safari and Chrome clip the MM/DD/YYYY text against
+   the calendar icon and collide the AM/PM segment with the clock. Two of them need ~410px, so
+   phones stack them full width and tablets sit them side by side. */
+.ec-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.ec-row > .ec-field { flex: 1 1 200px; }
+/* A pair is one side of the event — its date, its time, and the zone that time is in — and it
+   wraps as a unit. 320px of basis, not 200: at 200 two pairs squeeze side by side in a 490px
+   column and every field inside them stacks, which turns the row into two narrow columns. At 320
+   the column gives one side per line with its own fields side by side, and a wide container
+   still puts both sides up together.
+
+   align-content: start because the two pairs are different heights whenever only one carries a
+   zone — the default stretch spreads the shorter pair's rows to match the taller one, and the
+   dates stop lining up. */
+.ec-row > .ec-pair {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: start;
+  gap: 10px;
+  flex: 1 1 320px;
+  min-width: 0;
+}
+.ec-pair > .ec-field { flex: 1 1 200px; }
+/* An all-day event has no time and no zone, so each pair is a lone date and 320px of basis would
+   push the two dates onto separate lines for no reason. Engines without :has (Safari < 15.4) get
+   the stacked version, which is only a little roomier. */
+.ec-row > .ec-pair:has(> .ec-field:only-child) { flex-basis: 200px; }
+/* Grouped sections, the way a calendar app groups an event: what it is, when it is, who is
+   coming, what warns you, the details. A real <fieldset>, so the grouping is announced rather
+   than merely drawn, with the browser's default border and padding cleared away. */
+.ec-group {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+.ec-group + .ec-group { margin-top: 6px; padding-top: 18px; border-top: 1px solid var(--ec-border); }
+.ec-group > legend {
+  padding: 0;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ec-muted);
+}
+/* A legend is out of the grid flow, so the gap above the first field has to come from here. */
+.ec-group > legend + * { margin-top: 10px; }
+/* The event in one sentence, immediately above the buttons it informs. */
+.ec-recap {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: var(--ec-radius);
+  background: var(--ec-surface);
+  color: var(--ec-fg);
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.ec-switch { min-height: 44px; }
+.ec-field { display: grid; gap: 5px; min-width: 0; }
+.ec-field > label { font-size: 13px; font-weight: 600; color: var(--ec-muted); }
+.ec-root input[type='text'],
+.ec-root input[type='date'],
+.ec-root input[type='time'],
+.ec-root input[type='email'],
+.ec-root input[type='number'],
+.ec-root input[type='url'],
+.ec-root select,
+.ec-root textarea {
+  font-family: inherit;
+  /* 16px, not inherit: iOS Safari zooms the page when a focused field is smaller. It has to
+     live on this selector — the shorthand here would otherwise out-specify a later rule. */
+  font-size: 16px;
+  line-height: 1.35;
+  color: inherit;
+  background: var(--ec-bg);
+  border: 1px solid var(--ec-border);
+  border-radius: var(--ec-radius);
+  padding: 9px 10px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+/* WebKit sizes a <select> to its widest option and ignores min-width:0 when doing it, so the
+   time-zone list widened the page until the element was capped explicitly. text-overflow keeps
+   the closed control readable when a long zone name doesn't fit.
+
+   appearance:none is what makes the dropdown a rounded rectangle like the text fields: a native
+   select paints its own corners and ignores border-radius, so the two controls sat side by side
+   with different silhouettes. Dropping the native look means drawing the chevron ourselves, and
+   reserving room for it on the right so a long value never runs underneath it. */
+.ec-root select {
+  appearance: none;
+  -webkit-appearance: none;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  background-image: var(--ec-caret);
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px 8px;
+  padding-right: 30px;
+}
+.ec-root textarea { min-height: 76px; resize: vertical; }
+.ec-root input:focus-visible, .ec-root select:focus-visible, .ec-root textarea:focus-visible {
+  outline: 2px solid var(--ec-accent);
+  outline-offset: 1px;
+}
+.ec-inline { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+/* The guest field and its Add button share a row: the input flexes, the button keeps its size,
+   and both wrap to their own lines only when the container is genuinely too narrow. */
+.ec-inline input[type='email'] { flex: 1 1 160px; width: auto; }
+.ec-inline .ec-chip { flex: 0 0 auto; }
+/* "Every [2] weeks" — the number keeps its own width instead of stretching across the row, and
+   the unit sits beside it as text rather than pretending to be a second control. A count field
+   on its own line is capped for the same reason: a four-digit answer in a 480px box reads as a
+   mistake. */
+.ec-inline input[type='number'] { flex: 0 0 88px; width: auto; }
+.ec-field > input[type='number'] { max-width: 140px; }
+/* Three boxes that mean one thing: grouped like a field, sized like the number inputs they are.
+   The browser's fieldset border and padding are cleared, the same way .ec-group clears them. */
+.ec-duration { display: grid; gap: 5px; min-width: 0; border: 0; margin: 0; padding: 0; }
+.ec-duration > legend { padding: 0; font-size: 13px; font-weight: 600; color: var(--ec-muted); }
+/* A legend is out of the grid flow, so the gap under it has to come from here. */
+.ec-duration > legend + * { margin-top: 5px; }
+.ec-duration-part { flex: 0 0 auto; }
+.ec-duration-part > label { font-size: 12px; font-weight: 400; }
+.ec-duration .ec-inline input[type='number'] { flex: 0 0 78px; }
+.ec-unit { color: var(--ec-muted); font-size: 14px; }
+/* Not bold: the mark says "don't empty this", and a red bold star on five of fourteen labels
+   reads as five errors on a form nobody has touched yet. */
+.ec-required { margin-left: 2px; color: var(--ec-danger); }
+.ec-problem { color: var(--ec-danger); font-size: 13px; }
+.ec-hint { margin: 0; color: var(--ec-muted); font-size: 12px; }
+.ec-chip {
+  border: 1px solid var(--ec-border);
+  background: var(--ec-bg);
+  color: inherit;
+  border-radius: 999px;
+  /* 44px is the smallest comfortable touch target on both iOS and Android guidance. */
+  min-height: 44px;
+  padding: 5px 14px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.ec-chip[aria-pressed='true'] { border-color: var(--ec-accent); color: var(--ec-accent); background: var(--ec-accent-soft); }
+.ec-attendee { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.ec-remove { border: 0; background: none; color: var(--ec-muted); cursor: pointer; font: inherit; }
+.ec-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.ec-button {
+  font: inherit;
+  min-height: 44px;
+  font-weight: 600;
+  border: 1px solid var(--ec-accent);
+  background: var(--ec-accent);
+  color: var(--ec-accent-fg);
+  border-radius: var(--ec-radius);
+  padding: 10px 16px;
+  cursor: pointer;
+}
+.ec-button.ec-secondary { background: var(--ec-bg); color: var(--ec-accent); }
+.ec-side { display: grid; gap: 14px; align-content: start; }
+.ec-panel { background: var(--ec-surface); border: 1px solid var(--ec-border); border-radius: var(--ec-radius); padding: 14px; }
+.ec-panel h2 { margin: 0 0 8px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ec-muted); }
+.ec-preview { margin: 0; overflow-wrap: anywhere; font-family: var(--ec-mono); font-size: 12px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; max-height: 340px; overflow: auto; }
+.ec-links { display: grid; gap: 6px; }
+.ec-links a { color: var(--ec-accent); }
+.ec-attendee span { overflow-wrap: anywhere; }
+.ec-describe textarea { min-height: 66px; }
+.ec-describe .ec-actions { margin-top: 8px; }
+.ec-assumptions { margin: 10px 0 0; padding-left: 18px; color: var(--ec-muted); font-size: 13px; }
+@media (forced-colors: active) {
+  .ec-chip[aria-pressed='true'] { border: 2px solid; }
+}
+</style>
+    <style id="ec-styles-container">
+/* The shell exists purely to be the query container: an element can't answer a container
+   query about itself, so the width question is asked one level up. Container-relative rather
+   than viewport-relative because an embed can sit in a narrow column on a wide screen, where
+   a viewport query would hand it a two-column layout it has no room for. */
+.ec-shell { container-type: inline-size; }
+@container (min-width: 720px) {
+  /* 1.4fr/1fr, not 1fr/0.8fr: the form is the work, the panels are reference. This keeps the
+     inputs near 480px — comfortable to scan — instead of stretching them to fill. */
+  .ec-root[data-preview='on'] { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
+}
+</style>
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://icsmaker.com/#website","name":"ICS Maker","url":"https://icsmaker.com/","inLanguage":"en"},{"@type":"WebPage","@id":"https://icsmaker.com/#webpage","url":"https://icsmaker.com/","name":"ICS Maker — create a calendar event file (.ics), no signup","headline":"ICS Maker","description":"ICS Maker (icsmaker.com) is a free web page that turns a filled-in form into a calendar event file. Type the title, location, start and end, time zone, repeat, guests, alerts, and notes, then take the event as .ics (iCalendar, RFC 5545), jCal (RFC 7265), a CSV row for a bulk importer, or schema.org JSON-LD — or copy a prefilled link for Google Calendar, Outlook.com, Office 365, or Yahoo. There is no signup, no paid tier, and no upload: the event file is assembled by JavaScript in the browser and never sent anywhere. On icsmaker.com the page makes no network requests at all once it has loaded — a deployment can enable an optional describe-it box that sends the typed sentence to an LLM proxy, and that box is the only thing here that ever opens a connection.","inLanguage":"en","isPartOf":{"@id":"https://icsmaker.com/#website"},"mainEntity":{"@id":"https://icsmaker.com/#app"}},{"@type":"FAQPage","@id":"https://icsmaker.com/#faq","isPartOf":{"@id":"https://icsmaker.com/#webpage"},"mainEntity":[{"@type":"Question","name":"What is an .ics file?","acceptedAnswer":{"@type":"Answer","text":"An .ics file is a plain-text calendar event in the iCalendar format defined by RFC 5545. Every mainstream calendar — Apple Calendar, Google Calendar, Outlook, Thunderbird — reads it, which is why an invitation emailed between two different companies still lands correctly in both calendars."}},{"@type":"Question","name":"Do I need an account?","acceptedAnswer":{"@type":"Answer","text":"No. The page has no signup, no login, and no server component. The event is assembled in your browser and downloaded from there, so nothing you type is uploaded."}},{"@type":"Question","name":"Is it free?","acceptedAnswer":{"@type":"Answer","text":"Yes, and there is no paid tier holding features back. The same builder is also available as an embeddable widget for your own site."}},{"@type":"Question","name":"Will the event keep its time zone?","acceptedAnswer":{"@type":"Answer","text":"Only if you choose one. By default the event carries no time zone, so it opens at the clock time you typed wherever it is added — usually what you want for a local appointment. Pick a zone from the list when the event is tied to one place, and every guest sees it converted to their own."}},{"@type":"Question","name":"Can an event end in a different time zone from the one it starts in?","acceptedAnswer":{"@type":"Answer","text":"Yes. Pick a start zone, then tick \"Ends in a different time zone\" and choose the second one. The file carries a zone on the start and another on the end, which is exactly how a flight is meant to be written — it leaves at 15:00 in London and lands at 11:00 in New York."}}]},{"@type":"SoftwareApplication","@id":"https://icsmaker.com/#app","name":"ICS Maker","url":"https://icsmaker.com/","applicationCategory":"BusinessApplication","applicationSubCategory":"Calendar event file generator","operatingSystem":"Any (web browser)","browserRequirements":"Requires JavaScript","description":"Create an .ics calendar event and download it, or add it straight to Google, Outlook, Office 365, or Yahoo. Nothing is uploaded — the file is built in your browser.","isAccessibleForFree":true,"featureList":["Builds one event at a time: Title, location, notes, and a URL to attach to the event.","Times, all-day, and zones: A start and an end, a duration that follows either, an all-day switch, and an IANA time zone — with a second, different zone on the end for a flight.","Repeats: Daily, weekly, monthly, or yearly, every N periods, ending never, after a count, or on a date — written as a standard RRULE line.","Guests, alerts, and availability: Up to 100 invitee addresses as ATTENDEE lines, up to 10 alerts as VALARM blocks, and busy or free as TRANSP.","Four formats and four links: .ics, jCal, CSV, and schema.org JSON-LD to download; Google Calendar, Outlook.com, Office 365, and Yahoo to open.","An embed for your own site: The same builder as one script tag, under 80 kB gzipped, with no network calls of its own."],"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}]}</script>
+  </head>
+  <body>
+    <div id="root"><div class="site"><header class="site-header"><h1>ICS Maker</h1><p class="lede">Build a calendar event and download it as a file — or drop it straight into Google, Outlook, Office 365, or Yahoo. No signup, no upload: the file is generated in your browser.</p></header><main><section class="answer" aria-labelledby="answer-question"><h2 id="answer-question">How do I create a calendar event file (.ics) without an account?</h2><p>ICS Maker (icsmaker.com) is a free web page that turns a filled-in form into a calendar event file. Type the title, location, start and end, time zone, repeat, guests, alerts, and notes, then take the event as .ics (iCalendar, RFC 5545), jCal (RFC 7265), a CSV row for a bulk importer, or schema.org JSON-LD — or copy a prefilled link for Google Calendar, Outlook.com, Office 365, or Yahoo. There is no signup, no paid tier, and no upload: the event file is assembled by JavaScript in the browser and never sent anywhere. On icsmaker.com the page makes no network requests at all once it has loaded — a deployment can enable an optional describe-it box that sends the typed sentence to an LLM proxy, and that box is the only thing here that ever opens a connection.</p></section><section class="card"><div class="creator-placeholder"><p>Title, location, date and time, time zone, repeat, invitees, alerts, and notes — then download the <code>.ics</code> file or open it straight in your calendar.</p><noscript><p class="muted">The builder needs JavaScript, because building the file in your browser is what keeps the event off anyone else’s server.</p></noscript></div></section><section class="prose"><h2>Formats it generates</h2><dl><div><dt>.ics (iCalendar)</dt><dd>Apple Calendar, Google Calendar, Outlook, Thunderbird — the universal file.</dd></div><div><dt>jCal</dt><dd>The same event as JSON (RFC 7265) — for anything that would rather parse JSON than iCalendar.</dd></div><div><dt>CSV</dt><dd>Google Calendar and Outlook&#x27;s spreadsheet importer, for bulk or awkward cases.</dd></div><div><dt>JSON-LD</dt><dd>schema.org/Event markup, so search engines and browsers can read the event off a page.</dd></div></dl><h2>Why it asks so little</h2><p>There is no account, because an event you build in your browser needs nobody’s server. The page loads once and then talks to nothing: the file is assembled from what you typed and handed to your own download folder. Close the tab and there is no copy left anywhere.</p><h2>Questions</h2><dl class="faq"><div><dt>What is an .ics file?</dt><dd>An .ics file is a plain-text calendar event in the iCalendar format defined by RFC 5545. Every mainstream calendar — Apple Calendar, Google Calendar, Outlook, Thunderbird — reads it, which is why an invitation emailed between two different companies still lands correctly in both calendars.</dd></div><div><dt>Do I need an account?</dt><dd>No. The page has no signup, no login, and no server component. The event is assembled in your browser and downloaded from there, so nothing you type is uploaded.</dd></div><div><dt>Is it free?</dt><dd>Yes, and there is no paid tier holding features back. The same builder is also available as an embeddable widget for your own site.</dd></div><div><dt>Will the event keep its time zone?</dt><dd>Only if you choose one. By default the event carries no time zone, so it opens at the clock time you typed wherever it is added — usually what you want for a local appointment. Pick a zone from the list when the event is tied to one place, and every guest sees it converted to their own.</dd></div><div><dt>Can an event end in a different time zone from the one it starts in?</dt><dd>Yes. Pick a start zone, then tick &quot;Ends in a different time zone&quot; and choose the second one. The file carries a zone on the start and another on the end, which is exactly how a flight is meant to be written — it leaves at 15:00 in London and lands at 11:00 in New York.</dd></div></dl></section></main><footer class="site-footer"><nav aria-label="Pages"><ul><li><a href="/about/">What it is, and alternatives</a></li><li><a href="/ics-file/">What is an .ics file</a></li><li><a href="/add-to-google-calendar/">Add to Google Calendar</a></li><li><a href="/recurring-event/">Repeating events</a></li><li><a href="/ics-time-zone/">Wrong time zone</a></li><li><a href="/calendar-invite/">Sending an invite</a></li><li><a href="/ics-reminder/">Alerts and reminders</a></li><li><a href="/csv-to-calendar/">CSV import</a></li><li><a href="/jcal/">jCal (JSON)</a></li><li><a href="/add-to-calendar-button/">Put it on your site</a></li></ul></nav><p>Events are built locally. Nothing you type here is sent anywhere.</p></footer></div></div>
+  </body>
+</html>
