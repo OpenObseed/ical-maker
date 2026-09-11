@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Generatore di link &quot;Aggiungi a Google Calendar&quot;</title>
+    <meta name="description" content="Crea un evento e ottieni un link a Google Calendar che lo apre già precompilato — oltre ai link per Outlook, Office 365 e Yahoo, e al file .ics per tutto il resto." />
+    <!--
+      The site is a static bundle that talks to nobody: no analytics, no fonts, no CDN. The
+      policy says exactly that, so an injected script has nowhere to load from and nowhere to
+      send to. `style-src 'unsafe-inline'` is required because the component injects its
+      stylesheet as a <style> element (that's what makes the embed bundler-free); scripts stay
+      strictly same-origin. GitHub Pages can't send headers, so the policy rides in a meta tag.
+      `connect-src 'self'` is the site's promise in the only form a browser can enforce: there is
+      no AI endpoint, no analytics and no third party to reach, so nothing typed or attached here
+      can go anywhere. Adding a service back would mean widening this line, which is exactly the
+      argument anyone proposing one should have to make.
+      `'wasm-unsafe-eval'` and `worker-src 'self'` are what reading a picture costs: the text
+      recogniser is WebAssembly running in a worker. Both are scoped to this origin — the worker
+      is a same-origin script rather than a Blob, and the WASM is a file this site serves. The
+      line that matters, `connect-src 'self'`, is untouched: no recogniser is fetched from a CDN,
+      so no third party sees who attached a flyer, and nothing dropped in can be sent anywhere. There's no
+      frame-ancestors here on purpose: browsers ignore it in a meta tag, and GitHub Pages can't
+      send headers — the site holds no session or stored data, so framing it gains an attacker
+      nothing anyway.
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'sha256-dm+NrfAaDk8zqn7b2WtshfJD+s7ZVvgP1KE5rmoVKCc=' 'wasm-unsafe-eval'; worker-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <link rel="canonical" href="https://icsmaker.com/it/add-to-google-calendar/" />
+
+    <!--
+      Link previews. Without these a shared link renders as a bare grey rectangle in Slack,
+      iMessage, and every chat app in between — which is most of how a tool like this travels.
+      The image is committed artwork, generated from the same palette the site uses
+      (`node apps/ical/scripts/make-icons.mjs`); absolute URLs because scrapers do not resolve
+      relative ones. og:title is deliberately shorter than <title>, which carries the SEO tail.
+    -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="ICS Maker" />
+    <meta property="og:title" content="Generatore di link &quot;Aggiungi a Google Calendar&quot;" />
+    <meta property="og:description" content="Crea un evento e ottieni un link a Google Calendar che lo apre già precompilato — oltre ai link per Outlook, Office 365 e Yahoo, e al file .ics per tutto il resto." />
+    <meta property="og:url" content="https://icsmaker.com/it/add-to-google-calendar/" />
+    <meta property="og:image" content="https://icsmaker.com/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="ICS Maker — create a calendar event file, no signup" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- SVG for browsers, PNG for the iOS home screen, which ignores SVG favicons. -->
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#2f5bea" />
+    <script type="module" crossorigin src="/assets/index-BFSIdZ1Y.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-D8HNOIch.css">
+    <meta name="twitter:title" content="Generatore di link &quot;Aggiungi a Google Calendar&quot;" />
+    <meta name="twitter:description" content="Crea un evento e ottieni un link a Google Calendar che lo apre già precompilato — oltre ai link per Outlook, Office 365 e Yahoo, e al file .ics per tutto il resto." />
+    <meta name="twitter:image" content="https://icsmaker.com/og.png" />
+  <link rel="alternate" hreflang="en" href="https://icsmaker.com/add-to-google-calendar/" />
+    <link rel="alternate" hreflang="de" href="https://icsmaker.com/de/add-to-google-calendar/" />
+    <link rel="alternate" hreflang="es" href="https://icsmaker.com/es/add-to-google-calendar/" />
+    <link rel="alternate" hreflang="fr" href="https://icsmaker.com/fr/add-to-google-calendar/" />
+    <link rel="alternate" hreflang="it" href="https://icsmaker.com/it/add-to-google-calendar/" />
+    <link rel="alternate" hreflang="nl" href="https://icsmaker.com/nl/add-to-google-calendar/" />
+    <link rel="alternate" hreflang="pl" href="https://icsmaker.com/pl/add-to-google-calendar/" />
+    <link rel="alternate" hreflang="pt" href="https://icsmaker.com/pt/add-to-google-calendar/" />
+    <link rel="alternate" hreflang="tr" href="https://icsmaker.com/tr/add-to-google-calendar/" />
+    <link rel="alternate" hreflang="ru" href="https://icsmaker.com/ru/add-to-google-calendar/" />
+    <link rel="alternate" hreflang="ja" href="https://icsmaker.com/ja/add-to-google-calendar/" />
+    <link rel="alternate" hreflang="ko" href="https://icsmaker.com/ko/add-to-google-calendar/" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://icsmaker.com/zh-Hans/add-to-google-calendar/" />
+    <link rel="alternate" hreflang="zh-Hant" href="https://icsmaker.com/zh-Hant/add-to-google-calendar/" />
+    <link rel="alternate" hreflang="x-default" href="https://icsmaker.com/add-to-google-calendar/" />
+    <style id="ec-tokens">:root {
+  --ec-fg: #16181d;
+  --ec-muted: #626a7a;
+  --ec-bg: #ffffff;
+  --ec-page: #f2f4f8;
+  --ec-surface: #f6f7f9;
+  --ec-border: #d9dde5;
+  --ec-accent: #2f5bea;
+  --ec-accent-soft: #eef2fe;
+  --ec-accent-fg: #ffffff;
+  --ec-danger: #b42318;
+  --ec-code-bg: #16181d;
+  --ec-code-fg: #e9edf5;
+  --ec-caret: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%23626a7a' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  /* The widest the creator lets itself get before it centres in the space it's given. Past
+     this, fields keep growing but nothing reads better — a 540px-wide text input is harder to
+     scan, not easier — and the short side column leaves a void on one side. A host that wants
+     it edge-to-edge can raise this like any other token. */
+  --ec-max-width: 860px;
+  --ec-radius: 10px;
+  --ec-radius-lg: 14px;
+  --ec-shadow: 0 1px 2px rgb(16 24 40 / 6%);
+  --ec-font: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ec-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+  --ec-fg: #e8eaf0;
+  --ec-muted: #9aa3b5;
+  --ec-bg: #14161b;
+  --ec-page: #0e1015;
+  --ec-surface: #1c1f27;
+  --ec-border: #333846;
+  --ec-accent: #7c9bff;
+  --ec-accent-soft: #22283a;
+  --ec-accent-fg: #10131a;
+  --ec-danger: #ff8b80;
+  --ec-code-bg: #0b0d12;
+  --ec-code-fg: #e9edf5;
+  --ec-caret: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%239aa3b5' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  color-scheme: dark;
+}
+}</style>
+    <style id="ec-styles">
+.ec-root {
+  --ec-fg: #16181d;
+  --ec-muted: #626a7a;
+  --ec-bg: #ffffff;
+  --ec-page: #f2f4f8;
+  --ec-surface: #f6f7f9;
+  --ec-border: #d9dde5;
+  --ec-accent: #2f5bea;
+  --ec-accent-soft: #eef2fe;
+  --ec-accent-fg: #ffffff;
+  --ec-danger: #b42318;
+  --ec-code-bg: #16181d;
+  --ec-code-fg: #e9edf5;
+  --ec-caret: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%23626a7a' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  /* The widest the creator lets itself get before it centres in the space it's given. Past
+     this, fields keep growing but nothing reads better — a 540px-wide text input is harder to
+     scan, not easier — and the short side column leaves a void on one side. A host that wants
+     it edge-to-edge can raise this like any other token. */
+  --ec-max-width: 860px;
+  --ec-radius: 10px;
+  --ec-radius-lg: 14px;
+  --ec-shadow: 0 1px 2px rgb(16 24 40 / 6%);
+  --ec-font: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ec-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  .ec-root {
+  --ec-fg: #e8eaf0;
+  --ec-muted: #9aa3b5;
+  --ec-bg: #14161b;
+  --ec-page: #0e1015;
+  --ec-surface: #1c1f27;
+  --ec-border: #333846;
+  --ec-accent: #7c9bff;
+  --ec-accent-soft: #22283a;
+  --ec-accent-fg: #10131a;
+  --ec-danger: #ff8b80;
+  --ec-code-bg: #0b0d12;
+  --ec-code-fg: #e9edf5;
+  --ec-caret: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%239aa3b5' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  color-scheme: dark;
+}
+}
+.ec-root {
+  color: var(--ec-fg);
+  background: var(--ec-bg);
+  font-family: var(--ec-font);
+  font-size: 15px;
+  line-height: 1.45;
+  display: grid;
+  gap: 20px;
+  /* minmax(0, …) — without it a long preview line makes the whole grid overflow its host. */
+  grid-template-columns: minmax(0, 1fr);
+  /* Centre in whatever container it's handed: a wide card, a wide embed host, the page. */
+  max-width: var(--ec-max-width);
+  margin-inline: auto;
+}
+/* Fallback for browsers without container queries (Safari < 16, Firefox < 110). */
+@supports not (container-type: inline-size) {
+  @media (min-width: 860px) {
+    .ec-root[data-preview='on'] { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
+  }
+}
+/* minmax(0, 1fr), not the default auto: a <select> is sized by its widest option in WebKit, so
+   without this the time-zone list pushes the whole form wider than its container (it overflowed
+   a 320px viewport by 12px). The fields track the container; the option text scrolls. */
+.ec-fields { display: grid; gap: 14px; align-content: start; grid-template-columns: minmax(0, 1fr); }
+/* Generic rows wrap; compact date/time and duration groups below opt into their own one-line
+   grids instead of inheriting the old full-width-field behaviour. */
+.ec-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.ec-row > .ec-field { flex: 1 1 200px; }
+/* Two controls whose *values* are short — "None", "Busy" — rather than two that need room to be
+   read. 200px of basis would stack them on a phone for no reason: nothing in either list is wider
+   than the ~140px they get when they share a 320px screen, so they share it. Text inputs are not
+   in here on purpose; a 140px title box is worse than a tall form. */
+.ec-row-tight > .ec-field { flex: 1 1 130px; }
+/* A pair is one side of the event — its date, its time, and the zone that time is in — and it
+   wraps as a unit. 320px of basis, not 200: at 200 two pairs squeeze side by side in a 490px
+   column and every field inside them stacks, which turns the row into two narrow columns. At 320
+   the column gives one side per line with its own fields side by side, and a wide container
+   still puts both sides up together.
+
+   align-content: start because the two pairs are different heights whenever only one carries a
+   zone — the default stretch spreads the shorter pair's rows to match the taller one, and the
+   dates stop lining up. */
+.ec-row > .ec-pair {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  flex: 1 1 320px;
+  min-width: 0;
+}
+.ec-date-time {
+  display: grid;
+  /* Safari keeps a native calendar/clock button inside these controls and paints it over
+     neighbouring text when the track is narrower than its intrinsic control width. Keep both
+     tracks above that floor; the container rule below stacks them only when the whole side cannot
+     accommodate the safe minimum. */
+  grid-template-columns: minmax(150px, 1fr) minmax(140px, 1fr);
+  gap: 10px;
+  min-width: 0;
+}
+.ec-date-time > .ec-field:only-child { grid-column: 1 / -1; }
+.ec-time-control { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.ec-time-control input { flex: 1 1 auto; min-width: 0; }
+.ec-time-offset {
+  flex: 0 0 auto;
+  color: var(--ec-muted);
+  font-size: 12px;
+  line-height: 1;
+  white-space: nowrap;
+}
+.ec-zone-field { min-width: 0; }
+/* An all-day event has no time and no zone, so each pair is a lone date and 320px of basis would
+   push the two dates onto separate lines for no reason. Engines without :has (Safari < 15.4) get
+   the stacked version, which is only a little roomier. */
+.ec-row > .ec-pair:has(.ec-date-time > .ec-field:only-child) { flex-basis: 200px; }
+/* Grouped sections, the way a calendar app groups an event: what it is, when it is, who is
+   coming, what warns you, the details. A real <fieldset>, so the grouping is announced rather
+   than merely drawn, with the browser's default border and padding cleared away. */
+.ec-group {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+.ec-group + .ec-group { margin-top: 6px; padding-top: 18px; border-top: 1px solid var(--ec-border); }
+.ec-group > legend {
+  padding: 0;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ec-muted);
+}
+/* A legend is out of the grid flow, so the gap above the first field has to come from here. */
+.ec-group > legend + * { margin-top: 10px; }
+/* An optional group, folded away until it is wanted (see Optional in EventCreator.tsx). Block
+   rather than the grid its siblings use: display on a <details> is not honoured everywhere, and
+   a summary that lost its row would be a broken control rather than a slightly tighter one. The
+   fields inside get the grid instead, so the gaps match every other group. */
+.ec-optional { display: block; }
+.ec-group-body { display: grid; gap: 14px; margin-top: 12px; min-width: 0; }
+/* The summary is the legend for the group it opens, so it is drawn as one — plus a marker, and a
+   44px row, because on a phone this is the control that has to be hit before anything inside it
+   can be. */
+.ec-optional > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ec-muted);
+  cursor: pointer;
+  /* The native marker goes: a flex summary drops it in WebKit anyway, so drawing our own is what
+     keeps the three engines showing the same control. It is the select's caret, rotated. */
+  list-style: none;
+}
+.ec-optional > summary::-webkit-details-marker { display: none; }
+.ec-optional > summary::before {
+  content: '';
+  flex: 0 0 auto;
+  width: 12px;
+  height: 8px;
+  background: var(--ec-caret) no-repeat center / 12px 8px;
+  transform: rotate(-90deg);
+}
+.ec-optional[open] > summary::before { transform: none; }
+.ec-optional > summary:focus-visible { outline: 2px solid var(--ec-accent); outline-offset: 2px; }
+/* What a closed group is holding. Right-aligned and in sentence case: it is the answer to "is
+   there anything in there", not a second heading. */
+.ec-tally {
+  margin-left: auto;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+}
+/* The event in one sentence, immediately above the buttons it informs. */
+.ec-recap {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: var(--ec-radius);
+  background: var(--ec-surface);
+  color: var(--ec-fg);
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.ec-switch { min-height: 44px; }
+.ec-recap strong { display: block; font-size: 18px; }
+.ec-recap p { margin: 6px 0 0; }
+.ec-technical-preview summary { min-height: 44px; cursor: pointer; overflow-wrap: anywhere; }
+.ec-field { display: grid; gap: 5px; min-width: 0; }
+.ec-field > label { font-size: 13px; font-weight: 600; color: var(--ec-muted); }
+.ec-autocomplete { position: relative; min-width: 0; }
+.ec-autocomplete-list {
+  position: absolute;
+  z-index: 20;
+  inset-inline: 0;
+  max-height: 300px;
+  overflow-y: auto;
+  margin: 4px 0 0;
+  padding: 4px 0;
+  list-style: none;
+  background: var(--ec-bg);
+  border: 1px solid var(--ec-border);
+  border-radius: var(--ec-radius);
+  box-shadow: var(--ec-shadow);
+}
+.ec-autocomplete-option {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  color: inherit;
+  cursor: pointer;
+}
+.ec-autocomplete-option[data-active='true'], .ec-autocomplete-option:hover {
+  background: var(--ec-accent-soft);
+}
+.ec-autocomplete-empty { padding: 10px; color: var(--ec-muted); }
+.ec-root input[type='text'],
+.ec-root input[type='date'],
+.ec-root input[type='time'],
+.ec-root input[type='email'],
+.ec-root input[type='number'],
+.ec-root input[type='url'],
+.ec-root select,
+.ec-root textarea {
+  font-family: inherit;
+  /* 16px, not inherit: iOS Safari zooms the page when a focused field is smaller. It has to
+     live on this selector — the shorthand here would otherwise out-specify a later rule. */
+  font-size: 16px;
+  line-height: 1.35;
+  color: inherit;
+  background: var(--ec-bg);
+  border: 1px solid var(--ec-border);
+  border-radius: var(--ec-radius);
+  padding: 9px 10px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+/* WebKit sizes a <select> to its widest option and ignores min-width:0 when doing it, so the
+   time-zone list widened the page until the element was capped explicitly. text-overflow keeps
+   the closed control readable when a long zone name doesn't fit.
+
+   appearance:none is what makes the dropdown a rounded rectangle like the text fields: a native
+   select paints its own corners and ignores border-radius, so the two controls sat side by side
+   with different silhouettes. Dropping the native look means drawing the chevron ourselves, and
+   reserving room for it on the right so a long value never runs underneath it. */
+.ec-root select {
+  appearance: none;
+  -webkit-appearance: none;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  background-image: var(--ec-caret);
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px 8px;
+  padding-right: 30px;
+}
+.ec-root textarea { min-height: 76px; resize: vertical; }
+.ec-root input:focus-visible, .ec-root select:focus-visible, .ec-root textarea:focus-visible {
+  outline: 2px solid var(--ec-accent);
+  outline-offset: 1px;
+}
+.ec-inline { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+/* The guest field and its Add button share a row: the input flexes, the button keeps its size,
+   and both wrap to their own lines only when the container is genuinely too narrow. */
+.ec-inline input[type='email'] { flex: 1 1 160px; width: auto; }
+.ec-inline .ec-chip { flex: 0 0 auto; }
+/* "Every [2] weeks" — the number keeps its own width instead of stretching across the row, and
+   the unit sits beside it as text rather than pretending to be a second control. A count field
+   on its own line is capped for the same reason: a four-digit answer in a 480px box reads as a
+   mistake. */
+.ec-inline input[type='number'] { flex: 0 0 88px; width: auto; }
+.ec-field > input[type='number'] { max-width: 140px; }
+/* Three boxes that mean one thing: grouped like a field, sized like the number inputs they are.
+   The browser's fieldset border and padding are cleared, the same way .ec-group clears them. */
+.ec-duration { display: grid; gap: 5px; min-width: 0; border: 0; margin: 0; padding: 0; }
+.ec-duration > legend { padding: 0; font-size: 13px; font-weight: 600; color: var(--ec-muted); }
+/* A legend is out of the grid flow, so the gap under it has to come from here. */
+.ec-duration > legend + * { margin-top: 5px; }
+.ec-duration .ec-inline { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.ec-duration-part { min-width: 0; }
+.ec-duration-part > label { font-size: 12px; font-weight: 400; }
+.ec-duration .ec-inline input[type='number'] { width: 100%; max-width: none; }
+.ec-unit { color: var(--ec-muted); font-size: 14px; }
+/* Not bold: the mark says "don't empty this", and a red bold star on five of fourteen labels
+   reads as five errors on a form nobody has touched yet. */
+.ec-required { margin-left: 2px; color: var(--ec-danger); }
+.ec-problem { color: var(--ec-danger); font-size: 13px; }
+.ec-hint { margin: 0; color: var(--ec-muted); font-size: 12px; }
+.ec-chip {
+  border: 1px solid var(--ec-border);
+  background: var(--ec-bg);
+  color: inherit;
+  border-radius: 999px;
+  /* 44px is the smallest comfortable touch target on both iOS and Android guidance. */
+  min-height: 44px;
+  padding: 5px 14px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.ec-chip[aria-pressed='true'] { border-color: var(--ec-accent); color: var(--ec-accent); background: var(--ec-accent-soft); }
+.ec-attendee { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+/* The × beside a guest. Bare text is a ~20px target next to the address it deletes, which on a
+   phone is a mis-tap away from removing the wrong person. */
+.ec-remove { min-height: 44px; padding: 0 8px; border: 0; background: none; color: var(--ec-muted); cursor: pointer; font: inherit; }
+.ec-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.ec-button {
+  font: inherit;
+  min-height: 44px;
+  font-weight: 600;
+  border: 1px solid var(--ec-accent);
+  background: var(--ec-accent);
+  color: var(--ec-accent-fg);
+  border-radius: var(--ec-radius);
+  padding: 10px 16px;
+  cursor: pointer;
+}
+.ec-button.ec-secondary { background: var(--ec-bg); color: var(--ec-accent); }
+.ec-side { display: grid; gap: 14px; align-content: start; }
+.ec-panel { background: var(--ec-surface); border: 1px solid var(--ec-border); border-radius: var(--ec-radius); padding: 14px; }
+.ec-panel h2 { margin: 0 0 8px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ec-muted); }
+.ec-preview { margin: 0; overflow-wrap: anywhere; font-family: var(--ec-mono); font-size: 12px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; max-height: 340px; overflow: auto; }
+/* On a phone these four links are the whole point of the panel — they open the event in the
+   calendar app without a file changing hands at all — so each is a row you can hit, not a line
+   of text stacked 6px from the next one. */
+.ec-links { display: grid; gap: 2px; }
+.ec-links a { display: flex; align-items: center; min-height: 44px; color: var(--ec-accent); }
+.ec-attendee span { overflow-wrap: anywhere; }
+.ec-describe textarea { min-height: 66px; }
+.ec-describe .ec-actions { margin-top: 8px; }
+.ec-assumptions { margin: 10px 0 0; padding-left: 18px; color: var(--ec-muted); font-size: 13px; }
+@media (forced-colors: active) {
+  .ec-chip[aria-pressed='true'] { border: 2px solid; }
+}
+</style>
+    <style id="ec-styles-container">
+/* The shell exists purely to be the query container: an element can't answer a container
+   query about itself, so the width question is asked one level up. Container-relative rather
+   than viewport-relative because an embed can sit in a narrow column on a wide screen, where
+   a viewport query would hand it a two-column layout it has no room for. */
+.ec-shell { container-type: inline-size; }
+/* Narrow enough that three side-by-side buttons each end up a couple of words wide: give them a
+   row each instead, primary first. Container-relative like the rule below — an embed in a narrow
+   column on a desktop has the same problem a phone does. */
+@container (max-width: 420px) {
+  .ec-actions > .ec-button { flex: 1 1 100%; }
+  /* Keep the two native pickers the same width on phones. The time control owns the GMT label,
+     so its input can shrink inside the track without pushing the label below the picker. */
+  .ec-date-time { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@container (max-width: 300px) {
+  /* Native Safari controls need more room than a very narrow embed can provide. Stacking here
+     avoids the calendar/clock button overlap while preserving the compact row everywhere else. */
+  .ec-date-time { grid-template-columns: minmax(0, 1fr); }
+}
+@container (min-width: 720px) {
+  /* 1.4fr/1fr, not 1fr/0.8fr: the form is the work, the panels are reference. This keeps the
+     inputs near 480px — comfortable to scan — instead of stretching them to fill. */
+  .ec-root[data-preview='on'] { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
+}
+</style>
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://icsmaker.com/#website","name":"ICS Maker","url":"https://icsmaker.com/","inLanguage":["en","de","es","fr","it","nl","pl","pt","tr","ru","ja","ko","zh-Hans","zh-Hant"]},{"@type":"WebPage","@id":"https://icsmaker.com/it/add-to-google-calendar/#webpage","url":"https://icsmaker.com/it/add-to-google-calendar/","name":"Generatore di link \"Aggiungi a Google Calendar\"","headline":"Link \"Aggiungi a Google Calendar\"","description":"Un link di Google Calendar è un normale URL — calendar.google.com/calendar/render — che trasporta titolo, orari, luogo e descrizione come parametri di query. Cliccandoci sopra si apre Google Calendar con l'evento già compilato, e non viene salvato nulla lato Google finché la persona non preme salva. ICS Maker crea questo link a partire da un modulo e genera gli equivalenti per Outlook.com, Office 365 e Yahoo dallo stesso evento, oltre al file .ics per i calendari che non rientrano in nessuno dei quattro. Nessuno ha bisogno di un account ICS Maker, perché non esistono; il destinatario ha bisogno di un account Google solo per salvare l'evento al suo interno.","inLanguage":"it","isPartOf":{"@id":"https://icsmaker.com/#website"},"breadcrumb":{"@id":"https://icsmaker.com/it/add-to-google-calendar/#breadcrumb"}},{"@type":"FAQPage","@id":"https://icsmaker.com/it/add-to-google-calendar/#faq","isPartOf":{"@id":"https://icsmaker.com/it/add-to-google-calendar/#webpage"},"mainEntity":[{"@id":"https://icsmaker.com/it/add-to-google-calendar/#answer-question","@type":"Question","name":"Come si crea un link \"aggiungi a Google Calendar\"?","acceptedAnswer":{"@type":"Answer","text":"Un link di Google Calendar è un normale URL — calendar.google.com/calendar/render — che trasporta titolo, orari, luogo e descrizione come parametri di query. Cliccandoci sopra si apre Google Calendar con l'evento già compilato, e non viene salvato nulla lato Google finché la persona non preme salva. ICS Maker crea questo link a partire da un modulo e genera gli equivalenti per Outlook.com, Office 365 e Yahoo dallo stesso evento, oltre al file .ics per i calendari che non rientrano in nessuno dei quattro. Nessuno ha bisogno di un account ICS Maker, perché non esistono; il destinatario ha bisogno di un account Google solo per salvare l'evento al suo interno."}},{"@id":"https://icsmaker.com/it/add-to-google-calendar/#faq-1","@type":"Question","name":"La persona che clicca sul link ha bisogno di un account Google?","acceptedAnswer":{"@type":"Answer","text":"Ne serve uno per salvare l'evento, dato che finisce nel proprio calendario personale. Il link in sé è pubblico e funziona per chiunque; Google chiede di accedere se non si è già connessi."}},{"@id":"https://icsmaker.com/it/add-to-google-calendar/#faq-2","@type":"Question","name":"Posso mettere il link su un pulsante del mio sito?","acceptedAnswer":{"@type":"Answer","text":"Sì — è un normale URL, quindi funziona con qualsiasi link o pulsante. Se preferisci lasciare che i visitatori creino il proprio evento, l'intero builder si integra con un solo tag script."}},{"@id":"https://icsmaker.com/it/add-to-google-calendar/#faq-3","@type":"Question","name":"I partecipanti che aggiungo riceveranno un invito?","acceptedAnswer":{"@type":"Answer","text":"Non tramite il link. Gli indirizzi dei partecipanti viaggiano nel file .ics, ed è il calendario o il client di posta a inviare gli inviti quando l'organizzatore salva l'evento. Un link Google precompilato riempie i campi; non invia email per tuo conto."}},{"@id":"https://icsmaker.com/it/add-to-google-calendar/#faq-4","@type":"Question","name":"Cosa succede al fuso orario in un link?","acceptedAnswer":{"@type":"Answer","text":"A Google viene comunicato esplicitamente il fuso quando ne scegli uno, così tutti vedono lo stesso istante. Senza un fuso selezionato, l'evento usa l'orario digitato, interpretato nel fuso orario in cui si trova la persona che lo salva."}}]},{"@type":"BreadcrumbList","@id":"https://icsmaker.com/it/add-to-google-calendar/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"ICS Maker","item":"https://icsmaker.com/it/"},{"@type":"ListItem","position":2,"name":"Aggiungi a Google Calendar","item":"https://icsmaker.com/it/add-to-google-calendar/"}]}]}</script>
+  </head>
+  <body>
+    <div id="root"><div class="site"><header class="site-header"><div class="site-header-top"><p class="crumb"><a href="/it/">ICS Maker</a><span aria-hidden="true"> / </span><span aria-current="page">Aggiungi a Google Calendar</span></p><div class="language-pick"><label for="site-language">Lingua</label><select id="site-language"><option value="en">English</option><option value="de">Deutsch</option><option value="es">Español</option><option value="fr">Français</option><option value="it" selected="">Italiano</option><option value="nl">Nederlands</option><option value="pl">Polski</option><option value="pt">Português</option><option value="tr">Türkçe</option><option value="ru">Русский</option><option value="ja">日本語</option><option value="ko">한국어</option><option value="zh-Hans">简体中文</option><option value="zh-Hant">繁體中文</option></select></div></div><div class="site-heading"><h1>Link &quot;Aggiungi a Google Calendar&quot;</h1><p class="lede">Compila l&#x27;evento e prendi il link a Google Calendar accanto a esso. Chiunque ci clicchi sopra arriva su Google Calendar con l&#x27;evento già compilato, a un clic dal salvarlo.</p></div></header><main><section class="maker-workspace"><div class="card"><div class="creator-placeholder"><p>Titolo, luogo, data e ora, fuso orario, ripetizione, invitati, avvisi e note; poi scarica il file .ics o aprilo direttamente nel calendario. Puoi anche incollare un programma o allegare un documento o una foto per creare più eventi insieme.</p><noscript><p class="muted">Il generatore richiede JavaScript, perché creare il file nel browser impedisce che l’evento finisca sul server di qualcun altro.</p></noscript></div></div></section><section class="answer" aria-labelledby="answer-question"><h2 id="answer-question">Come si crea un link &quot;aggiungi a Google Calendar&quot;?</h2><p>Un link di Google Calendar è un normale URL — calendar.google.com/calendar/render — che trasporta titolo, orari, luogo e descrizione come parametri di query. Cliccandoci sopra si apre Google Calendar con l&#x27;evento già compilato, e non viene salvato nulla lato Google finché la persona non preme salva. ICS Maker crea questo link a partire da un modulo e genera gli equivalenti per Outlook.com, Office 365 e Yahoo dallo stesso evento, oltre al file .ics per i calendari che non rientrano in nessuno dei quattro. Nessuno ha bisogno di un account ICS Maker, perché non esistono; il destinatario ha bisogno di un account Google solo per salvare l&#x27;evento al suo interno.</p></section><section class="prose"><div class="localized-body"><h2>Cos'è davvero il link</h2><p>Google accetta un evento come URL: <code>calendar.google.com/calendar/render</code> con titolo, orari, luogo e descrizione come parametri di query. Non viene salvato nulla lato Google finché la persona non clicca su salva, quindi il link funziona per chiunque — non deve essere l'account che lo ha creato, e non serve alcun account per crearne uno.</p><p>Lo stesso evento produce contemporaneamente i link per Outlook.com, Office 365 e Yahoo, e si scarica come file .ics per Apple Calendar, Thunderbird e tutto il resto. Scegli quello che usa il tuo pubblico; l'evento è identico in tutti.</p><h2>Quando un link batte un file</h2><p>Un link è preferibile in un'email, una newsletter o una pagina web: un tocco, nessun download, niente da aprire. Un file è preferibile quando il calendario del destinatario non è uno dei quattro servizi web sopra indicati, quando l'evento deve sopravvivere all'inoltro, o quando vuoi che venga salvato in un posto permanente. La maggior parte degli inviti vuole entrambi — un link per comodità e un file per le persone il cui calendario non puoi indovinare.</p></div><h2>Domande</h2><dl class="faq"><div id="faq-1"><dt>La persona che clicca sul link ha bisogno di un account Google?</dt><dd>Ne serve uno per salvare l&#x27;evento, dato che finisce nel proprio calendario personale. Il link in sé è pubblico e funziona per chiunque; Google chiede di accedere se non si è già connessi.</dd></div><div id="faq-2"><dt>Posso mettere il link su un pulsante del mio sito?</dt><dd>Sì — è un normale URL, quindi funziona con qualsiasi link o pulsante. Se preferisci lasciare che i visitatori creino il proprio evento, l&#x27;intero builder si integra con un solo tag script.</dd></div><div id="faq-3"><dt>I partecipanti che aggiungo riceveranno un invito?</dt><dd>Non tramite il link. Gli indirizzi dei partecipanti viaggiano nel file .ics, ed è il calendario o il client di posta a inviare gli inviti quando l&#x27;organizzatore salva l&#x27;evento. Un link Google precompilato riempie i campi; non invia email per tuo conto.</dd></div><div id="faq-4"><dt>Cosa succede al fuso orario in un link?</dt><dd>A Google viene comunicato esplicitamente il fuso quando ne scegli uno, così tutti vedono lo stesso istante. Senza un fuso selezionato, l&#x27;evento usa l&#x27;orario digitato, interpretato nel fuso orario in cui si trova la persona che lo salva.</dd></div></dl></section></main><footer class="site-footer"><nav aria-label="Pagine"><ul><li><a href="/it/">Crea un evento</a></li><li><a href="/it/about/">Cos&#x27;è, e alternative</a></li><li><a href="/it/ics-file/">Cos&#x27;è un file .ics</a></li><li><a href="/it/recurring-event/">Eventi ricorrenti</a></li><li><a href="/it/ics-time-zone/">Fuso orario sbagliato</a></li><li><a href="/it/calendar-invite/">Invio di un invito</a></li><li><a href="/it/ics-reminder/">Avvisi e promemoria</a></li><li><a href="/it/csv-to-calendar/">Importazione CSV</a></li><li><a href="/it/jcal/">jCal (JSON)</a></li><li><a href="/it/add-to-calendar-button/">Mettilo sul tuo sito</a></li></ul></nav><p>Gli eventi vengono creati localmente. Nulla di ciò che scrivi qui viene inviato.</p></footer></div></div>
+  </body>
+</html>

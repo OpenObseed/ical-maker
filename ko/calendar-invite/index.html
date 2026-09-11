@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>캘린더 초대를 .ics 첨부 파일로 보내는 방법</title>
+    <meta name="description" content="참석자가 포함된 이벤트를 만들고 .ics 파일을 이메일에 첨부하세요. ATTENDEE와 METHOD:REQUEST가 실제로 하는 역할, 그리고 파일 하나만으로는 RSVP를 수집할 수 없는 이유를 알아봅니다." />
+    <!--
+      The site is a static bundle that talks to nobody: no analytics, no fonts, no CDN. The
+      policy says exactly that, so an injected script has nowhere to load from and nowhere to
+      send to. `style-src 'unsafe-inline'` is required because the component injects its
+      stylesheet as a <style> element (that's what makes the embed bundler-free); scripts stay
+      strictly same-origin. GitHub Pages can't send headers, so the policy rides in a meta tag.
+      `connect-src 'self'` is the site's promise in the only form a browser can enforce: there is
+      no AI endpoint, no analytics and no third party to reach, so nothing typed or attached here
+      can go anywhere. Adding a service back would mean widening this line, which is exactly the
+      argument anyone proposing one should have to make.
+      `'wasm-unsafe-eval'` and `worker-src 'self'` are what reading a picture costs: the text
+      recogniser is WebAssembly running in a worker. Both are scoped to this origin — the worker
+      is a same-origin script rather than a Blob, and the WASM is a file this site serves. The
+      line that matters, `connect-src 'self'`, is untouched: no recogniser is fetched from a CDN,
+      so no third party sees who attached a flyer, and nothing dropped in can be sent anywhere. There's no
+      frame-ancestors here on purpose: browsers ignore it in a meta tag, and GitHub Pages can't
+      send headers — the site holds no session or stored data, so framing it gains an attacker
+      nothing anyway.
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'sha256-phQjA8COkT76swngdCyCCkozyWg25MSrbLcH+m3KH5U=' 'wasm-unsafe-eval'; worker-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <link rel="canonical" href="https://icsmaker.com/ko/calendar-invite/" />
+
+    <!--
+      Link previews. Without these a shared link renders as a bare grey rectangle in Slack,
+      iMessage, and every chat app in between — which is most of how a tool like this travels.
+      The image is committed artwork, generated from the same palette the site uses
+      (`node apps/ical/scripts/make-icons.mjs`); absolute URLs because scrapers do not resolve
+      relative ones. og:title is deliberately shorter than <title>, which carries the SEO tail.
+    -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="ICS Maker" />
+    <meta property="og:title" content="캘린더 초대를 .ics 첨부 파일로 보내는 방법" />
+    <meta property="og:description" content="참석자가 포함된 이벤트를 만들고 .ics 파일을 이메일에 첨부하세요. ATTENDEE와 METHOD:REQUEST가 실제로 하는 역할, 그리고 파일 하나만으로는 RSVP를 수집할 수 없는 이유를 알아봅니다." />
+    <meta property="og:url" content="https://icsmaker.com/ko/calendar-invite/" />
+    <meta property="og:image" content="https://icsmaker.com/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="ICS Maker — create a calendar event file, no signup" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- SVG for browsers, PNG for the iOS home screen, which ignores SVG favicons. -->
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#2f5bea" />
+    <script type="module" crossorigin src="/assets/index-BFSIdZ1Y.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-D8HNOIch.css">
+    <meta name="twitter:title" content="캘린더 초대를 .ics 첨부 파일로 보내는 방법" />
+    <meta name="twitter:description" content="참석자가 포함된 이벤트를 만들고 .ics 파일을 이메일에 첨부하세요. ATTENDEE와 METHOD:REQUEST가 실제로 하는 역할, 그리고 파일 하나만으로는 RSVP를 수집할 수 없는 이유를 알아봅니다." />
+    <meta name="twitter:image" content="https://icsmaker.com/og.png" />
+  <link rel="alternate" hreflang="en" href="https://icsmaker.com/calendar-invite/" />
+    <link rel="alternate" hreflang="de" href="https://icsmaker.com/de/calendar-invite/" />
+    <link rel="alternate" hreflang="es" href="https://icsmaker.com/es/calendar-invite/" />
+    <link rel="alternate" hreflang="fr" href="https://icsmaker.com/fr/calendar-invite/" />
+    <link rel="alternate" hreflang="it" href="https://icsmaker.com/it/calendar-invite/" />
+    <link rel="alternate" hreflang="nl" href="https://icsmaker.com/nl/calendar-invite/" />
+    <link rel="alternate" hreflang="pl" href="https://icsmaker.com/pl/calendar-invite/" />
+    <link rel="alternate" hreflang="pt" href="https://icsmaker.com/pt/calendar-invite/" />
+    <link rel="alternate" hreflang="tr" href="https://icsmaker.com/tr/calendar-invite/" />
+    <link rel="alternate" hreflang="ru" href="https://icsmaker.com/ru/calendar-invite/" />
+    <link rel="alternate" hreflang="ja" href="https://icsmaker.com/ja/calendar-invite/" />
+    <link rel="alternate" hreflang="ko" href="https://icsmaker.com/ko/calendar-invite/" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://icsmaker.com/zh-Hans/calendar-invite/" />
+    <link rel="alternate" hreflang="zh-Hant" href="https://icsmaker.com/zh-Hant/calendar-invite/" />
+    <link rel="alternate" hreflang="x-default" href="https://icsmaker.com/calendar-invite/" />
+    <style id="ec-tokens">:root {
+  --ec-fg: #16181d;
+  --ec-muted: #626a7a;
+  --ec-bg: #ffffff;
+  --ec-page: #f2f4f8;
+  --ec-surface: #f6f7f9;
+  --ec-border: #d9dde5;
+  --ec-accent: #2f5bea;
+  --ec-accent-soft: #eef2fe;
+  --ec-accent-fg: #ffffff;
+  --ec-danger: #b42318;
+  --ec-code-bg: #16181d;
+  --ec-code-fg: #e9edf5;
+  --ec-caret: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%23626a7a' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  /* The widest the creator lets itself get before it centres in the space it's given. Past
+     this, fields keep growing but nothing reads better — a 540px-wide text input is harder to
+     scan, not easier — and the short side column leaves a void on one side. A host that wants
+     it edge-to-edge can raise this like any other token. */
+  --ec-max-width: 860px;
+  --ec-radius: 10px;
+  --ec-radius-lg: 14px;
+  --ec-shadow: 0 1px 2px rgb(16 24 40 / 6%);
+  --ec-font: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ec-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+  --ec-fg: #e8eaf0;
+  --ec-muted: #9aa3b5;
+  --ec-bg: #14161b;
+  --ec-page: #0e1015;
+  --ec-surface: #1c1f27;
+  --ec-border: #333846;
+  --ec-accent: #7c9bff;
+  --ec-accent-soft: #22283a;
+  --ec-accent-fg: #10131a;
+  --ec-danger: #ff8b80;
+  --ec-code-bg: #0b0d12;
+  --ec-code-fg: #e9edf5;
+  --ec-caret: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%239aa3b5' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  color-scheme: dark;
+}
+}</style>
+    <style id="ec-styles">
+.ec-root {
+  --ec-fg: #16181d;
+  --ec-muted: #626a7a;
+  --ec-bg: #ffffff;
+  --ec-page: #f2f4f8;
+  --ec-surface: #f6f7f9;
+  --ec-border: #d9dde5;
+  --ec-accent: #2f5bea;
+  --ec-accent-soft: #eef2fe;
+  --ec-accent-fg: #ffffff;
+  --ec-danger: #b42318;
+  --ec-code-bg: #16181d;
+  --ec-code-fg: #e9edf5;
+  --ec-caret: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%23626a7a' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  /* The widest the creator lets itself get before it centres in the space it's given. Past
+     this, fields keep growing but nothing reads better — a 540px-wide text input is harder to
+     scan, not easier — and the short side column leaves a void on one side. A host that wants
+     it edge-to-edge can raise this like any other token. */
+  --ec-max-width: 860px;
+  --ec-radius: 10px;
+  --ec-radius-lg: 14px;
+  --ec-shadow: 0 1px 2px rgb(16 24 40 / 6%);
+  --ec-font: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ec-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  .ec-root {
+  --ec-fg: #e8eaf0;
+  --ec-muted: #9aa3b5;
+  --ec-bg: #14161b;
+  --ec-page: #0e1015;
+  --ec-surface: #1c1f27;
+  --ec-border: #333846;
+  --ec-accent: #7c9bff;
+  --ec-accent-soft: #22283a;
+  --ec-accent-fg: #10131a;
+  --ec-danger: #ff8b80;
+  --ec-code-bg: #0b0d12;
+  --ec-code-fg: #e9edf5;
+  --ec-caret: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%239aa3b5' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  color-scheme: dark;
+}
+}
+.ec-root {
+  color: var(--ec-fg);
+  background: var(--ec-bg);
+  font-family: var(--ec-font);
+  font-size: 15px;
+  line-height: 1.45;
+  display: grid;
+  gap: 20px;
+  /* minmax(0, …) — without it a long preview line makes the whole grid overflow its host. */
+  grid-template-columns: minmax(0, 1fr);
+  /* Centre in whatever container it's handed: a wide card, a wide embed host, the page. */
+  max-width: var(--ec-max-width);
+  margin-inline: auto;
+}
+/* Fallback for browsers without container queries (Safari < 16, Firefox < 110). */
+@supports not (container-type: inline-size) {
+  @media (min-width: 860px) {
+    .ec-root[data-preview='on'] { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
+  }
+}
+/* minmax(0, 1fr), not the default auto: a <select> is sized by its widest option in WebKit, so
+   without this the time-zone list pushes the whole form wider than its container (it overflowed
+   a 320px viewport by 12px). The fields track the container; the option text scrolls. */
+.ec-fields { display: grid; gap: 14px; align-content: start; grid-template-columns: minmax(0, 1fr); }
+/* Generic rows wrap; compact date/time and duration groups below opt into their own one-line
+   grids instead of inheriting the old full-width-field behaviour. */
+.ec-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.ec-row > .ec-field { flex: 1 1 200px; }
+/* Two controls whose *values* are short — "None", "Busy" — rather than two that need room to be
+   read. 200px of basis would stack them on a phone for no reason: nothing in either list is wider
+   than the ~140px they get when they share a 320px screen, so they share it. Text inputs are not
+   in here on purpose; a 140px title box is worse than a tall form. */
+.ec-row-tight > .ec-field { flex: 1 1 130px; }
+/* A pair is one side of the event — its date, its time, and the zone that time is in — and it
+   wraps as a unit. 320px of basis, not 200: at 200 two pairs squeeze side by side in a 490px
+   column and every field inside them stacks, which turns the row into two narrow columns. At 320
+   the column gives one side per line with its own fields side by side, and a wide container
+   still puts both sides up together.
+
+   align-content: start because the two pairs are different heights whenever only one carries a
+   zone — the default stretch spreads the shorter pair's rows to match the taller one, and the
+   dates stop lining up. */
+.ec-row > .ec-pair {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  flex: 1 1 320px;
+  min-width: 0;
+}
+.ec-date-time {
+  display: grid;
+  /* Safari keeps a native calendar/clock button inside these controls and paints it over
+     neighbouring text when the track is narrower than its intrinsic control width. Keep both
+     tracks above that floor; the container rule below stacks them only when the whole side cannot
+     accommodate the safe minimum. */
+  grid-template-columns: minmax(150px, 1fr) minmax(140px, 1fr);
+  gap: 10px;
+  min-width: 0;
+}
+.ec-date-time > .ec-field:only-child { grid-column: 1 / -1; }
+.ec-time-control { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.ec-time-control input { flex: 1 1 auto; min-width: 0; }
+.ec-time-offset {
+  flex: 0 0 auto;
+  color: var(--ec-muted);
+  font-size: 12px;
+  line-height: 1;
+  white-space: nowrap;
+}
+.ec-zone-field { min-width: 0; }
+/* An all-day event has no time and no zone, so each pair is a lone date and 320px of basis would
+   push the two dates onto separate lines for no reason. Engines without :has (Safari < 15.4) get
+   the stacked version, which is only a little roomier. */
+.ec-row > .ec-pair:has(.ec-date-time > .ec-field:only-child) { flex-basis: 200px; }
+/* Grouped sections, the way a calendar app groups an event: what it is, when it is, who is
+   coming, what warns you, the details. A real <fieldset>, so the grouping is announced rather
+   than merely drawn, with the browser's default border and padding cleared away. */
+.ec-group {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+.ec-group + .ec-group { margin-top: 6px; padding-top: 18px; border-top: 1px solid var(--ec-border); }
+.ec-group > legend {
+  padding: 0;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ec-muted);
+}
+/* A legend is out of the grid flow, so the gap above the first field has to come from here. */
+.ec-group > legend + * { margin-top: 10px; }
+/* An optional group, folded away until it is wanted (see Optional in EventCreator.tsx). Block
+   rather than the grid its siblings use: display on a <details> is not honoured everywhere, and
+   a summary that lost its row would be a broken control rather than a slightly tighter one. The
+   fields inside get the grid instead, so the gaps match every other group. */
+.ec-optional { display: block; }
+.ec-group-body { display: grid; gap: 14px; margin-top: 12px; min-width: 0; }
+/* The summary is the legend for the group it opens, so it is drawn as one — plus a marker, and a
+   44px row, because on a phone this is the control that has to be hit before anything inside it
+   can be. */
+.ec-optional > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ec-muted);
+  cursor: pointer;
+  /* The native marker goes: a flex summary drops it in WebKit anyway, so drawing our own is what
+     keeps the three engines showing the same control. It is the select's caret, rotated. */
+  list-style: none;
+}
+.ec-optional > summary::-webkit-details-marker { display: none; }
+.ec-optional > summary::before {
+  content: '';
+  flex: 0 0 auto;
+  width: 12px;
+  height: 8px;
+  background: var(--ec-caret) no-repeat center / 12px 8px;
+  transform: rotate(-90deg);
+}
+.ec-optional[open] > summary::before { transform: none; }
+.ec-optional > summary:focus-visible { outline: 2px solid var(--ec-accent); outline-offset: 2px; }
+/* What a closed group is holding. Right-aligned and in sentence case: it is the answer to "is
+   there anything in there", not a second heading. */
+.ec-tally {
+  margin-left: auto;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+}
+/* The event in one sentence, immediately above the buttons it informs. */
+.ec-recap {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: var(--ec-radius);
+  background: var(--ec-surface);
+  color: var(--ec-fg);
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.ec-switch { min-height: 44px; }
+.ec-recap strong { display: block; font-size: 18px; }
+.ec-recap p { margin: 6px 0 0; }
+.ec-technical-preview summary { min-height: 44px; cursor: pointer; overflow-wrap: anywhere; }
+.ec-field { display: grid; gap: 5px; min-width: 0; }
+.ec-field > label { font-size: 13px; font-weight: 600; color: var(--ec-muted); }
+.ec-autocomplete { position: relative; min-width: 0; }
+.ec-autocomplete-list {
+  position: absolute;
+  z-index: 20;
+  inset-inline: 0;
+  max-height: 300px;
+  overflow-y: auto;
+  margin: 4px 0 0;
+  padding: 4px 0;
+  list-style: none;
+  background: var(--ec-bg);
+  border: 1px solid var(--ec-border);
+  border-radius: var(--ec-radius);
+  box-shadow: var(--ec-shadow);
+}
+.ec-autocomplete-option {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  color: inherit;
+  cursor: pointer;
+}
+.ec-autocomplete-option[data-active='true'], .ec-autocomplete-option:hover {
+  background: var(--ec-accent-soft);
+}
+.ec-autocomplete-empty { padding: 10px; color: var(--ec-muted); }
+.ec-root input[type='text'],
+.ec-root input[type='date'],
+.ec-root input[type='time'],
+.ec-root input[type='email'],
+.ec-root input[type='number'],
+.ec-root input[type='url'],
+.ec-root select,
+.ec-root textarea {
+  font-family: inherit;
+  /* 16px, not inherit: iOS Safari zooms the page when a focused field is smaller. It has to
+     live on this selector — the shorthand here would otherwise out-specify a later rule. */
+  font-size: 16px;
+  line-height: 1.35;
+  color: inherit;
+  background: var(--ec-bg);
+  border: 1px solid var(--ec-border);
+  border-radius: var(--ec-radius);
+  padding: 9px 10px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+/* WebKit sizes a <select> to its widest option and ignores min-width:0 when doing it, so the
+   time-zone list widened the page until the element was capped explicitly. text-overflow keeps
+   the closed control readable when a long zone name doesn't fit.
+
+   appearance:none is what makes the dropdown a rounded rectangle like the text fields: a native
+   select paints its own corners and ignores border-radius, so the two controls sat side by side
+   with different silhouettes. Dropping the native look means drawing the chevron ourselves, and
+   reserving room for it on the right so a long value never runs underneath it. */
+.ec-root select {
+  appearance: none;
+  -webkit-appearance: none;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  background-image: var(--ec-caret);
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px 8px;
+  padding-right: 30px;
+}
+.ec-root textarea { min-height: 76px; resize: vertical; }
+.ec-root input:focus-visible, .ec-root select:focus-visible, .ec-root textarea:focus-visible {
+  outline: 2px solid var(--ec-accent);
+  outline-offset: 1px;
+}
+.ec-inline { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+/* The guest field and its Add button share a row: the input flexes, the button keeps its size,
+   and both wrap to their own lines only when the container is genuinely too narrow. */
+.ec-inline input[type='email'] { flex: 1 1 160px; width: auto; }
+.ec-inline .ec-chip { flex: 0 0 auto; }
+/* "Every [2] weeks" — the number keeps its own width instead of stretching across the row, and
+   the unit sits beside it as text rather than pretending to be a second control. A count field
+   on its own line is capped for the same reason: a four-digit answer in a 480px box reads as a
+   mistake. */
+.ec-inline input[type='number'] { flex: 0 0 88px; width: auto; }
+.ec-field > input[type='number'] { max-width: 140px; }
+/* Three boxes that mean one thing: grouped like a field, sized like the number inputs they are.
+   The browser's fieldset border and padding are cleared, the same way .ec-group clears them. */
+.ec-duration { display: grid; gap: 5px; min-width: 0; border: 0; margin: 0; padding: 0; }
+.ec-duration > legend { padding: 0; font-size: 13px; font-weight: 600; color: var(--ec-muted); }
+/* A legend is out of the grid flow, so the gap under it has to come from here. */
+.ec-duration > legend + * { margin-top: 5px; }
+.ec-duration .ec-inline { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.ec-duration-part { min-width: 0; }
+.ec-duration-part > label { font-size: 12px; font-weight: 400; }
+.ec-duration .ec-inline input[type='number'] { width: 100%; max-width: none; }
+.ec-unit { color: var(--ec-muted); font-size: 14px; }
+/* Not bold: the mark says "don't empty this", and a red bold star on five of fourteen labels
+   reads as five errors on a form nobody has touched yet. */
+.ec-required { margin-left: 2px; color: var(--ec-danger); }
+.ec-problem { color: var(--ec-danger); font-size: 13px; }
+.ec-hint { margin: 0; color: var(--ec-muted); font-size: 12px; }
+.ec-chip {
+  border: 1px solid var(--ec-border);
+  background: var(--ec-bg);
+  color: inherit;
+  border-radius: 999px;
+  /* 44px is the smallest comfortable touch target on both iOS and Android guidance. */
+  min-height: 44px;
+  padding: 5px 14px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.ec-chip[aria-pressed='true'] { border-color: var(--ec-accent); color: var(--ec-accent); background: var(--ec-accent-soft); }
+.ec-attendee { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+/* The × beside a guest. Bare text is a ~20px target next to the address it deletes, which on a
+   phone is a mis-tap away from removing the wrong person. */
+.ec-remove { min-height: 44px; padding: 0 8px; border: 0; background: none; color: var(--ec-muted); cursor: pointer; font: inherit; }
+.ec-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.ec-button {
+  font: inherit;
+  min-height: 44px;
+  font-weight: 600;
+  border: 1px solid var(--ec-accent);
+  background: var(--ec-accent);
+  color: var(--ec-accent-fg);
+  border-radius: var(--ec-radius);
+  padding: 10px 16px;
+  cursor: pointer;
+}
+.ec-button.ec-secondary { background: var(--ec-bg); color: var(--ec-accent); }
+.ec-side { display: grid; gap: 14px; align-content: start; }
+.ec-panel { background: var(--ec-surface); border: 1px solid var(--ec-border); border-radius: var(--ec-radius); padding: 14px; }
+.ec-panel h2 { margin: 0 0 8px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ec-muted); }
+.ec-preview { margin: 0; overflow-wrap: anywhere; font-family: var(--ec-mono); font-size: 12px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; max-height: 340px; overflow: auto; }
+/* On a phone these four links are the whole point of the panel — they open the event in the
+   calendar app without a file changing hands at all — so each is a row you can hit, not a line
+   of text stacked 6px from the next one. */
+.ec-links { display: grid; gap: 2px; }
+.ec-links a { display: flex; align-items: center; min-height: 44px; color: var(--ec-accent); }
+.ec-attendee span { overflow-wrap: anywhere; }
+.ec-describe textarea { min-height: 66px; }
+.ec-describe .ec-actions { margin-top: 8px; }
+.ec-assumptions { margin: 10px 0 0; padding-left: 18px; color: var(--ec-muted); font-size: 13px; }
+@media (forced-colors: active) {
+  .ec-chip[aria-pressed='true'] { border: 2px solid; }
+}
+</style>
+    <style id="ec-styles-container">
+/* The shell exists purely to be the query container: an element can't answer a container
+   query about itself, so the width question is asked one level up. Container-relative rather
+   than viewport-relative because an embed can sit in a narrow column on a wide screen, where
+   a viewport query would hand it a two-column layout it has no room for. */
+.ec-shell { container-type: inline-size; }
+/* Narrow enough that three side-by-side buttons each end up a couple of words wide: give them a
+   row each instead, primary first. Container-relative like the rule below — an embed in a narrow
+   column on a desktop has the same problem a phone does. */
+@container (max-width: 420px) {
+  .ec-actions > .ec-button { flex: 1 1 100%; }
+  /* Keep the two native pickers the same width on phones. The time control owns the GMT label,
+     so its input can shrink inside the track without pushing the label below the picker. */
+  .ec-date-time { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@container (max-width: 300px) {
+  /* Native Safari controls need more room than a very narrow embed can provide. Stacking here
+     avoids the calendar/clock button overlap while preserving the compact row everywhere else. */
+  .ec-date-time { grid-template-columns: minmax(0, 1fr); }
+}
+@container (min-width: 720px) {
+  /* 1.4fr/1fr, not 1fr/0.8fr: the form is the work, the panels are reference. This keeps the
+     inputs near 480px — comfortable to scan — instead of stretching them to fill. */
+  .ec-root[data-preview='on'] { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
+}
+</style>
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://icsmaker.com/#website","name":"ICS Maker","url":"https://icsmaker.com/","inLanguage":["en","de","es","fr","it","nl","pl","pt","tr","ru","ja","ko","zh-Hans","zh-Hant"]},{"@type":"WebPage","@id":"https://icsmaker.com/ko/calendar-invite/#webpage","url":"https://icsmaker.com/ko/calendar-invite/","name":"캘린더 초대를 .ics 첨부 파일로 보내는 방법","headline":"캘린더 초대 보내기","description":"이벤트에 주소를 넣고 .ics 파일을 다운로드한 다음, 일반 이메일에 첨부하세요. 각 참석자는 ROLE, PARTSTAT, RSVP를 포함하는 ATTENDEE 줄이 되며, 수신자는 한 번의 탭으로 이벤트를 저장할 수 있습니다. 다운로드한 파일이 할 수 없는 것은 응답 수집입니다. RSVP 추적에는 METHOD:REPLY 메일을 수신할 무언가가 필요하기 때문입니다. ICS Maker는 METHOD:REQUEST와 ORGANIZER를 의도적으로 작성하지 않습니다. 메일 서버도 계정도 없기 때문에, 주최자인 척하는 것은 수신자의 캘린더가 그대로 실행에 옮길 수 있는 거짓말이 될 것입니다. RSVP를 수집하려면 파일을 본인의 캘린더로 가져와 거기서 초대를 보내세요.","inLanguage":"ko","isPartOf":{"@id":"https://icsmaker.com/#website"},"breadcrumb":{"@id":"https://icsmaker.com/ko/calendar-invite/#breadcrumb"}},{"@type":"FAQPage","@id":"https://icsmaker.com/ko/calendar-invite/#faq","isPartOf":{"@id":"https://icsmaker.com/ko/calendar-invite/#webpage"},"mainEntity":[{"@id":"https://icsmaker.com/ko/calendar-invite/#answer-question","@type":"Question","name":"캘린더 초대를 .ics 첨부 파일로 보내려면 어떻게 하나요?","acceptedAnswer":{"@type":"Answer","text":"이벤트에 주소를 넣고 .ics 파일을 다운로드한 다음, 일반 이메일에 첨부하세요. 각 참석자는 ROLE, PARTSTAT, RSVP를 포함하는 ATTENDEE 줄이 되며, 수신자는 한 번의 탭으로 이벤트를 저장할 수 있습니다. 다운로드한 파일이 할 수 없는 것은 응답 수집입니다. RSVP 추적에는 METHOD:REPLY 메일을 수신할 무언가가 필요하기 때문입니다. ICS Maker는 METHOD:REQUEST와 ORGANIZER를 의도적으로 작성하지 않습니다. 메일 서버도 계정도 없기 때문에, 주최자인 척하는 것은 수신자의 캘린더가 그대로 실행에 옮길 수 있는 거짓말이 될 것입니다. RSVP를 수집하려면 파일을 본인의 캘린더로 가져와 거기서 초대를 보내세요."}},{"@id":"https://icsmaker.com/ko/calendar-invite/#faq-1","@type":"Question","name":"초대자로 추가한 사람들이 이메일을 받게 되나요?","acceptedAnswer":{"@type":"Answer","text":"이 페이지에서는 받지 않습니다. 메일 서버가 없고 아무것도 전송하지 않으며, 주소는 파일 안에 ATTENDEE 줄로 기록될 뿐입니다. 파일을 직접 이메일에 첨부하거나, 본인의 캘린더로 가져와서 초대를 보내도록 하세요."}},{"@id":"https://icsmaker.com/ko/calendar-invite/#faq-2","@type":"Question","name":"METHOD:REQUEST와 METHOD:PUBLISH의 차이는 무엇인가요?","acceptedAnswer":{"@type":"Answer","text":"REQUEST는 \"당신은 초대되었으니 답장해 주세요\"라는 의미이며, 캘린더 시스템이 주최자를 대신해 보내는 메시지에 사용됩니다. 수신자의 클라이언트는 METHOD:REPLY로 응답합니다. PUBLISH는 \"여기 이벤트가 있으니 가져가거나 무시하세요\"라는 의미로, 웹사이트의 파일이나 첨부 파일이 바로 이에 해당합니다. METHOD 줄이 전혀 없는 파일은 대부분의 리더에서 publish로 취급되며, 이는 이 빌더가 생성하는 것입니다."}},{"@id":"https://icsmaker.com/ko/calendar-invite/#faq-3","@type":"Question","name":"누가 수락했는지 추적할 수 있나요?","acceptedAnswer":{"@type":"Answer","text":"다운로드한 파일로는 불가능합니다. RSVP 추적에는 응답을 수신할 무언가, 즉 캘린더 계정이나 서버가 필요한데, 정적 파일에는 둘 다 없습니다. 각 참석자의 PARTSTAT=NEEDS-ACTION은 시작 상태일 뿐, 우편함이 아닙니다. 응답이 필요하다면 이벤트를 본인의 캘린더로 가져와 거기서 초대하세요."}},{"@id":"https://icsmaker.com/ko/calendar-invite/#faq-4","@type":"Question","name":"Gmail이나 Outlook 메시지에 .ics를 첨부하려면 어떻게 하나요?","acceptedAnswer":{"@type":"Answer","text":"다른 파일과 똑같습니다. 메시지를 작성하고 다운로드한 .ics 파일을 첨부하세요. 두 클라이언트 모두 해당 형식을 인식하며, 대부분의 수신자는 단순 첨부 파일이 아니라 캘린더 추가 프롬프트를 인라인으로 보게 됩니다. Gmail은 작성 창에서 직접 초대장을 만들 수도 있는데, RSVP를 원한다면 이 방법을 사용하세요."}}]},{"@type":"BreadcrumbList","@id":"https://icsmaker.com/ko/calendar-invite/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"ICS Maker","item":"https://icsmaker.com/ko/"},{"@type":"ListItem","position":2,"name":"초대 보내기","item":"https://icsmaker.com/ko/calendar-invite/"}]}]}</script>
+  </head>
+  <body>
+    <div id="root"><div class="site"><header class="site-header"><div class="site-header-top"><p class="crumb"><a href="/ko/">ICS Maker</a><span aria-hidden="true"> / </span><span aria-current="page">초대 보내기</span></p><div class="language-pick"><label for="site-language">언어</label><select id="site-language"><option value="en">English</option><option value="de">Deutsch</option><option value="es">Español</option><option value="fr">Français</option><option value="it">Italiano</option><option value="nl">Nederlands</option><option value="pl">Polski</option><option value="pt">Português</option><option value="tr">Türkçe</option><option value="ru">Русский</option><option value="ja">日本語</option><option value="ko" selected="">한국어</option><option value="zh-Hans">简体中文</option><option value="zh-Hant">繁體中文</option></select></div></div><div class="site-heading"><h1>캘린더 초대 보내기</h1><p class="lede">이벤트에 주소를 추가하고 다운로드하세요. 파일이 그 주소들을 담고 있으며, 이를 이메일에 첨부하면 보내는 모든 사람이 클릭 한 번으로 이벤트에 접근할 수 있습니다.</p></div></header><main><section class="maker-workspace"><div class="card"><div class="creator-placeholder"><p>제목, 장소, 날짜와 시간, 시간대, 반복, 참석자, 알림, 메모를 입력한 다음 .ics 파일을 내려받거나 캘린더에서 바로 여세요. 일정을 붙여 넣거나 문서 또는 사진을 첨부해 여러 일정을 한 번에 만들 수도 있습니다.</p><noscript><p class="muted">파일을 브라우저에서 만들어 일정을 외부 서버로 보내지 않기 위해 이 도구에는 JavaScript가 필요합니다.</p></noscript></div></div></section><section class="answer" aria-labelledby="answer-question"><h2 id="answer-question">캘린더 초대를 .ics 첨부 파일로 보내려면 어떻게 하나요?</h2><p>이벤트에 주소를 넣고 .ics 파일을 다운로드한 다음, 일반 이메일에 첨부하세요. 각 참석자는 ROLE, PARTSTAT, RSVP를 포함하는 ATTENDEE 줄이 되며, 수신자는 한 번의 탭으로 이벤트를 저장할 수 있습니다. 다운로드한 파일이 할 수 없는 것은 응답 수집입니다. RSVP 추적에는 METHOD:REPLY 메일을 수신할 무언가가 필요하기 때문입니다. ICS Maker는 METHOD:REQUEST와 ORGANIZER를 의도적으로 작성하지 않습니다. 메일 서버도 계정도 없기 때문에, 주최자인 척하는 것은 수신자의 캘린더가 그대로 실행에 옮길 수 있는 거짓말이 될 것입니다. RSVP를 수집하려면 파일을 본인의 캘린더로 가져와 거기서 초대를 보내세요.</p></section><section class="prose"><div class="localized-body"><h2>파일 안에서 참석자 목록은 어떻게 보이나요</h2><p>각 사람은 한 줄로 표시됩니다. <code>ATTENDEE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;</code><code>RSVP=TRUE:mailto:ada@example.com</code>은 누가 초대되었는지, 선택 사항이 아니라 참석이 기대된다는 것, 아직 응답하지 않았다는 것, 그리고 응답이 필요하다는 것을 나타냅니다. 표시 이름은 직접 추가할 경우 <code>CN</code> 매개변수에 들어갑니다 — <code>ATTENDEE;CN=Ada Lovelace;…</code> — 그리고 주소 자체는 항상 <code>mailto:</code> URI이며, 이는 파서가 엄격하게 검사하는 유일한 부분입니다.</p><h2>참석자가 있는 이벤트가 초대장과 같은 것은 아닙니다</h2><p>진짜 초대장은 메일 메시지입니다. 캘린더 데이터는 <code>text/calendar; method=REQUEST</code>로 첨부되고, 파일에는 이에 대응하는 <code>METHOD:REQUEST</code> 줄과 <code>ORGANIZER</code>가 담기며, 수신자의 메일 클라이언트는 이를 수락 및 거절 버튼으로 바꿔 <code>METHOD:REPLY</code>를 다시 메일로 보냅니다. 이 모든 교환은 두 캘린더 서버 사이의 이메일을 통해 이루어집니다.</p><p>이 빌더는 메서드와 주최자를 의도적으로 작성하지 않습니다. 계정도, 메일 서버도 없고 당신이 누구인지도 알지 못하므로, 이벤트의 주최자라고 주장하는 것은 수신자의 캘린더가 그대로 실행에 옮길 수 있는 거짓말이 될 것입니다. 대신 참석자 목록이 그대로 담긴 순수한 이벤트를 얻게 되는데, 이는 첨부하거나, 전달하거나, 게시할 때 바로 원하는 형태입니다.</p><h2>그렇다면 실제로 사람들을 어떻게 초대하나요?</h2><dl><div><dt>파일 첨부하기</dt><dd>파일을 다운로드해서 일반 이메일에 첨부하세요. 모든 사람이 한 번의 탭으로 저장할 수 있는 이벤트를 받게 되며, 전달되더라도 그대로 유지됩니다. 아무도 RSVP할 수 없으니, 메시지 본문에서 답장을 요청하세요.</dd></div><div><dt>가져온 다음, 본인의 캘린더에서 초대하기</dt><dd>파일을 본인의 캘린더에서 열면 모든 필드와 참석자 목록이 채워지며, 그다음 보내기를 누르세요. 당신의 캘린더가 주최자가 되어 정식 초대장을 보내고 누가 수락했는지 추적합니다. RSVP가 필요할 때 선택할 방법입니다.</dd></div><div><dt>대신 링크 보내기</dt><dd>캘린더 추가 링크는 다운로드 없이 수신자 본인의 캘린더에 이벤트를 미리 채워 넣습니다. 뉴스레터나 웹페이지에서 더 적합하지만, 참석자 목록은 담기지 않습니다.</dd></div></dl></div><h2>자주 묻는 질문</h2><dl class="faq"><div id="faq-1"><dt>초대자로 추가한 사람들이 이메일을 받게 되나요?</dt><dd>이 페이지에서는 받지 않습니다. 메일 서버가 없고 아무것도 전송하지 않으며, 주소는 파일 안에 ATTENDEE 줄로 기록될 뿐입니다. 파일을 직접 이메일에 첨부하거나, 본인의 캘린더로 가져와서 초대를 보내도록 하세요.</dd></div><div id="faq-2"><dt>METHOD:REQUEST와 METHOD:PUBLISH의 차이는 무엇인가요?</dt><dd>REQUEST는 &quot;당신은 초대되었으니 답장해 주세요&quot;라는 의미이며, 캘린더 시스템이 주최자를 대신해 보내는 메시지에 사용됩니다. 수신자의 클라이언트는 METHOD:REPLY로 응답합니다. PUBLISH는 &quot;여기 이벤트가 있으니 가져가거나 무시하세요&quot;라는 의미로, 웹사이트의 파일이나 첨부 파일이 바로 이에 해당합니다. METHOD 줄이 전혀 없는 파일은 대부분의 리더에서 publish로 취급되며, 이는 이 빌더가 생성하는 것입니다.</dd></div><div id="faq-3"><dt>누가 수락했는지 추적할 수 있나요?</dt><dd>다운로드한 파일로는 불가능합니다. RSVP 추적에는 응답을 수신할 무언가, 즉 캘린더 계정이나 서버가 필요한데, 정적 파일에는 둘 다 없습니다. 각 참석자의 PARTSTAT=NEEDS-ACTION은 시작 상태일 뿐, 우편함이 아닙니다. 응답이 필요하다면 이벤트를 본인의 캘린더로 가져와 거기서 초대하세요.</dd></div><div id="faq-4"><dt>Gmail이나 Outlook 메시지에 .ics를 첨부하려면 어떻게 하나요?</dt><dd>다른 파일과 똑같습니다. 메시지를 작성하고 다운로드한 .ics 파일을 첨부하세요. 두 클라이언트 모두 해당 형식을 인식하며, 대부분의 수신자는 단순 첨부 파일이 아니라 캘린더 추가 프롬프트를 인라인으로 보게 됩니다. Gmail은 작성 창에서 직접 초대장을 만들 수도 있는데, RSVP를 원한다면 이 방법을 사용하세요.</dd></div></dl></section></main><footer class="site-footer"><nav aria-label="페이지"><ul><li><a href="/ko/">이벤트 만들기</a></li><li><a href="/ko/about/">이 도구의 정체와 대안</a></li><li><a href="/ko/ics-file/">.ics 파일이란 무엇인가</a></li><li><a href="/ko/add-to-google-calendar/">Google 캘린더에 추가</a></li><li><a href="/ko/recurring-event/">반복 일정</a></li><li><a href="/ko/ics-time-zone/">잘못된 시간대</a></li><li><a href="/ko/ics-reminder/">알림 및 리마인더</a></li><li><a href="/ko/csv-to-calendar/">CSV 가져오기</a></li><li><a href="/ko/jcal/">jCal (JSON)</a></li><li><a href="/ko/add-to-calendar-button/">내 사이트에 넣기</a></li></ul></nav><p>일정은 이 기기에서 만들어집니다. 여기에 입력한 내용은 어디에도 전송되지 않습니다.</p></footer></div></div>
+  </body>
+</html>

@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>반복되는 캘린더 일정(.ics RRULE 생성기 및 예시)</title>
+    <meta name="description" content="반복 일정을 만들어 올바른 RRULE이 포함된 .ics 파일로 다운로드하세요 — 격주, 매월 마지막 날, 평일만 반복되는 규칙을 그대로 복사해서 쓸 수 있습니다." />
+    <!--
+      The site is a static bundle that talks to nobody: no analytics, no fonts, no CDN. The
+      policy says exactly that, so an injected script has nowhere to load from and nowhere to
+      send to. `style-src 'unsafe-inline'` is required because the component injects its
+      stylesheet as a <style> element (that's what makes the embed bundler-free); scripts stay
+      strictly same-origin. GitHub Pages can't send headers, so the policy rides in a meta tag.
+      `connect-src 'self'` is the site's promise in the only form a browser can enforce: there is
+      no AI endpoint, no analytics and no third party to reach, so nothing typed or attached here
+      can go anywhere. Adding a service back would mean widening this line, which is exactly the
+      argument anyone proposing one should have to make.
+      `'wasm-unsafe-eval'` and `worker-src 'self'` are what reading a picture costs: the text
+      recogniser is WebAssembly running in a worker. Both are scoped to this origin — the worker
+      is a same-origin script rather than a Blob, and the WASM is a file this site serves. The
+      line that matters, `connect-src 'self'`, is untouched: no recogniser is fetched from a CDN,
+      so no third party sees who attached a flyer, and nothing dropped in can be sent anywhere. There's no
+      frame-ancestors here on purpose: browsers ignore it in a meta tag, and GitHub Pages can't
+      send headers — the site holds no session or stored data, so framing it gains an attacker
+      nothing anyway.
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'sha256-pueU6TCCAnMwmKDwqsEzbABNcHX0IRv0ootIX/vsUSk=' 'wasm-unsafe-eval'; worker-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <link rel="canonical" href="https://icsmaker.com/ko/recurring-event/" />
+
+    <!--
+      Link previews. Without these a shared link renders as a bare grey rectangle in Slack,
+      iMessage, and every chat app in between — which is most of how a tool like this travels.
+      The image is committed artwork, generated from the same palette the site uses
+      (`node apps/ical/scripts/make-icons.mjs`); absolute URLs because scrapers do not resolve
+      relative ones. og:title is deliberately shorter than <title>, which carries the SEO tail.
+    -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="ICS Maker" />
+    <meta property="og:title" content="반복되는 캘린더 일정(.ics RRULE 생성기 및 예시)" />
+    <meta property="og:description" content="반복 일정을 만들어 올바른 RRULE이 포함된 .ics 파일로 다운로드하세요 — 격주, 매월 마지막 날, 평일만 반복되는 규칙을 그대로 복사해서 쓸 수 있습니다." />
+    <meta property="og:url" content="https://icsmaker.com/ko/recurring-event/" />
+    <meta property="og:image" content="https://icsmaker.com/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="ICS Maker — create a calendar event file, no signup" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- SVG for browsers, PNG for the iOS home screen, which ignores SVG favicons. -->
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#2f5bea" />
+    <script type="module" crossorigin src="/assets/index-BFSIdZ1Y.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-D8HNOIch.css">
+    <meta name="twitter:title" content="반복되는 캘린더 일정(.ics RRULE 생성기 및 예시)" />
+    <meta name="twitter:description" content="반복 일정을 만들어 올바른 RRULE이 포함된 .ics 파일로 다운로드하세요 — 격주, 매월 마지막 날, 평일만 반복되는 규칙을 그대로 복사해서 쓸 수 있습니다." />
+    <meta name="twitter:image" content="https://icsmaker.com/og.png" />
+  <link rel="alternate" hreflang="en" href="https://icsmaker.com/recurring-event/" />
+    <link rel="alternate" hreflang="de" href="https://icsmaker.com/de/recurring-event/" />
+    <link rel="alternate" hreflang="es" href="https://icsmaker.com/es/recurring-event/" />
+    <link rel="alternate" hreflang="fr" href="https://icsmaker.com/fr/recurring-event/" />
+    <link rel="alternate" hreflang="it" href="https://icsmaker.com/it/recurring-event/" />
+    <link rel="alternate" hreflang="nl" href="https://icsmaker.com/nl/recurring-event/" />
+    <link rel="alternate" hreflang="pl" href="https://icsmaker.com/pl/recurring-event/" />
+    <link rel="alternate" hreflang="pt" href="https://icsmaker.com/pt/recurring-event/" />
+    <link rel="alternate" hreflang="tr" href="https://icsmaker.com/tr/recurring-event/" />
+    <link rel="alternate" hreflang="ru" href="https://icsmaker.com/ru/recurring-event/" />
+    <link rel="alternate" hreflang="ja" href="https://icsmaker.com/ja/recurring-event/" />
+    <link rel="alternate" hreflang="ko" href="https://icsmaker.com/ko/recurring-event/" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://icsmaker.com/zh-Hans/recurring-event/" />
+    <link rel="alternate" hreflang="zh-Hant" href="https://icsmaker.com/zh-Hant/recurring-event/" />
+    <link rel="alternate" hreflang="x-default" href="https://icsmaker.com/recurring-event/" />
+    <style id="ec-tokens">:root {
+  --ec-fg: #16181d;
+  --ec-muted: #626a7a;
+  --ec-bg: #ffffff;
+  --ec-page: #f2f4f8;
+  --ec-surface: #f6f7f9;
+  --ec-border: #d9dde5;
+  --ec-accent: #2f5bea;
+  --ec-accent-soft: #eef2fe;
+  --ec-accent-fg: #ffffff;
+  --ec-danger: #b42318;
+  --ec-code-bg: #16181d;
+  --ec-code-fg: #e9edf5;
+  --ec-caret: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%23626a7a' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  /* The widest the creator lets itself get before it centres in the space it's given. Past
+     this, fields keep growing but nothing reads better — a 540px-wide text input is harder to
+     scan, not easier — and the short side column leaves a void on one side. A host that wants
+     it edge-to-edge can raise this like any other token. */
+  --ec-max-width: 860px;
+  --ec-radius: 10px;
+  --ec-radius-lg: 14px;
+  --ec-shadow: 0 1px 2px rgb(16 24 40 / 6%);
+  --ec-font: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ec-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+  --ec-fg: #e8eaf0;
+  --ec-muted: #9aa3b5;
+  --ec-bg: #14161b;
+  --ec-page: #0e1015;
+  --ec-surface: #1c1f27;
+  --ec-border: #333846;
+  --ec-accent: #7c9bff;
+  --ec-accent-soft: #22283a;
+  --ec-accent-fg: #10131a;
+  --ec-danger: #ff8b80;
+  --ec-code-bg: #0b0d12;
+  --ec-code-fg: #e9edf5;
+  --ec-caret: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%239aa3b5' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  color-scheme: dark;
+}
+}</style>
+    <style id="ec-styles">
+.ec-root {
+  --ec-fg: #16181d;
+  --ec-muted: #626a7a;
+  --ec-bg: #ffffff;
+  --ec-page: #f2f4f8;
+  --ec-surface: #f6f7f9;
+  --ec-border: #d9dde5;
+  --ec-accent: #2f5bea;
+  --ec-accent-soft: #eef2fe;
+  --ec-accent-fg: #ffffff;
+  --ec-danger: #b42318;
+  --ec-code-bg: #16181d;
+  --ec-code-fg: #e9edf5;
+  --ec-caret: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%23626a7a' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  /* The widest the creator lets itself get before it centres in the space it's given. Past
+     this, fields keep growing but nothing reads better — a 540px-wide text input is harder to
+     scan, not easier — and the short side column leaves a void on one side. A host that wants
+     it edge-to-edge can raise this like any other token. */
+  --ec-max-width: 860px;
+  --ec-radius: 10px;
+  --ec-radius-lg: 14px;
+  --ec-shadow: 0 1px 2px rgb(16 24 40 / 6%);
+  --ec-font: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ec-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  .ec-root {
+  --ec-fg: #e8eaf0;
+  --ec-muted: #9aa3b5;
+  --ec-bg: #14161b;
+  --ec-page: #0e1015;
+  --ec-surface: #1c1f27;
+  --ec-border: #333846;
+  --ec-accent: #7c9bff;
+  --ec-accent-soft: #22283a;
+  --ec-accent-fg: #10131a;
+  --ec-danger: #ff8b80;
+  --ec-code-bg: #0b0d12;
+  --ec-code-fg: #e9edf5;
+  --ec-caret: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%239aa3b5' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  color-scheme: dark;
+}
+}
+.ec-root {
+  color: var(--ec-fg);
+  background: var(--ec-bg);
+  font-family: var(--ec-font);
+  font-size: 15px;
+  line-height: 1.45;
+  display: grid;
+  gap: 20px;
+  /* minmax(0, …) — without it a long preview line makes the whole grid overflow its host. */
+  grid-template-columns: minmax(0, 1fr);
+  /* Centre in whatever container it's handed: a wide card, a wide embed host, the page. */
+  max-width: var(--ec-max-width);
+  margin-inline: auto;
+}
+/* Fallback for browsers without container queries (Safari < 16, Firefox < 110). */
+@supports not (container-type: inline-size) {
+  @media (min-width: 860px) {
+    .ec-root[data-preview='on'] { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
+  }
+}
+/* minmax(0, 1fr), not the default auto: a <select> is sized by its widest option in WebKit, so
+   without this the time-zone list pushes the whole form wider than its container (it overflowed
+   a 320px viewport by 12px). The fields track the container; the option text scrolls. */
+.ec-fields { display: grid; gap: 14px; align-content: start; grid-template-columns: minmax(0, 1fr); }
+/* Generic rows wrap; compact date/time and duration groups below opt into their own one-line
+   grids instead of inheriting the old full-width-field behaviour. */
+.ec-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.ec-row > .ec-field { flex: 1 1 200px; }
+/* Two controls whose *values* are short — "None", "Busy" — rather than two that need room to be
+   read. 200px of basis would stack them on a phone for no reason: nothing in either list is wider
+   than the ~140px they get when they share a 320px screen, so they share it. Text inputs are not
+   in here on purpose; a 140px title box is worse than a tall form. */
+.ec-row-tight > .ec-field { flex: 1 1 130px; }
+/* A pair is one side of the event — its date, its time, and the zone that time is in — and it
+   wraps as a unit. 320px of basis, not 200: at 200 two pairs squeeze side by side in a 490px
+   column and every field inside them stacks, which turns the row into two narrow columns. At 320
+   the column gives one side per line with its own fields side by side, and a wide container
+   still puts both sides up together.
+
+   align-content: start because the two pairs are different heights whenever only one carries a
+   zone — the default stretch spreads the shorter pair's rows to match the taller one, and the
+   dates stop lining up. */
+.ec-row > .ec-pair {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  flex: 1 1 320px;
+  min-width: 0;
+}
+.ec-date-time {
+  display: grid;
+  /* Safari keeps a native calendar/clock button inside these controls and paints it over
+     neighbouring text when the track is narrower than its intrinsic control width. Keep both
+     tracks above that floor; the container rule below stacks them only when the whole side cannot
+     accommodate the safe minimum. */
+  grid-template-columns: minmax(150px, 1fr) minmax(140px, 1fr);
+  gap: 10px;
+  min-width: 0;
+}
+.ec-date-time > .ec-field:only-child { grid-column: 1 / -1; }
+.ec-time-control { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.ec-time-control input { flex: 1 1 auto; min-width: 0; }
+.ec-time-offset {
+  flex: 0 0 auto;
+  color: var(--ec-muted);
+  font-size: 12px;
+  line-height: 1;
+  white-space: nowrap;
+}
+.ec-zone-field { min-width: 0; }
+/* An all-day event has no time and no zone, so each pair is a lone date and 320px of basis would
+   push the two dates onto separate lines for no reason. Engines without :has (Safari < 15.4) get
+   the stacked version, which is only a little roomier. */
+.ec-row > .ec-pair:has(.ec-date-time > .ec-field:only-child) { flex-basis: 200px; }
+/* Grouped sections, the way a calendar app groups an event: what it is, when it is, who is
+   coming, what warns you, the details. A real <fieldset>, so the grouping is announced rather
+   than merely drawn, with the browser's default border and padding cleared away. */
+.ec-group {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+.ec-group + .ec-group { margin-top: 6px; padding-top: 18px; border-top: 1px solid var(--ec-border); }
+.ec-group > legend {
+  padding: 0;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ec-muted);
+}
+/* A legend is out of the grid flow, so the gap above the first field has to come from here. */
+.ec-group > legend + * { margin-top: 10px; }
+/* An optional group, folded away until it is wanted (see Optional in EventCreator.tsx). Block
+   rather than the grid its siblings use: display on a <details> is not honoured everywhere, and
+   a summary that lost its row would be a broken control rather than a slightly tighter one. The
+   fields inside get the grid instead, so the gaps match every other group. */
+.ec-optional { display: block; }
+.ec-group-body { display: grid; gap: 14px; margin-top: 12px; min-width: 0; }
+/* The summary is the legend for the group it opens, so it is drawn as one — plus a marker, and a
+   44px row, because on a phone this is the control that has to be hit before anything inside it
+   can be. */
+.ec-optional > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ec-muted);
+  cursor: pointer;
+  /* The native marker goes: a flex summary drops it in WebKit anyway, so drawing our own is what
+     keeps the three engines showing the same control. It is the select's caret, rotated. */
+  list-style: none;
+}
+.ec-optional > summary::-webkit-details-marker { display: none; }
+.ec-optional > summary::before {
+  content: '';
+  flex: 0 0 auto;
+  width: 12px;
+  height: 8px;
+  background: var(--ec-caret) no-repeat center / 12px 8px;
+  transform: rotate(-90deg);
+}
+.ec-optional[open] > summary::before { transform: none; }
+.ec-optional > summary:focus-visible { outline: 2px solid var(--ec-accent); outline-offset: 2px; }
+/* What a closed group is holding. Right-aligned and in sentence case: it is the answer to "is
+   there anything in there", not a second heading. */
+.ec-tally {
+  margin-left: auto;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+}
+/* The event in one sentence, immediately above the buttons it informs. */
+.ec-recap {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: var(--ec-radius);
+  background: var(--ec-surface);
+  color: var(--ec-fg);
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.ec-switch { min-height: 44px; }
+.ec-recap strong { display: block; font-size: 18px; }
+.ec-recap p { margin: 6px 0 0; }
+.ec-technical-preview summary { min-height: 44px; cursor: pointer; overflow-wrap: anywhere; }
+.ec-field { display: grid; gap: 5px; min-width: 0; }
+.ec-field > label { font-size: 13px; font-weight: 600; color: var(--ec-muted); }
+.ec-autocomplete { position: relative; min-width: 0; }
+.ec-autocomplete-list {
+  position: absolute;
+  z-index: 20;
+  inset-inline: 0;
+  max-height: 300px;
+  overflow-y: auto;
+  margin: 4px 0 0;
+  padding: 4px 0;
+  list-style: none;
+  background: var(--ec-bg);
+  border: 1px solid var(--ec-border);
+  border-radius: var(--ec-radius);
+  box-shadow: var(--ec-shadow);
+}
+.ec-autocomplete-option {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  color: inherit;
+  cursor: pointer;
+}
+.ec-autocomplete-option[data-active='true'], .ec-autocomplete-option:hover {
+  background: var(--ec-accent-soft);
+}
+.ec-autocomplete-empty { padding: 10px; color: var(--ec-muted); }
+.ec-root input[type='text'],
+.ec-root input[type='date'],
+.ec-root input[type='time'],
+.ec-root input[type='email'],
+.ec-root input[type='number'],
+.ec-root input[type='url'],
+.ec-root select,
+.ec-root textarea {
+  font-family: inherit;
+  /* 16px, not inherit: iOS Safari zooms the page when a focused field is smaller. It has to
+     live on this selector — the shorthand here would otherwise out-specify a later rule. */
+  font-size: 16px;
+  line-height: 1.35;
+  color: inherit;
+  background: var(--ec-bg);
+  border: 1px solid var(--ec-border);
+  border-radius: var(--ec-radius);
+  padding: 9px 10px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+/* WebKit sizes a <select> to its widest option and ignores min-width:0 when doing it, so the
+   time-zone list widened the page until the element was capped explicitly. text-overflow keeps
+   the closed control readable when a long zone name doesn't fit.
+
+   appearance:none is what makes the dropdown a rounded rectangle like the text fields: a native
+   select paints its own corners and ignores border-radius, so the two controls sat side by side
+   with different silhouettes. Dropping the native look means drawing the chevron ourselves, and
+   reserving room for it on the right so a long value never runs underneath it. */
+.ec-root select {
+  appearance: none;
+  -webkit-appearance: none;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  background-image: var(--ec-caret);
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px 8px;
+  padding-right: 30px;
+}
+.ec-root textarea { min-height: 76px; resize: vertical; }
+.ec-root input:focus-visible, .ec-root select:focus-visible, .ec-root textarea:focus-visible {
+  outline: 2px solid var(--ec-accent);
+  outline-offset: 1px;
+}
+.ec-inline { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+/* The guest field and its Add button share a row: the input flexes, the button keeps its size,
+   and both wrap to their own lines only when the container is genuinely too narrow. */
+.ec-inline input[type='email'] { flex: 1 1 160px; width: auto; }
+.ec-inline .ec-chip { flex: 0 0 auto; }
+/* "Every [2] weeks" — the number keeps its own width instead of stretching across the row, and
+   the unit sits beside it as text rather than pretending to be a second control. A count field
+   on its own line is capped for the same reason: a four-digit answer in a 480px box reads as a
+   mistake. */
+.ec-inline input[type='number'] { flex: 0 0 88px; width: auto; }
+.ec-field > input[type='number'] { max-width: 140px; }
+/* Three boxes that mean one thing: grouped like a field, sized like the number inputs they are.
+   The browser's fieldset border and padding are cleared, the same way .ec-group clears them. */
+.ec-duration { display: grid; gap: 5px; min-width: 0; border: 0; margin: 0; padding: 0; }
+.ec-duration > legend { padding: 0; font-size: 13px; font-weight: 600; color: var(--ec-muted); }
+/* A legend is out of the grid flow, so the gap under it has to come from here. */
+.ec-duration > legend + * { margin-top: 5px; }
+.ec-duration .ec-inline { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.ec-duration-part { min-width: 0; }
+.ec-duration-part > label { font-size: 12px; font-weight: 400; }
+.ec-duration .ec-inline input[type='number'] { width: 100%; max-width: none; }
+.ec-unit { color: var(--ec-muted); font-size: 14px; }
+/* Not bold: the mark says "don't empty this", and a red bold star on five of fourteen labels
+   reads as five errors on a form nobody has touched yet. */
+.ec-required { margin-left: 2px; color: var(--ec-danger); }
+.ec-problem { color: var(--ec-danger); font-size: 13px; }
+.ec-hint { margin: 0; color: var(--ec-muted); font-size: 12px; }
+.ec-chip {
+  border: 1px solid var(--ec-border);
+  background: var(--ec-bg);
+  color: inherit;
+  border-radius: 999px;
+  /* 44px is the smallest comfortable touch target on both iOS and Android guidance. */
+  min-height: 44px;
+  padding: 5px 14px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.ec-chip[aria-pressed='true'] { border-color: var(--ec-accent); color: var(--ec-accent); background: var(--ec-accent-soft); }
+.ec-attendee { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+/* The × beside a guest. Bare text is a ~20px target next to the address it deletes, which on a
+   phone is a mis-tap away from removing the wrong person. */
+.ec-remove { min-height: 44px; padding: 0 8px; border: 0; background: none; color: var(--ec-muted); cursor: pointer; font: inherit; }
+.ec-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.ec-button {
+  font: inherit;
+  min-height: 44px;
+  font-weight: 600;
+  border: 1px solid var(--ec-accent);
+  background: var(--ec-accent);
+  color: var(--ec-accent-fg);
+  border-radius: var(--ec-radius);
+  padding: 10px 16px;
+  cursor: pointer;
+}
+.ec-button.ec-secondary { background: var(--ec-bg); color: var(--ec-accent); }
+.ec-side { display: grid; gap: 14px; align-content: start; }
+.ec-panel { background: var(--ec-surface); border: 1px solid var(--ec-border); border-radius: var(--ec-radius); padding: 14px; }
+.ec-panel h2 { margin: 0 0 8px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ec-muted); }
+.ec-preview { margin: 0; overflow-wrap: anywhere; font-family: var(--ec-mono); font-size: 12px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; max-height: 340px; overflow: auto; }
+/* On a phone these four links are the whole point of the panel — they open the event in the
+   calendar app without a file changing hands at all — so each is a row you can hit, not a line
+   of text stacked 6px from the next one. */
+.ec-links { display: grid; gap: 2px; }
+.ec-links a { display: flex; align-items: center; min-height: 44px; color: var(--ec-accent); }
+.ec-attendee span { overflow-wrap: anywhere; }
+.ec-describe textarea { min-height: 66px; }
+.ec-describe .ec-actions { margin-top: 8px; }
+.ec-assumptions { margin: 10px 0 0; padding-left: 18px; color: var(--ec-muted); font-size: 13px; }
+@media (forced-colors: active) {
+  .ec-chip[aria-pressed='true'] { border: 2px solid; }
+}
+</style>
+    <style id="ec-styles-container">
+/* The shell exists purely to be the query container: an element can't answer a container
+   query about itself, so the width question is asked one level up. Container-relative rather
+   than viewport-relative because an embed can sit in a narrow column on a wide screen, where
+   a viewport query would hand it a two-column layout it has no room for. */
+.ec-shell { container-type: inline-size; }
+/* Narrow enough that three side-by-side buttons each end up a couple of words wide: give them a
+   row each instead, primary first. Container-relative like the rule below — an embed in a narrow
+   column on a desktop has the same problem a phone does. */
+@container (max-width: 420px) {
+  .ec-actions > .ec-button { flex: 1 1 100%; }
+  /* Keep the two native pickers the same width on phones. The time control owns the GMT label,
+     so its input can shrink inside the track without pushing the label below the picker. */
+  .ec-date-time { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@container (max-width: 300px) {
+  /* Native Safari controls need more room than a very narrow embed can provide. Stacking here
+     avoids the calendar/clock button overlap while preserving the compact row everywhere else. */
+  .ec-date-time { grid-template-columns: minmax(0, 1fr); }
+}
+@container (min-width: 720px) {
+  /* 1.4fr/1fr, not 1fr/0.8fr: the form is the work, the panels are reference. This keeps the
+     inputs near 480px — comfortable to scan — instead of stretching them to fill. */
+  .ec-root[data-preview='on'] { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
+}
+</style>
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://icsmaker.com/#website","name":"ICS Maker","url":"https://icsmaker.com/","inLanguage":["en","de","es","fr","it","nl","pl","pt","tr","ru","ja","ko","zh-Hans","zh-Hant"]},{"@type":"WebPage","@id":"https://icsmaker.com/ko/recurring-event/#webpage","url":"https://icsmaker.com/ko/recurring-event/","name":"반복되는 캘린더 일정(.ics RRULE 생성기 및 예시)","headline":"반복 일정","description":"반복은 .ics 파일의 한 줄로 표현됩니다: RRULE:FREQ=WEEKLY, 격주나 3주마다 등을 지정하려면 INTERVAL을, 시리즈를 종료하려면 COUNT나 UNTIL을 사용합니다. ICS Maker의 양식에서는 빈도(매일, 매주, 매월, 매년), 간격, 그리고 시리즈가 끝나지 않는지, 특정 횟수 후 멈추는지, 특정 날짜까지 진행되는지를 설정하며, 이 RRULE을 다운로드되는 파일에 기록합니다. 이를 읽는 캘린더 앱이 스스로 시리즈를 전개하므로, 아무리 긴 시리즈라도 하나의 작은 파일로 유지됩니다. 특정 요일을 선택하는 기능은 양식에 없으며, 파일을 한 줄만 수정하면 됩니다: 매월 마지막 날은 FREQ=MONTHLY;BYMONTHDAY=-1, 매월 첫째 월요일은 BYDAY=1MO, 평일만 반복하려면 BYDAY=MO,TU,WE,TH,FR를 사용합니다. 이 페이지에는 그대로 붙여넣을 수 있는 열두 가지 규칙이 정리되어 있습니다.","inLanguage":"ko","isPartOf":{"@id":"https://icsmaker.com/#website"},"breadcrumb":{"@id":"https://icsmaker.com/ko/recurring-event/#breadcrumb"}},{"@type":"FAQPage","@id":"https://icsmaker.com/ko/recurring-event/#faq","isPartOf":{"@id":"https://icsmaker.com/ko/recurring-event/#webpage"},"mainEntity":[{"@id":"https://icsmaker.com/ko/recurring-event/#answer-question","@type":"Question","name":"캘린더 일정을 매주 또는 매월 반복되게 하려면 어떻게 하나요?","acceptedAnswer":{"@type":"Answer","text":"반복은 .ics 파일의 한 줄로 표현됩니다: RRULE:FREQ=WEEKLY, 격주나 3주마다 등을 지정하려면 INTERVAL을, 시리즈를 종료하려면 COUNT나 UNTIL을 사용합니다. ICS Maker의 양식에서는 빈도(매일, 매주, 매월, 매년), 간격, 그리고 시리즈가 끝나지 않는지, 특정 횟수 후 멈추는지, 특정 날짜까지 진행되는지를 설정하며, 이 RRULE을 다운로드되는 파일에 기록합니다. 이를 읽는 캘린더 앱이 스스로 시리즈를 전개하므로, 아무리 긴 시리즈라도 하나의 작은 파일로 유지됩니다. 특정 요일을 선택하는 기능은 양식에 없으며, 파일을 한 줄만 수정하면 됩니다: 매월 마지막 날은 FREQ=MONTHLY;BYMONTHDAY=-1, 매월 첫째 월요일은 BYDAY=1MO, 평일만 반복하려면 BYDAY=MO,TU,WE,TH,FR를 사용합니다. 이 페이지에는 그대로 붙여넣을 수 있는 열두 가지 규칙이 정리되어 있습니다."}},{"@id":"https://icsmaker.com/ko/recurring-event/#faq-1","@type":"Question","name":"반복 일정을 어떻게 중지하나요?","acceptedAnswer":{"@type":"Answer","text":"\"반복 종료\"를 특정 횟수 또는 마지막 날짜로 설정하면, 파일에 그에 맞게 COUNT나 UNTIL이 포함됩니다. \"안 함\"으로 두면 시리즈는 사용자가 직접 캘린더에서 종료할 때까지 계속되며, 가져온 시리즈는 언제든 캘린더에서 수정할 수 있습니다."}},{"@id":"https://icsmaker.com/ko/recurring-event/#faq-2","@type":"Question","name":"COUNT와 UNTIL의 차이는 무엇인가요?","acceptedAnswer":{"@type":"Answer","text":"COUNT는 특정 횟수 이후 시리즈를 중지합니다 — COUNT=12는 정확히 12회만 발생하고 그 이상은 없습니다. UNTIL은 특정 시점에서 중지되며, UNTIL=20261231T235959Z처럼 UTC 타임스탬프로 작성하고, 이 시점 이후로 발생할 일정은 그냥 생성되지 않습니다. 둘은 서로 반대 방향에서 같은 역할을 하며, RFC 5545에서는 하나의 규칙에 둘 다 사용하는 것을 허용하지 않습니다."}},{"@id":"https://icsmaker.com/ko/recurring-event/#faq-3","@type":"Question","name":"일정을 격주로 반복되게 할 수 있나요?","acceptedAnswer":{"@type":"Answer","text":"네 — 매주를 선택하고 간격을 2로 설정하세요. 파일의 반복 규칙에 INTERVAL=2가 추가되며, 모든 캘린더가 이를 격주로 인식합니다. 같은 방식으로 3일마다, 6개월마다 등도 설정할 수 있습니다."}},{"@id":"https://icsmaker.com/ko/recurring-event/#faq-4","@type":"Question","name":"매월 마지막 날에 반복되게 하려면 어떻게 하나요?","acceptedAnswer":{"@type":"Answer","text":"FREQ=MONTHLY;BYMONTHDAY=-1을 사용하세요. 이는 다운로드한 파일을 직접 수정해야 합니다 — 양식에서는 빈도, 간격, 종료 방식은 설정할 수 있지만 매월 어느 날을 선택할지는 설정할 수 없습니다. 음수는 끝에서부터 거꾸로 세므로, 각 달의 상황에 따라 28일, 29일, 30일, 31일에 자동으로 맞춰집니다. 대신 매월 일정을 31일에 시작하는 것은 흔한 실수입니다 — 대부분의 캘린더는 31일이 없는 달을 일정을 옮기지 않고 그냥 건너뜁니다."}},{"@id":"https://icsmaker.com/ko/recurring-event/#faq-5","@type":"Question","name":"시리즈 중 한 번만 건너뛰려면 어떻게 하나요?","acceptedAnswer":{"@type":"Answer","text":"RRULE 옆에 EXDATE 줄을 추가하고, 제외할 발생 일정의 시작 시각을 적으세요 — EXDATE:20261225T090000Z는 그 하나의 인스턴스만 제거하고 나머지는 그대로 둡니다. 삭제하는 대신 옮기려면, EXDATE와 함께 동일한 UID와 원래 자리를 가리키는 RECURRENCE-ID를 가진 두 번째 VEVENT를 추가하면 됩니다."}},{"@id":"https://icsmaker.com/ko/recurring-event/#faq-6","@type":"Question","name":"Outlook이나 Google에 가져와도 반복이 유지되나요?","acceptedAnswer":{"@type":"Answer","text":"네. RRULE은 RFC 5545의 일부이며 Apple 캘린더, Thunderbird와 함께 이 둘 모두 이를 인식합니다. 이들은 모든 발생 일정을 저장하는 대신 가져오는 시점에 시리즈를 전개합니다."}}]},{"@type":"BreadcrumbList","@id":"https://icsmaker.com/ko/recurring-event/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"ICS Maker","item":"https://icsmaker.com/ko/"},{"@type":"ListItem","position":2,"name":"반복 일정","item":"https://icsmaker.com/ko/recurring-event/"}]}]}</script>
+  </head>
+  <body>
+    <div id="root"><div class="site"><header class="site-header"><div class="site-header-top"><p class="crumb"><a href="/ko/">ICS Maker</a><span aria-hidden="true"> / </span><span aria-current="page">반복 일정</span></p><div class="language-pick"><label for="site-language">언어</label><select id="site-language"><option value="en">English</option><option value="de">Deutsch</option><option value="es">Español</option><option value="fr">Français</option><option value="it">Italiano</option><option value="nl">Nederlands</option><option value="pl">Polski</option><option value="pt">Português</option><option value="tr">Türkçe</option><option value="ru">Русский</option><option value="ja">日本語</option><option value="ko" selected="">한국어</option><option value="zh-Hans">简体中文</option><option value="zh-Hant">繁體中文</option></select></div></div><div class="site-heading"><h1>반복 일정</h1><p class="lede">일정을 매일, 매주, 매월, 매년 반복되도록 설정하세요. 파일에는 표준 반복 규칙이 포함되어 있어, 이를 여는 캘린더 앱이 단일 일정이 아니라 전체 시리즈를 생성합니다.</p></div></header><main><section class="maker-workspace"><div class="card"><div class="creator-placeholder"><p>제목, 장소, 날짜와 시간, 시간대, 반복, 참석자, 알림, 메모를 입력한 다음 .ics 파일을 내려받거나 캘린더에서 바로 여세요. 일정을 붙여 넣거나 문서 또는 사진을 첨부해 여러 일정을 한 번에 만들 수도 있습니다.</p><noscript><p class="muted">파일을 브라우저에서 만들어 일정을 외부 서버로 보내지 않기 위해 이 도구에는 JavaScript가 필요합니다.</p></noscript></div></div></section><section class="answer" aria-labelledby="answer-question"><h2 id="answer-question">캘린더 일정을 매주 또는 매월 반복되게 하려면 어떻게 하나요?</h2><p>반복은 .ics 파일의 한 줄로 표현됩니다: RRULE:FREQ=WEEKLY, 격주나 3주마다 등을 지정하려면 INTERVAL을, 시리즈를 종료하려면 COUNT나 UNTIL을 사용합니다. ICS Maker의 양식에서는 빈도(매일, 매주, 매월, 매년), 간격, 그리고 시리즈가 끝나지 않는지, 특정 횟수 후 멈추는지, 특정 날짜까지 진행되는지를 설정하며, 이 RRULE을 다운로드되는 파일에 기록합니다. 이를 읽는 캘린더 앱이 스스로 시리즈를 전개하므로, 아무리 긴 시리즈라도 하나의 작은 파일로 유지됩니다. 특정 요일을 선택하는 기능은 양식에 없으며, 파일을 한 줄만 수정하면 됩니다: 매월 마지막 날은 FREQ=MONTHLY;BYMONTHDAY=-1, 매월 첫째 월요일은 BYDAY=1MO, 평일만 반복하려면 BYDAY=MO,TU,WE,TH,FR를 사용합니다. 이 페이지에는 그대로 붙여넣을 수 있는 열두 가지 규칙이 정리되어 있습니다.</p></section><section class="prose"><div class="localized-body"><h2>파일 안의 규칙</h2><p>반복은 한 줄로 표현됩니다: <code>RRULE:FREQ=WEEKLY</code>. 캘린더는 이를 읽어 스스로 발생 일정을 생성하므로, 아무리 오래 지속되는 반복 일정이라도 하나의 작은 파일로 유지됩니다. 이 규칙에는 간격(<code>INTERVAL=2</code>은 격주), 종료 날짜(<code>UNTIL</code>), 또는 횟수 제한(<code>COUNT</code>)도 함께 포함될 수 있습니다.</p><p>이 모든 것을 생성기가 작성합니다. 빈도를 선택하고, 간격을 설정한 다음 — 2주마다, 3개월마다 등 — 시리즈가 끝나지 않을지, 특정 횟수 후 멈출지, 특정 날짜까지 진행될지를 선택하세요. 이렇게 생성된 줄은 표준 형식이므로, 파일을 여는 캘린더 앱은 설명된 그대로의 시리즈를 정확히 생성합니다.</p><h2>복사해서 붙여넣을 수 있는 반복 규칙</h2><p>이 양식은 빈도, 간격, 그리고 시리즈 종료 방식을 다룹니다. 특정 요일 — 매월 마지막 날, 첫째 월요일, 평일만 — 을 선택하는 것은 파일을 다운로드한 후 한 줄만 수정하면 됩니다. 텍스트 편집기에서 파일을 열어 <code>RRULE:</code> 줄을 다음 중 하나로 바꾸세요. 각 요소는 모두 RFC 5545에 정의되어 있으므로, Google 캘린더, Outlook, Apple 캘린더, Thunderbird 모두 동일하게 인식합니다.</p><dl><div><dt>매주, 같은 요일</dt><dd><code>RRULE:FREQ=WEEKLY</code></dd></div><div><dt>격주(2주마다)</dt><dd><code>RRULE:FREQ=WEEKLY;INTERVAL=2</code></dd></div><div><dt>매 평일, 월요일부터 금요일까지</dt><dd><code>RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR</code></dd></div><div><dt>매월 1일</dt><dd><code>RRULE:FREQ=MONTHLY;BYMONTHDAY=1</code></dd></div><div><dt>매월 마지막 날</dt><dd><code>RRULE:FREQ=MONTHLY;BYMONTHDAY=-1</code></dd></div><div><dt>매월 첫째 월요일</dt><dd><code>RRULE:FREQ=MONTHLY;BYDAY=1MO</code></dd></div><div><dt>매월 마지막 금요일</dt><dd><code>RRULE:FREQ=MONTHLY;BYDAY=-1FR</code></dd></div><div><dt>매월 마지막 근무일</dt><dd><code>RRULE:FREQ=MONTHLY;BYDAY=MO,TU,WE,TH,FR;BYSETPOS=-1</code></dd></div><div><dt>3개월마다(분기별)</dt><dd><code>RRULE:FREQ=MONTHLY;INTERVAL=3</code></dd></div><div><dt>매년, 시작 날짜에</dt><dd><code>RRULE:FREQ=YEARLY</code></dd></div><div><dt>12회 반복 후 종료</dt><dd><code>RRULE:FREQ=MONTHLY;COUNT=12</code></dd></div><div><dt>고정된 날짜까지 매주 반복</dt><dd><code>RRULE:FREQ=WEEKLY;UNTIL=20261231T235959Z</code></dd></div></dl><h2>각 요소가 맞물리는 방식</h2><p><code>FREQ</code>만이 필수 요소이며, 나머지는 이를 세부적으로 좁혀줍니다. <code>INTERVAL</code>은 주기를 건너뛰므로, <code>FREQ=WEEKLY;INTERVAL=2</code>은 이틀마다가 아니라 2주마다를 의미합니다. <code>BYDAY</code>은 두 글자 요일 코드를 받으며, 그 앞에 숫자를 붙이면 해당 월 내의 특정 순번을 지정합니다 — <code>1MO</code>은 첫째 월요일, <code>-1FR</code>은 마지막 금요일을 의미합니다. <code>BYMONTHDAY</code>은 대신 날짜를 세며, 음수일 경우 끝에서부터 거꾸로 세는데, 이 덕분에 <code>BYMONTHDAY=-1</code>이 "마지막 날"을 안정적으로 표현하는 방법이 됩니다. <code>BYSETPOS</code>은 규칙의 나머지 부분이 각 주기에서 찾아낸 값들 중에서 선택하므로, 요일 목록에 <code>BYSETPOS=-1</code>을 붙이면 마지막 근무일에 해당하게 됩니다.</p><h2>어떤 빈도를 선택해야 할까</h2><p>매주 반복은 시작일로 선택한 요일에 고정되고, 매월 반복은 날짜에 고정됩니다. 31일에 설정된 매월 일정은 대표적인 함정입니다 — 31일이 없는 달은 대부분의 캘린더에서 옮겨지지 않고 건너뛰어지므로, 매월 마지막 날을 의미한다면 31일에 시리즈를 시작하고 잘 되기를 바라기보다 <code>BYMONTHDAY=-1</code>을 사용하세요.</p></div><h2>자주 묻는 질문</h2><dl class="faq"><div id="faq-1"><dt>반복 일정을 어떻게 중지하나요?</dt><dd>&quot;반복 종료&quot;를 특정 횟수 또는 마지막 날짜로 설정하면, 파일에 그에 맞게 COUNT나 UNTIL이 포함됩니다. &quot;안 함&quot;으로 두면 시리즈는 사용자가 직접 캘린더에서 종료할 때까지 계속되며, 가져온 시리즈는 언제든 캘린더에서 수정할 수 있습니다.</dd></div><div id="faq-2"><dt>COUNT와 UNTIL의 차이는 무엇인가요?</dt><dd>COUNT는 특정 횟수 이후 시리즈를 중지합니다 — COUNT=12는 정확히 12회만 발생하고 그 이상은 없습니다. UNTIL은 특정 시점에서 중지되며, UNTIL=20261231T235959Z처럼 UTC 타임스탬프로 작성하고, 이 시점 이후로 발생할 일정은 그냥 생성되지 않습니다. 둘은 서로 반대 방향에서 같은 역할을 하며, RFC 5545에서는 하나의 규칙에 둘 다 사용하는 것을 허용하지 않습니다.</dd></div><div id="faq-3"><dt>일정을 격주로 반복되게 할 수 있나요?</dt><dd>네 — 매주를 선택하고 간격을 2로 설정하세요. 파일의 반복 규칙에 INTERVAL=2가 추가되며, 모든 캘린더가 이를 격주로 인식합니다. 같은 방식으로 3일마다, 6개월마다 등도 설정할 수 있습니다.</dd></div><div id="faq-4"><dt>매월 마지막 날에 반복되게 하려면 어떻게 하나요?</dt><dd>FREQ=MONTHLY;BYMONTHDAY=-1을 사용하세요. 이는 다운로드한 파일을 직접 수정해야 합니다 — 양식에서는 빈도, 간격, 종료 방식은 설정할 수 있지만 매월 어느 날을 선택할지는 설정할 수 없습니다. 음수는 끝에서부터 거꾸로 세므로, 각 달의 상황에 따라 28일, 29일, 30일, 31일에 자동으로 맞춰집니다. 대신 매월 일정을 31일에 시작하는 것은 흔한 실수입니다 — 대부분의 캘린더는 31일이 없는 달을 일정을 옮기지 않고 그냥 건너뜁니다.</dd></div><div id="faq-5"><dt>시리즈 중 한 번만 건너뛰려면 어떻게 하나요?</dt><dd>RRULE 옆에 EXDATE 줄을 추가하고, 제외할 발생 일정의 시작 시각을 적으세요 — EXDATE:20261225T090000Z는 그 하나의 인스턴스만 제거하고 나머지는 그대로 둡니다. 삭제하는 대신 옮기려면, EXDATE와 함께 동일한 UID와 원래 자리를 가리키는 RECURRENCE-ID를 가진 두 번째 VEVENT를 추가하면 됩니다.</dd></div><div id="faq-6"><dt>Outlook이나 Google에 가져와도 반복이 유지되나요?</dt><dd>네. RRULE은 RFC 5545의 일부이며 Apple 캘린더, Thunderbird와 함께 이 둘 모두 이를 인식합니다. 이들은 모든 발생 일정을 저장하는 대신 가져오는 시점에 시리즈를 전개합니다.</dd></div></dl></section></main><footer class="site-footer"><nav aria-label="페이지"><ul><li><a href="/ko/">이벤트 만들기</a></li><li><a href="/ko/about/">이 도구의 정체와 대안</a></li><li><a href="/ko/ics-file/">.ics 파일이란 무엇인가</a></li><li><a href="/ko/add-to-google-calendar/">Google 캘린더에 추가</a></li><li><a href="/ko/ics-time-zone/">잘못된 시간대</a></li><li><a href="/ko/calendar-invite/">초대 보내기</a></li><li><a href="/ko/ics-reminder/">알림 및 리마인더</a></li><li><a href="/ko/csv-to-calendar/">CSV 가져오기</a></li><li><a href="/ko/jcal/">jCal (JSON)</a></li><li><a href="/ko/add-to-calendar-button/">내 사이트에 넣기</a></li></ul></nav><p>일정은 이 기기에서 만들어집니다. 여기에 입력한 내용은 어디에도 전송되지 않습니다.</p></footer></div></div>
+  </body>
+</html>

@@ -1,0 +1,950 @@
+# ICS Maker
+
+> ICS Maker is a free online iCalendar (.ics) file generator. Enter an event title, start and end, then download the file and import it into Google Calendar, Outlook, or Apple Calendar. You can also paste a schedule or attach a document or image, review the detected events, and download several events together in one .ics file. The event form supports time zones, recurrence, guests and reminders, plus jCal, CSV, JSON-LD and calendar links. No account is required; text recognition, document reading and file generation run in your browser without uploading your event data.
+
+Home: https://icsmaker.com/
+
+## What it can do
+
+- **Builds and collects events** — Create an event with title, location, notes and a URL; collect multiple events and download them together as one .ics file.
+- **Reads schedules locally** — Paste text or attach a document, spreadsheet or image, then review and correct the detected events before downloading. No event data is uploaded.
+- **Times, all-day, and zones** — A start and an end, a duration that follows either, an all-day switch, and an IANA time zone — with a second, different zone on the end for a flight.
+- **Repeats** — Daily, weekly, monthly, or yearly, every N periods, ending never, after a count, or on a date — written as a standard RRULE line.
+- **Guests, alerts, and availability** — Up to 100 invitee addresses as ATTENDEE lines, up to 10 alerts as VALARM blocks, and busy or free as TRANSP.
+- **Four formats and four links** — .ics, jCal, CSV, and schema.org JSON-LD to download; Google Calendar, Outlook.com, Office 365, and Yahoo to open.
+- **An embed for your own site** — The same builder as one script tag, under 85 kB gzipped, with no network calls of its own.
+
+## What it cannot do
+
+- **Send anything** — There is no mail server. Invitee addresses are written into the file; nobody is emailed, and no invitation goes out until you attach the file or import it into a calendar that can send.
+- **Collect RSVPs** — Replies arrive as mail to an organiser. A downloaded file has no mailbox, so PARTSTAT stays at NEEDS-ACTION for everyone.
+- **Host a subscribable feed** — A calendar subscription is a URL a calendar re-fetches. ICS Maker hands you a file; keeping one at a stable URL that updates is a hosting job, not a builder one.
+- **Store, list, or edit past events** — Nothing is saved — not on a server, and not in the browser between visits. Closing the tab ends the event’s life here.
+- **Guarantee automatic extraction** — Documents and spreadsheets are read as text, not through a column-mapping importer. Check detected titles, dates and times before downloading; free-form prose and scanned PDFs may need pasted text or a photo.
+- **Pick which day of the month a series lands on** — BYDAY, BYMONTHDAY, BYSETPOS, and EXDATE are one-line edits to the downloaded file, not form controls.
+
+## Pages
+
+### [Create an ICS calendar file](https://icsmaker.com/)
+
+**How do I create a calendar event file (.ics) without an account?**
+
+ICS Maker is a free online iCalendar (.ics) file generator. Enter an event title, start and end, then download the file and import it into Google Calendar, Outlook, or Apple Calendar. You can also paste a schedule or attach a document or image, review the detected events, and download several events together in one .ics file. The event form supports time zones, recurrence, guests and reminders, plus jCal, CSV, JSON-LD and calendar links. No account is required; text recognition, document reading and file generation run in your browser without uploading your event data.
+
+### [What ICS Maker is](https://icsmaker.com/about/)
+
+**What is ICS Maker, who is it for, and how does it compare to the alternatives?**
+
+ICS Maker is a free web page that builds calendar events and exports each as a file (.ics, jCal, CSV, or JSON-LD) or as a prefilled link for Google Calendar, Outlook.com, Office 365, or Yahoo. Everything runs in the browser: there is no account, no server of its own, and no stored event, so the file is never uploaded and nothing survives closing the tab. It suits someone who needs one correct calendar file now — an organiser attaching an event to an email, a developer checking how a property is spelled, a site owner embedding a builder for visitors. It is the wrong tool for managing a calendar, collecting RSVPs, hosting a subscribable feed, or guaranteeing accurate extraction from every document, and a calendar account or a code library is the better answer for those.
+
+### [The .ics file, explained](https://icsmaker.com/ics-file/)
+
+**What is an .ics file?**
+
+An .ics file is one calendar event — or several — written as plain text in the iCalendar format, standardised as RFC 5545 in 2009 and unchanged since. The event sits between BEGIN:VEVENT and END:VEVENT, where SUMMARY is the title, DTSTART and DTEND are the times, LOCATION and DESCRIPTION are what they sound like, and UID is the identifier a calendar uses to tell an update from a new event. Apple Calendar, Google Calendar, Outlook, and Thunderbird all read it, which is why an invitation emailed between two companies lands correctly in both. ICS Maker builds one from a form and shows the exact file text beside it as you type.
+
+### [Add-to-Google-Calendar links](https://icsmaker.com/add-to-google-calendar/)
+
+**How do I make an 'add to Google Calendar' link?**
+
+A Google Calendar link is an ordinary URL — calendar.google.com/calendar/render — carrying the title, times, location, and description as query parameters. Clicking it opens Google Calendar with the event already filled in, and nothing is stored on Google's side until the person presses save. ICS Maker builds that link from a form and produces the Outlook.com, Office 365, and Yahoo equivalents from the same event, plus the .ics file for the calendars that are none of the four. Nobody needs an ICS Maker account, because there are none; the recipient needs a Google account only to save the event into it.
+
+### [Repeating events](https://icsmaker.com/recurring-event/)
+
+**How do I make a calendar event repeat every week or every month?**
+
+A repeat is one line in the .ics file: RRULE:FREQ=WEEKLY, with INTERVAL for every second or third period and COUNT or UNTIL to end the series. ICS Maker's form sets the frequency (daily, weekly, monthly, yearly), the interval, and whether the series never ends, stops after a number of occurrences, or runs to a date — and writes the RRULE into the downloaded file, which the reading calendar expands itself, so a series of any length stays one small file. Choosing a particular day is not in the form and is a one-line edit to the file: FREQ=MONTHLY;BYMONTHDAY=-1 for the last day of the month, BYDAY=1MO for the first Monday, BYDAY=MO,TU,WE,TH,FR for weekdays only. This page lists twelve such rules to paste.
+
+### [When the event lands at the wrong time](https://icsmaker.com/ics-time-zone/)
+
+**Why is my calendar event an hour, or a day, out?**
+
+An .ics file can express a time in three ways, and the wrong one is nearly always the cause. A floating time (DTSTART:20260815T090000, no zone) is nine o'clock wherever it is opened. A UTC time (a trailing Z) is one absolute instant. A named zone (DTSTART;TZID=Europe/London:...) is an instant that stays at the same local clock time across daylight saving. An hour-out import is usually a Windows-style zone name such as 'GMT Standard Time' that the reading calendar does not recognise and falls back to UTC on; a day-out all-day event is usually a midnight timestamp where VALUE=DATE was needed, or an end date written on the last day rather than the day after, since DTEND is exclusive. ICS Maker writes a floating time by default and a TZID naming an IANA zone when one is chosen — without a bundled VTIMEZONE block, which every mainstream calendar resolves from the zone name itself.
+
+### [Sending a calendar invite](https://icsmaker.com/calendar-invite/)
+
+**How do I send a calendar invite as an .ics attachment?**
+
+Put the addresses on the event, download the .ics, and attach it to an ordinary email: each guest becomes an ATTENDEE line carrying ROLE, PARTSTAT, and RSVP, and the recipient saves the event in one tap. What a downloaded file cannot do is collect answers, because RSVP tracking needs something that receives METHOD:REPLY mail. ICS Maker writes neither METHOD:REQUEST nor ORGANIZER on purpose: it has no mail server and no account, so claiming to be the organiser would be a lie the recipient's calendar could act on. To collect RSVPs, import the file into your own calendar and send the invitations from there.
+
+### [Reminders inside an .ics file](https://icsmaker.com/ics-reminder/)
+
+**How do I add a reminder or alert to an .ics event?**
+
+A reminder is a VALARM block inside the event: ACTION:DISPLAY for an on-screen notification, and TRIGGER:-PT30M for the offset, where PT introduces an ISO 8601 duration and the leading minus makes it fire before the start rather than after it. ICS Maker offers alerts from the form and writes one VALARM per alert, always spelling the offset in minutes — a day before is -PT1440M. An event may carry up to ten alarms here, but whether they all arrive is the reading calendar's decision: some add their own default alongside, and some strip alarms from imported events entirely so that a downloaded file cannot schedule notifications on a device.
+
+### [Importing events from a CSV](https://icsmaker.com/csv-to-calendar/)
+
+**What CSV format does Google Calendar's importer accept?**
+
+Google Calendar and Outlook read a CSV whose first row is exactly: Subject, Start Date, Start Time, End Date, End Time, All Day Event, Description, Location. Dates are MM/DD/YYYY and times are twelve-hour with a suffix (09:00 AM); an all-day row sets All Day Event to True and leaves both time cells empty. ICS Maker exports that header plus one correct row, to paste the rest of the sheet beneath. Those eight columns are everything a CSV carries — no time zone, no repeat rule, no guest list, no reminders, no URL — so use an .ics whenever any of those matter, and CSV when the volume makes a file per event absurd.
+
+### [jCal — iCalendar as JSON](https://icsmaker.com/jcal/)
+
+**What is jCal, and how does it differ from an .ics file?**
+
+jCal is iCalendar written as JSON, standardised as RFC 7265 in 2014. It carries exactly the same data as an .ics file — the same properties, parameters, and components — in nested arrays rather than objects, because a component can repeat a property and the order can be significant. A calendar is ["vcalendar", [properties], [components]], each property is [name, parameters, valueType, value], so SUMMARY:Standup becomes ["summary", {}, "text", "Standup"]. It is not the same as schema.org Event in JSON-LD, which describes an event for search engines and keeps far less of it. ICS Maker writes .ics and jCal from one event model rather than converting between them, so the two cannot disagree about what the event is.
+
+### [Put the builder on your own site](https://icsmaker.com/add-to-calendar-button/)
+
+**How do I put an add-to-calendar button or event builder on my own site?**
+
+ICS Maker's builder ships as a standalone script: one empty element, one script tag pointing at event-creator.js, and one EventCreator.mount() call — no build step, no framework, no account, no key, and no per-view limit. The bundle is a single self-contained IIFE under 85 kB gzipped with its rendering library included, and it makes no network requests at all: no analytics, no fonts, no CDN, so it adds no origin to a Content-Security-Policy and no paragraph to a privacy policy. Every colour, radius, and font is a CSS custom property under .ec-root, dark mode follows the visitor's own preference, and a React site can render the component directly instead of loading the bundle.
+
+### [Eine ICS-Kalenderdatei erstellen](https://icsmaker.com/de/)
+
+**Wie erstelle ich eine Kalendertermin-Datei (.ics) ohne Konto?**
+
+ICS Maker ist ein kostenloser Online-Generator für iCalendar-Dateien (.ics). Gib Titel, Beginn und Ende eines Termins ein, lade die Datei herunter und importiere sie in Google Kalender, Outlook oder Apple Kalender. Du kannst auch einen Terminplan einfügen oder ein Dokument oder Bild anhängen, die erkannten Termine prüfen und mehrere Termine gemeinsam als eine .ics-Datei herunterladen. Das Formular unterstützt Zeitzonen, Wiederholungen, Gäste und Erinnerungen sowie jCal, CSV, JSON-LD und Kalenderlinks. Du brauchst kein Konto: Texterkennung, Dokumentverarbeitung und Dateierstellung laufen im Browser, ohne deine Termindaten hochzuladen.
+
+### [Was ICS Maker ist](https://icsmaker.com/de/about/)
+
+**Was ist ICS Maker, für wen ist es gedacht, und wie schneidet es im Vergleich zu den Alternativen ab?**
+
+ICS Maker erstellt kostenlos Kalendertermine im Browser. Exportiere einzelne Termine als .ics, jCal, CSV oder JSON-LD oder öffne einen vorausgefüllten Link für Google Kalender, Outlook.com, Office 365 oder Yahoo. Sammle Termine aus dem Formular, einem eingefügten Terminplan oder einer angehängten Datei und lade sie gemeinsam als eine .ics-Datei herunter. Prüfe vorher die erkannten Angaben. Es gibt kein Konto, keine hochgeladenen Termindaten und keine gespeicherten Termine zwischen Besuchen. Das Werkzeug eignet sich zum Teilen von Kalenderdateien und zum Einbetten eines Formulars. Es verwaltet keinen Kalender, sammelt keine Zusagen, hostet kein Kalenderabonnement und garantiert keine fehlerfreie Dokumenterkennung.
+
+### [Die .ics-Datei, erklärt](https://icsmaker.com/de/ics-file/)
+
+**Was ist eine .ics-Datei?**
+
+Eine .ics-Datei ist ein Kalenderereignis – oder mehrere –, geschrieben als Klartext im iCalendar-Format, das 2009 als RFC 5545 standardisiert wurde und seitdem unverändert ist. Das Ereignis steht zwischen BEGIN:VEVENT und END:VEVENT, wobei SUMMARY der Titel ist, DTSTART und DTEND die Zeiten sind, LOCATION und DESCRIPTION das sind, wonach sie klingen, und UID der Bezeichner ist, mit dem ein Kalender ein Update von einem neuen Ereignis unterscheidet. Apple Kalender, Google Kalender, Outlook und Thunderbird lesen sie alle, weshalb eine zwischen zwei Unternehmen per E-Mail versendete Einladung in beiden korrekt ankommt. ICS Maker erstellt eine aus einem Formular und zeigt dir beim Tippen daneben den exakten Dateitext an.
+
+### [Links zum Hinzufügen zu Google Kalender](https://icsmaker.com/de/add-to-google-calendar/)
+
+**Wie erstelle ich einen „Zu Google Kalender hinzufügen“-Link?**
+
+Ein Google-Kalender-Link ist eine ganz gewöhnliche URL – calendar.google.com/calendar/render –, die Titel, Zeiten, Ort und Beschreibung als Abfrageparameter enthält. Ein Klick darauf öffnet Google Kalender mit dem bereits ausgefüllten Termin, und auf Googles Seite wird nichts gespeichert, bis die Person auf Speichern drückt. ICS Maker erstellt diesen Link aus einem Formular und erzeugt aus demselben Termin die entsprechenden Links für Outlook.com, Office 365 und Yahoo sowie die .ics-Datei für die Kalender, die keiner dieser vier sind. Niemand braucht ein ICS-Maker-Konto, weil es so etwas nicht gibt; der Empfänger braucht ein Google-Konto nur, um den Termin darin zu speichern.
+
+### [Wiederkehrende Termine](https://icsmaker.com/de/recurring-event/)
+
+**Wie lasse ich einen Kalendertermin jede Woche oder jeden Monat wiederholen?**
+
+Eine Wiederholung ist eine einzige Zeile in der .ics-Datei: RRULE:FREQ=WEEKLY, mit INTERVAL für jeden zweiten oder dritten Zeitraum und COUNT oder UNTIL, um die Serie zu beenden. Das Formular von ICS Maker legt die Häufigkeit (täglich, wöchentlich, monatlich, jährlich), das Intervall und fest, ob die Serie nie endet, nach einer bestimmten Anzahl von Wiederholungen stoppt oder bis zu einem Datum läuft – und schreibt die RRULE in die heruntergeladene Datei, die der lesende Kalender selbst erweitert, sodass eine Serie beliebiger Länge eine einzige kleine Datei bleibt. Die Auswahl eines bestimmten Tages ist nicht im Formular enthalten und erfordert eine einzeilige Bearbeitung der Datei: FREQ=MONTHLY;BYMONTHDAY=-1 für den letzten Tag des Monats, BYDAY=1MO für den ersten Montag, BYDAY=MO,TU,WE,TH,FR für ausschließlich Wochentage. Diese Seite listet zwölf solcher Regeln zum Einfügen auf.
+
+### [Wenn das Ereignis zur falschen Zeit landet](https://icsmaker.com/de/ics-time-zone/)
+
+**Warum ist mein Kalenderereignis eine Stunde oder einen Tag daneben?**
+
+Eine .ics-Datei kann eine Uhrzeit auf drei Arten angeben, und die falsche ist fast immer die Ursache. Eine schwebende Zeit (DTSTART:20260815T090000, keine Zeitzone) ist neun Uhr, wo auch immer sie geöffnet wird. Eine UTC-Zeit (ein angehängtes Z) ist ein absoluter Zeitpunkt. Eine benannte Zeitzone (DTSTART;TZID=Europe/London:...) ist ein Zeitpunkt, der über die Sommerzeitumstellung hinweg auf derselben lokalen Uhrzeit bleibt. Ein um eine Stunde falscher Import ist meist ein Windows-artiger Zeitzonenname wie „GMT Standard Time“, den der lesende Kalender nicht erkennt und daher auf UTC zurückfällt; ein um einen Tag falsches ganztägiges Ereignis ist meist ein Mitternachts-Zeitstempel, wo VALUE=DATE nötig gewesen wäre, oder ein Enddatum, das auf den letzten Tag statt auf den Tag danach geschrieben wurde, da DTEND exklusiv ist. ICS Maker schreibt standardmäßig eine schwebende Zeit und, wenn eine ausgewählt wird, eine TZID mit einer IANA-Zeitzone – ohne eingebetteten VTIMEZONE-Block, den jeder gängige Kalender ohnehin aus dem Zeitzonennamen selbst auflöst.
+
+### [Eine Kalendereinladung versenden](https://icsmaker.com/de/calendar-invite/)
+
+**Wie versende ich eine Kalendereinladung als .ics-Anhang?**
+
+Fügen Sie die Adressen zum Ereignis hinzu, laden Sie die .ics-Datei herunter und hängen Sie sie an eine gewöhnliche E-Mail an: Jeder Gast wird zu einer ATTENDEE-Zeile mit ROLE, PARTSTAT und RSVP, und der Empfänger speichert das Ereignis mit einem Fingertipp. Was eine heruntergeladene Datei nicht kann, ist Antworten einzusammeln, denn die RSVP-Verfolgung erfordert etwas, das METHOD:REPLY-Mails empfängt. ICS Maker schreibt absichtlich weder METHOD:REQUEST noch ORGANIZER: Es hat weder Mailserver noch Konto, daher wäre die Behauptung, der Organisator zu sein, eine Lüge, nach der der Kalender des Empfängers handeln könnte. Um RSVPs einzusammeln, importieren Sie die Datei in Ihren eigenen Kalender und versenden Sie die Einladungen von dort aus.
+
+### [Erinnerungen in einer .ics-Datei](https://icsmaker.com/de/ics-reminder/)
+
+**Wie füge ich einem .ics-Ereignis eine Erinnerung oder einen Alarm hinzu?**
+
+Eine Erinnerung ist ein VALARM-Block innerhalb des Ereignisses: ACTION:DISPLAY für eine Benachrichtigung auf dem Bildschirm und TRIGGER:-PT30M für den Versatz, wobei PT eine ISO-8601-Dauer einleitet und das vorangestellte Minus dafür sorgt, dass sie vor statt nach dem Beginn ausgelöst wird. ICS Maker bietet Erinnerungen über das Formular an und schreibt pro Erinnerung ein VALARM, wobei der Versatz stets in Minuten angegeben wird – ein Tag vorher ist -PT1440M. Ein Ereignis kann hier bis zu zehn Alarme tragen, doch ob sie alle ankommen, entscheidet der lesende Kalender: Manche fügen daneben ihre eigene Standardeinstellung hinzu, und manche entfernen Alarme aus importierten Ereignissen vollständig, sodass eine heruntergeladene Datei auf einem Gerät keine Benachrichtigungen einplanen kann.
+
+### [Termine aus einer CSV-Datei importieren](https://icsmaker.com/de/csv-to-calendar/)
+
+**Welches CSV-Format akzeptiert der Importer von Google Kalender?**
+
+Google Kalender und Outlook lesen eine CSV-Datei, deren erste Zeile exakt lautet: Subject, Start Date, Start Time, End Date, End Time, All Day Event, Description, Location. Daten sind im Format MM/DD/YYYY und Uhrzeiten im 12-Stunden-Format mit Zusatz (09:00 AM); bei einem ganztägigen Termin wird All Day Event auf True gesetzt und beide Zeitzellen bleiben leer. ICS Maker exportiert diese Kopfzeile plus eine korrekte Zeile, um den Rest der Tabelle darunter einzufügen. Diese acht Spalten sind alles, was eine CSV-Datei transportiert – keine Zeitzone, keine Wiederholungsregel, keine Gästeliste, keine Erinnerungen, keine URL – verwenden Sie also eine .ics-Datei, sobald eines davon wichtig ist, und CSV, wenn die Menge eine Datei pro Termin absurd macht.
+
+### [jCal — iCalendar als JSON](https://icsmaker.com/de/jcal/)
+
+**Was ist jCal, und wie unterscheidet es sich von einer .ics-Datei?**
+
+jCal ist iCalendar, geschrieben als JSON, standardisiert als RFC 7265 im Jahr 2014. Es enthält exakt dieselben Daten wie eine .ics-Datei — dieselben Eigenschaften, Parameter und Komponenten — in verschachtelten Arrays statt Objekten, weil eine Komponente eine Eigenschaft wiederholen kann und die Reihenfolge von Bedeutung sein kann. Ein Kalender ist ["vcalendar", [Eigenschaften], [Komponenten]], jede Eigenschaft ist [Name, Parameter, Werttyp, Wert], sodass aus SUMMARY:Standup ["summary", {}, "text", "Standup"] wird. Das ist nicht dasselbe wie schema.org Event in JSON-LD, das einen Termin für Suchmaschinen beschreibt und davon deutlich weniger erfasst. ICS Maker schreibt .ics und jCal aus einem einzigen Terminmodell, statt zwischen beiden zu konvertieren, sodass die beiden nicht widersprüchlich darüber sein können, was der Termin ist.
+
+### [Den Builder auf Ihrer eigenen Website einbinden](https://icsmaker.com/de/add-to-calendar-button/)
+
+**Wie bringe ich einen Add-to-Calendar-Button oder Event-Builder auf meine eigene Website?**
+
+Der Builder von ICS Maker wird als eigenständiges Script ausgeliefert: ein leeres Element, ein Script-Tag, das auf event-creator.js verweist, und ein Aufruf von EventCreator.mount() – kein Build-Schritt, kein Framework, kein Konto, kein Schlüssel und kein Limit pro Ansicht. Das Bundle ist eine einzige eigenständige IIFE unter 85 kB gzippt, inklusive Rendering-Bibliothek, und es sendet überhaupt keine Netzwerkanfragen: keine Analysen, keine Schriftarten, kein CDN – es fügt also weder eine Origin zu einer Content-Security-Policy noch einen Absatz zu einer Datenschutzerklärung hinzu. Jede Farbe, jeder Radius und jede Schriftart ist eine CSS-Custom-Property unter .ec-root, der Dark Mode folgt der eigenen Voreinstellung des Besuchers, und eine React-Website kann die Komponente direkt rendern, anstatt das Bundle zu laden.
+
+### [Crea un archivo de calendario ICS](https://icsmaker.com/es/)
+
+**¿Cómo creo un archivo de evento de calendario (.ics) sin una cuenta?**
+
+ICS Maker es un generador gratuito de archivos iCalendar (.ics) en línea. Introduce el título, el inicio y el final de un evento, descarga el archivo e impórtalo en Google Calendar, Outlook o Apple Calendar. También puedes pegar un horario o adjuntar un documento o una imagen, revisar los eventos detectados y descargar varios juntos en un único archivo .ics. El formulario admite zonas horarias, repeticiones, invitados y recordatorios, además de jCal, CSV, JSON-LD y enlaces de calendario. No necesitas una cuenta: el reconocimiento de texto, la lectura de documentos y la generación de archivos se ejecutan en tu navegador sin subir tus datos de eventos.
+
+### [Qué es ICS Maker](https://icsmaker.com/es/about/)
+
+**¿Qué es ICS Maker, para quién es y cómo se compara con las alternativas?**
+
+ICS Maker crea eventos de calendario gratis en el navegador. Exporta cada evento como .ics, jCal, CSV o JSON-LD, o abre un enlace prerrellenado para Google Calendar, Outlook.com, Office 365 o Yahoo. Reúne eventos del formulario, de un horario pegado o de un archivo adjunto y descárgalos juntos en un único .ics, tras revisar los datos detectados. No hay cuenta, no se suben datos de eventos y no se conservan eventos entre visitas. Sirve para compartir archivos de calendario o integrar un formulario en una web. No gestiona calendarios, no recoge confirmaciones de asistencia ni aloja suscripciones, y no garantiza una extracción perfecta de todos los documentos.
+
+### [El archivo .ics, explicado](https://icsmaker.com/es/ics-file/)
+
+**¿Qué es un archivo .ics?**
+
+Un archivo .ics es uno o varios eventos de calendario escritos como texto sin formato en el formato iCalendar, estandarizado como RFC 5545 en 2009 y sin cambios desde entonces. El evento se encuentra entre BEGIN:VEVENT y END:VEVENT, donde SUMMARY es el título, DTSTART y DTEND son las horas, LOCATION y DESCRIPTION son lo que su nombre indica, y UID es el identificador que usa un calendario para distinguir una actualización de un evento nuevo. Apple Calendar, Google Calendar, Outlook y Thunderbird lo leen todos, por eso una invitación enviada por correo entre dos empresas llega correctamente a ambas. ICS Maker crea uno a partir de un formulario y muestra el texto exacto del archivo junto a él mientras escribes.
+
+### [Enlaces de añadir a Google Calendar](https://icsmaker.com/es/add-to-google-calendar/)
+
+**¿Cómo creo un enlace de "añadir a Google Calendar"?**
+
+Un enlace de Google Calendar es una URL corriente — calendar.google.com/calendar/render — que lleva el título, los horarios, la ubicación y la descripción como parámetros de consulta. Al hacer clic se abre Google Calendar con el evento ya rellenado, y no se guarda nada en el lado de Google hasta que la persona pulsa guardar. ICS Maker crea ese enlace a partir de un formulario y genera los equivalentes de Outlook.com, Office 365 y Yahoo a partir del mismo evento, además del archivo .ics para los calendarios que no son ninguno de los cuatro. Nadie necesita una cuenta de ICS Maker, porque no existen; el destinatario solo necesita una cuenta de Google para guardar el evento en ella.
+
+### [Eventos recurrentes](https://icsmaker.com/es/recurring-event/)
+
+**¿Cómo hago que un evento de calendario se repita cada semana o cada mes?**
+
+Una repetición es una sola línea en el archivo .ics: RRULE:FREQ=WEEKLY, con INTERVAL para cada segundo o tercer período y COUNT o UNTIL para finalizar la serie. El formulario de ICS Maker define la frecuencia (diaria, semanal, mensual, anual), el intervalo y si la serie nunca termina, se detiene después de un número de repeticiones o llega hasta una fecha, y escribe la RRULE en el archivo descargado, que el calendario que lo lee expande por sí mismo, de modo que una serie de cualquier duración sigue siendo un archivo pequeño. Elegir un día concreto no está en el formulario y requiere editar una línea del archivo: FREQ=MONTHLY;BYMONTHDAY=-1 para el último día del mes, BYDAY=1MO para el primer lunes, BYDAY=MO,TU,WE,TH,FR para solo días laborables. Esta página enumera doce reglas de este tipo listas para copiar.
+
+### [Cuando el evento aparece a la hora equivocada](https://icsmaker.com/es/ics-time-zone/)
+
+**¿Por qué mi evento de calendario aparece una hora, o un día, desfasado?**
+
+Un archivo .ics puede expresar una hora de tres maneras, y casi siempre la causa es haber usado la incorrecta. Una hora flotante (DTSTART:20260815T090000, sin zona) son las nueve en punto donde sea que se abra. Una hora UTC (con una Z al final) es un instante absoluto. Una zona con nombre (DTSTART;TZID=Europe/London:...) es un instante que mantiene la misma hora local del reloj a través del horario de verano. Una importación desfasada una hora suele deberse a un nombre de zona al estilo de Windows, como «GMT Standard Time», que el calendario que lo lee no reconoce y por lo cual recurre a UTC; un evento de todo el día desfasado un día suele deberse a una marca de tiempo de medianoche donde se necesitaba VALUE=DATE, o a una fecha de fin escrita en el último día en lugar del día siguiente, ya que DTEND es exclusivo. ICS Maker escribe una hora flotante de forma predeterminada y un TZID que nombra una zona IANA cuando se elige una, sin incluir un bloque VTIMEZONE, que todos los calendarios habituales resuelven a partir del propio nombre de la zona.
+
+### [Enviar una invitación de calendario](https://icsmaker.com/es/calendar-invite/)
+
+**¿Cómo envío una invitación de calendario como archivo adjunto .ics?**
+
+Agrega las direcciones al evento, descarga el .ics y adjúntalo a un correo normal: cada invitado se convierte en una línea ATTENDEE que lleva ROLE, PARTSTAT y RSVP, y el destinatario guarda el evento con un toque. Lo que un archivo descargado no puede hacer es recopilar respuestas, porque el seguimiento de RSVP necesita algo que reciba correo METHOD:REPLY. ICS Maker no escribe METHOD:REQUEST ni ORGANIZER a propósito: no tiene servidor de correo ni cuenta, así que decir ser el organizador sería una mentira sobre la que el calendario del destinatario podría actuar. Para recopilar confirmaciones de asistencia, importa el archivo a tu propio calendario y envía las invitaciones desde ahí.
+
+### [Recordatorios dentro de un archivo .ics](https://icsmaker.com/es/ics-reminder/)
+
+**¿Cómo añado un recordatorio o alerta a un evento .ics?**
+
+Un recordatorio es un bloque VALARM dentro del evento: ACTION:DISPLAY para una notificación en pantalla, y TRIGGER:-PT30M para el desplazamiento, donde PT introduce una duración ISO 8601 y el signo menos inicial hace que se dispare antes del inicio en lugar de después. ICS Maker ofrece alertas desde el formulario y escribe un VALARM por cada alerta, expresando siempre el desplazamiento en minutos: un día antes es -PT1440M. Un evento puede llevar hasta diez alarmas aquí, pero que todas lleguen depende del calendario que las lea: algunos añaden su propio valor predeterminado junto a ellas, y otros eliminan por completo las alarmas de los eventos importados, de modo que un archivo descargado no pueda programar notificaciones en un dispositivo.
+
+### [Importar eventos desde un CSV](https://icsmaker.com/es/csv-to-calendar/)
+
+**¿Qué formato de CSV acepta el importador de Google Calendar?**
+
+Google Calendar y Outlook leen un CSV cuya primera fila es exactamente: Subject, Start Date, Start Time, End Date, End Time, All Day Event, Description, Location. Las fechas van en formato MM/DD/YYYY y las horas en formato de doce horas con un sufijo (09:00 AM); una fila de evento de día completo pone All Day Event en True y deja ambas celdas de hora vacías. ICS Maker exporta ese encabezado más una fila correcta, para que pegues el resto de la hoja debajo. Esas ocho columnas son todo lo que un CSV transporta: sin zona horaria, sin regla de repetición, sin lista de invitados, sin recordatorios, sin URL; así que usa un .ics siempre que algo de eso importe, y CSV cuando el volumen haga absurdo un archivo por evento.
+
+### [jCal — iCalendar como JSON](https://icsmaker.com/es/jcal/)
+
+**¿Qué es jCal y en qué se diferencia de un archivo .ics?**
+
+jCal es iCalendar escrito como JSON, estandarizado como RFC 7265 en 2014. Contiene exactamente los mismos datos que un archivo .ics —las mismas propiedades, parámetros y componentes— en arrays anidados en lugar de objetos, porque un componente puede repetir una propiedad y el orden puede ser importante. Un calendario es ["vcalendar", [propiedades], [componentes]], cada propiedad es [nombre, parámetros, tipoDeValor, valor], de modo que SUMMARY:Standup se convierte en ["summary", {}, "text", "Standup"]. No es lo mismo que schema.org Event en JSON-LD, que describe un evento para los motores de búsqueda y conserva muchos menos datos. ICS Maker escribe .ics y jCal a partir de un único modelo de evento en lugar de convertir entre ambos, de modo que los dos no pueden estar en desacuerdo sobre qué es el evento.
+
+### [Pon el creador en tu propio sitio](https://icsmaker.com/es/add-to-calendar-button/)
+
+**¿Cómo pongo un botón de añadir al calendario o un creador de eventos en mi propio sitio?**
+
+El creador de ICS Maker se distribuye como un script independiente: un elemento vacío, una etiqueta de script que apunta a event-creator.js, y una llamada a EventCreator.mount(); sin proceso de compilación, sin framework, sin cuenta, sin clave y sin límite por visualización. El paquete es un único IIFE autónomo de menos de 85 kB comprimido con su librería de renderizado incluida, y no realiza ninguna solicitud de red: sin analítica, sin fuentes tipográficas, sin CDN, por lo que no añade ningún origen a una Content-Security-Policy ni ningún párrafo a una política de privacidad. Cada color, radio y tipografía es una propiedad personalizada de CSS bajo .ec-root, el modo oscuro sigue la preferencia propia del visitante, y un sitio en React puede renderizar el componente directamente en lugar de cargar el paquete.
+
+### [Créez un fichier de calendrier ICS](https://icsmaker.com/fr/)
+
+**Comment créer un fichier d'événement de calendrier (.ics) sans compte ?**
+
+ICS Maker est un générateur gratuit de fichiers iCalendar (.ics) en ligne. Saisissez le titre, le début et la fin d’un événement, téléchargez le fichier et importez-le dans Google Agenda, Outlook ou Calendrier Apple. Vous pouvez aussi coller un planning ou joindre un document ou une image, vérifier les événements détectés et en télécharger plusieurs dans un seul fichier .ics. Le formulaire gère les fuseaux horaires, les récurrences, les invités et les rappels, ainsi que jCal, CSV, JSON-LD et les liens de calendrier. Aucun compte n’est nécessaire : la reconnaissance de texte, la lecture des documents et la création des fichiers se font dans votre navigateur, sans envoi de vos données d’événements.
+
+### [Ce qu'est ICS Maker](https://icsmaker.com/fr/about/)
+
+**Qu'est-ce qu'ICS Maker, à qui s'adresse-t-il, et comment se compare-t-il aux alternatives ?**
+
+ICS Maker crée gratuitement des événements de calendrier dans le navigateur. Exportez chaque événement en .ics, jCal, CSV ou JSON-LD, ou ouvrez un lien prérempli pour Google Agenda, Outlook.com, Office 365 ou Yahoo. Rassemblez des événements depuis le formulaire, un planning collé ou un fichier joint et téléchargez-les dans un seul .ics après vérification des données détectées. Aucun compte, aucun envoi de données d’événements et aucune conservation entre les visites. L’outil sert à partager des fichiers de calendrier ou à intégrer un formulaire sur un site. Il ne gère pas de calendrier, ne collecte pas de confirmations de présence, n’héberge pas d’abonnement et ne garantit pas une extraction parfaite de tous les documents.
+
+### [Le fichier .ics, expliqué](https://icsmaker.com/fr/ics-file/)
+
+**Qu'est-ce qu'un fichier .ics ?**
+
+Un fichier .ics est un événement de calendrier — ou plusieurs — écrit en texte brut au format iCalendar, normalisé sous le nom RFC 5545 en 2009 et inchangé depuis. L'événement se situe entre BEGIN:VEVENT et END:VEVENT, où SUMMARY est le titre, DTSTART et DTEND sont les horaires, LOCATION et DESCRIPTION correspondent à ce que leur nom indique, et UID est l'identifiant qu'un calendrier utilise pour distinguer une mise à jour d'un nouvel événement. Apple Calendar, Google Calendar, Outlook et Thunderbird le lisent tous, ce qui explique pourquoi une invitation envoyée par e-mail entre deux entreprises s'affiche correctement dans les deux. ICS Maker en génère un à partir d'un formulaire et affiche le texte exact du fichier à côté, au fur et à mesure que vous saisissez.
+
+### [Liens « Ajouter à Google Agenda »](https://icsmaker.com/fr/add-to-google-calendar/)
+
+**Comment créer un lien « ajouter à Google Agenda » ?**
+
+Un lien Google Agenda est une simple URL — calendar.google.com/calendar/render — qui transporte le titre, les horaires, le lieu et la description sous forme de paramètres de requête. En cliquant dessus, Google Agenda s'ouvre avec l'événement déjà rempli, et rien n'est enregistré côté Google tant que la personne n'a pas cliqué sur enregistrer. ICS Maker construit ce lien à partir d'un formulaire et produit les équivalents Outlook.com, Office 365 et Yahoo à partir du même événement, ainsi que le fichier .ics pour les agendas qui ne sont aucun des quatre. Personne n'a besoin d'un compte ICS Maker, car il n'en existe pas ; le destinataire n'a besoin d'un compte Google que pour enregistrer l'événement dedans.
+
+### [Événements récurrents](https://icsmaker.com/fr/recurring-event/)
+
+**Comment faire en sorte qu'un événement de calendrier se répète chaque semaine ou chaque mois ?**
+
+Une répétition tient en une ligne dans le fichier .ics : RRULE:FREQ=WEEKLY, avec INTERVAL pour une période sur deux ou sur trois, et COUNT ou UNTIL pour mettre fin à la série. Le formulaire d'ICS Maker définit la fréquence (quotidienne, hebdomadaire, mensuelle, annuelle), l'intervalle, et si la série ne se termine jamais, s'arrête après un certain nombre d'occurrences, ou court jusqu'à une date — puis écrit la RRULE dans le fichier téléchargé, que le calendrier lecteur développe lui-même, si bien qu'une série de n'importe quelle longueur reste un petit fichier. Choisir un jour précis n'est pas prévu dans le formulaire et se fait en modifiant une ligne du fichier : FREQ=MONTHLY;BYMONTHDAY=-1 pour le dernier jour du mois, BYDAY=1MO pour le premier lundi, BYDAY=MO,TU,WE,TH,FR pour les jours de semaine uniquement. Cette page recense douze règles de ce type à copier.
+
+### [Quand l'événement tombe à la mauvaise heure](https://icsmaker.com/fr/ics-time-zone/)
+
+**Pourquoi mon événement de calendrier est-il décalé d'une heure, ou d'un jour ?**
+
+Un fichier .ics peut exprimer une heure de trois façons, et c'est presque toujours la mauvaise qui en est la cause. Une heure flottante (DTSTART:20260815T090000, sans fuseau) est neuf heures là où elle est ouverte. Une heure UTC (un Z final) est un instant absolu. Un fuseau nommé (DTSTART;TZID=Europe/London:...) est un instant qui reste à la même heure locale malgré le changement d'heure d'été/hiver. Un import décalé d'une heure vient généralement d'un nom de fuseau de style Windows tel que « GMT Standard Time » que le calendrier qui le lit ne reconnaît pas et qu'il ramène par défaut à UTC ; un événement décalé d'un jour est généralement un horodatage à minuit alors qu'il fallait VALUE=DATE, ou une date de fin écrite le dernier jour au lieu du lendemain, puisque DTEND est exclusif. ICS Maker écrit par défaut une heure flottante, et un TZID nommant un fuseau IANA lorsqu'un fuseau est choisi — sans bloc VTIMEZONE intégré, que tout calendrier grand public résout à partir du nom du fuseau lui-même.
+
+### [Envoyer une invitation de calendrier](https://icsmaker.com/fr/calendar-invite/)
+
+**Comment envoyer une invitation de calendrier sous forme de pièce jointe .ics ?**
+
+Ajoutez les adresses à l'événement, téléchargez le fichier .ics, puis joignez-le à un e-mail ordinaire : chaque invité devient une ligne ATTENDEE portant ROLE, PARTSTAT et RSVP, et le destinataire enregistre l'événement en un geste. Ce qu'un fichier téléchargé ne peut pas faire, c'est collecter les réponses, car le suivi des RSVP nécessite quelque chose capable de recevoir des e-mails METHOD:REPLY. ICS Maker n'écrit volontairement ni METHOD:REQUEST ni ORGANIZER : il n'a ni serveur de messagerie ni compte, donc prétendre être l'organisateur serait un mensonge sur lequel le calendrier du destinataire pourrait agir. Pour collecter des RSVP, importez le fichier dans votre propre calendrier et envoyez les invitations depuis celui-ci.
+
+### [Les rappels dans un fichier .ics](https://icsmaker.com/fr/ics-reminder/)
+
+**Comment ajouter un rappel ou une alerte à un événement .ics ?**
+
+Un rappel est un bloc VALARM à l'intérieur de l'événement : ACTION:DISPLAY pour une notification à l'écran, et TRIGGER:-PT30M pour le décalage, où PT introduit une durée ISO 8601 et le signe moins initial fait que l'alerte se déclenche avant le début plutôt qu'après. ICS Maker propose des alertes depuis le formulaire et écrit un VALARM par alerte, en exprimant toujours le décalage en minutes — un jour avant devient -PT1440M. Un événement peut porter jusqu'à dix alarmes ici, mais leur arrivée effective dépend du calendrier qui les lit : certains ajoutent leur propre alerte par défaut en plus, et d'autres suppriment purement et simplement les alarmes des événements importés, de sorte qu'un fichier téléchargé ne puisse pas déclencher de notifications sur un appareil.
+
+### [Importer des événements depuis un CSV](https://icsmaker.com/fr/csv-to-calendar/)
+
+**Quel format de CSV l'outil d'import de Google Agenda accepte-t-il ?**
+
+Google Agenda et Outlook lisent un CSV dont la première ligne est exactement : Subject, Start Date, Start Time, End Date, End Time, All Day Event, Description, Location. Les dates sont au format MM/DD/YYYY et les heures sur douze heures avec un suffixe (09:00 AM) ; une ligne d'événement sur la journée entière définit All Day Event sur True et laisse les deux cellules d'heure vides. ICS Maker exporte cet en-tête ainsi qu'une ligne correcte, à coller le reste de la feuille en dessous. Ces huit colonnes sont tout ce qu'un CSV transporte — pas de fuseau horaire, pas de règle de répétition, pas de liste d'invités, pas de rappels, pas d'URL — utilisez donc un .ics dès que l'un de ces éléments compte, et le CSV lorsque le volume rend absurde un fichier par événement.
+
+### [jCal — iCalendar en JSON](https://icsmaker.com/fr/jcal/)
+
+**Qu'est-ce que jCal, et en quoi diffère-t-il d'un fichier .ics ?**
+
+jCal est iCalendar écrit en JSON, normalisé sous le nom RFC 7265 en 2014. Il porte exactement les mêmes données qu'un fichier .ics — les mêmes propriétés, paramètres et composants — sous forme de tableaux imbriqués plutôt que d'objets, car un composant peut répéter une propriété et l'ordre peut être significatif. Un calendrier est ["vcalendar", [propriétés], [composants]], chaque propriété est [nom, paramètres, typeDeValeur, valeur], donc SUMMARY:Standup devient ["summary", {}, "text", "Standup"]. Ce n'est pas la même chose que schema.org Event en JSON-LD, qui décrit un événement pour les moteurs de recherche et en conserve bien moins. ICS Maker écrit les fichiers .ics et jCal à partir d'un seul modèle d'événement plutôt que de convertir l'un vers l'autre, de sorte que les deux ne peuvent pas être en désaccord sur ce qu'est l'événement.
+
+### [Intégrez le créateur à votre propre site](https://icsmaker.com/fr/add-to-calendar-button/)
+
+**Comment intégrer un bouton « Ajouter au calendrier » ou un créateur d'événements sur mon propre site ?**
+
+Le créateur d'ICS Maker est distribué sous forme de script autonome : un élément vide, une balise script pointant vers event-creator.js, et un appel EventCreator.mount() — pas d'étape de build, pas de framework, pas de compte, pas de clé, et aucune limite par affichage. Le bundle est une IIFE autonome unique de moins de 85 ko compressé, avec sa bibliothèque de rendu incluse, et il n'effectue aucune requête réseau : pas d'analytique, pas de polices, pas de CDN, si bien qu'il n'ajoute aucune origine à une Content-Security-Policy ni aucun paragraphe à une politique de confidentialité. Chaque couleur, rayon et police est une propriété CSS personnalisée sous .ec-root, le mode sombre suit la préférence du visiteur, et un site React peut afficher le composant directement plutôt que de charger le bundle.
+
+### [Crea un file di calendario ICS](https://icsmaker.com/it/)
+
+**Come posso creare un file di evento per calendario (.ics) senza un account?**
+
+ICS Maker è un generatore gratuito di file iCalendar (.ics) online. Inserisci titolo, inizio e fine di un evento, scarica il file e importalo in Google Calendar, Outlook o Calendario Apple. Puoi anche incollare un programma o allegare un documento o un’immagine, controllare gli eventi rilevati e scaricarne diversi insieme in un unico file .ics. Il modulo supporta fusi orari, ricorrenze, invitati e promemoria, oltre a jCal, CSV, JSON-LD e link di calendario. Non serve un account: riconoscimento del testo, lettura dei documenti e generazione dei file avvengono nel browser senza inviare i dati degli eventi.
+
+### [Cos'è ICS Maker](https://icsmaker.com/it/about/)
+
+**Cos'è ICS Maker, a chi si rivolge e come si confronta con le alternative?**
+
+ICS Maker crea gratuitamente eventi di calendario nel browser. Esporta ogni evento come .ics, jCal, CSV o JSON-LD, oppure apri un link precompilato per Google Calendar, Outlook.com, Office 365 o Yahoo. Raccogli eventi dal modulo, da un programma incollato o da un file allegato e scaricali in un unico .ics dopo aver controllato i dati rilevati. Non servono account, i dati degli eventi non vengono inviati e gli eventi non vengono conservati tra una visita e l’altra. È utile per condividere file di calendario o incorporare un modulo in un sito. Non gestisce calendari, non raccoglie conferme di partecipazione e non ospita abbonamenti, e non garantisce un’estrazione perfetta da ogni documento.
+
+### [Il file .ics, spiegato](https://icsmaker.com/it/ics-file/)
+
+**Cos'è un file .ics?**
+
+Un file .ics è uno o più eventi di calendario, scritti come testo semplice nel formato iCalendar, standardizzato come RFC 5545 nel 2009 e rimasto invariato da allora. L'evento si trova tra BEGIN:VEVENT e END:VEVENT, dove SUMMARY è il titolo, DTSTART e DTEND sono gli orari, LOCATION e DESCRIPTION sono ciò che sembrano essere, e UID è l'identificatore che un calendario usa per distinguere un aggiornamento da un evento nuovo. Apple Calendar, Google Calendar, Outlook e Thunderbird lo leggono tutti, ed è per questo che un invito inviato via email tra due aziende arriva correttamente in entrambe. ICS Maker ne crea uno a partire da un modulo e mostra il testo esatto del file accanto, mentre digiti.
+
+### [Link "Aggiungi a Google Calendar"](https://icsmaker.com/it/add-to-google-calendar/)
+
+**Come si crea un link "aggiungi a Google Calendar"?**
+
+Un link di Google Calendar è un normale URL — calendar.google.com/calendar/render — che trasporta titolo, orari, luogo e descrizione come parametri di query. Cliccandoci sopra si apre Google Calendar con l'evento già compilato, e non viene salvato nulla lato Google finché la persona non preme salva. ICS Maker crea questo link a partire da un modulo e genera gli equivalenti per Outlook.com, Office 365 e Yahoo dallo stesso evento, oltre al file .ics per i calendari che non rientrano in nessuno dei quattro. Nessuno ha bisogno di un account ICS Maker, perché non esistono; il destinatario ha bisogno di un account Google solo per salvare l'evento al suo interno.
+
+### [Eventi ricorrenti](https://icsmaker.com/it/recurring-event/)
+
+**Come faccio a far ripetere un evento del calendario ogni settimana o ogni mese?**
+
+Una ripetizione è una sola riga nel file .ics: RRULE:FREQ=WEEKLY, con INTERVAL per ogni secondo o terzo periodo e COUNT o UNTIL per terminare la serie. Il modulo di ICS Maker imposta la frequenza (giornaliera, settimanale, mensile, annuale), l'intervallo e se la serie non termina mai, si interrompe dopo un certo numero di occorrenze o arriva fino a una data — e scrive la RRULE nel file scaricato, che il calendario di lettura espande da solo, così una serie di qualsiasi durata resta un unico file di piccole dimensioni. Scegliere un giorno particolare non è previsto dal modulo ed è una modifica di una sola riga nel file: FREQ=MONTHLY;BYMONTHDAY=-1 per l'ultimo giorno del mese, BYDAY=1MO per il primo lunedì, BYDAY=MO,TU,WE,TH,FR solo per i giorni feriali. Questa pagina elenca dodici regole di questo tipo da incollare.
+
+### [Quando l'evento cade all'orario sbagliato](https://icsmaker.com/it/ics-time-zone/)
+
+**Perché il mio evento di calendario è sfasato di un'ora, o di un giorno?**
+
+Un file .ics può esprimere un orario in tre modi, e quasi sempre la causa è l'uso di quello sbagliato. Un orario mobile (DTSTART:20260815T090000, senza fuso) corrisponde alle nove del mattino ovunque venga aperto. Un orario UTC (con una Z finale) è un istante assoluto. Un fuso con nome (DTSTART;TZID=Europe/London:...) è un istante che resta allo stesso orario locale anche durante i cambi dell'ora legale. Un'importazione sfasata di un'ora è di solito dovuta a un nome di fuso in stile Windows come 'GMT Standard Time', che il calendario di lettura non riconosce e per cui ricade su UTC; un evento per l'intera giornata sfasato di un giorno è di solito dovuto a un timestamp a mezzanotte dove sarebbe servito VALUE=DATE, oppure a una data di fine scritta sull'ultimo giorno anziché sul giorno successivo, dato che DTEND è esclusivo. ICS Maker scrive di default un orario mobile, e un TZID che nomina un fuso IANA quando ne viene scelto uno — senza un blocco VTIMEZONE incorporato, che ogni calendario più diffuso risolve a partire dal nome del fuso stesso.
+
+### [Invio di un invito calendario](https://icsmaker.com/it/calendar-invite/)
+
+**Come invio un invito calendario come allegato .ics?**
+
+Inserisci gli indirizzi nell'evento, scarica il file .ics e allegalo a una normale email: ogni invitato diventa una riga ATTENDEE con ROLE, PARTSTAT e RSVP, e il destinatario salva l'evento con un tocco. Ciò che un file scaricato non può fare è raccogliere le risposte, perché il tracciamento delle RSVP richiede qualcosa che riceva email METHOD:REPLY. ICS Maker non scrive né METHOD:REQUEST né ORGANIZER di proposito: non ha un server di posta né un account, quindi dichiararsi organizzatore sarebbe una bugia su cui il calendario del destinatario potrebbe agire. Per raccogliere le RSVP, importa il file nel tuo calendario e invia gli inviti da lì.
+
+### [Promemoria all'interno di un file .ics](https://icsmaker.com/it/ics-reminder/)
+
+**Come aggiungo un promemoria o un avviso a un evento .ics?**
+
+Un promemoria è un blocco VALARM all'interno dell'evento: ACTION:DISPLAY per una notifica a schermo, e TRIGGER:-PT30M per l'offset, dove PT introduce una durata ISO 8601 e il segno meno iniziale lo fa scattare prima dell'inizio anziché dopo. ICS Maker offre avvisi dal modulo e scrive un VALARM per ogni avviso, indicando sempre l'offset in minuti — un giorno prima è -PT1440M. Un evento può portare fino a dieci allarmi qui, ma se arrivano tutti dipende dal calendario che li legge: alcuni aggiungono un proprio predefinito accanto, e alcuni rimuovono del tutto gli allarmi dagli eventi importati, in modo che un file scaricato non possa pianificare notifiche su un dispositivo.
+
+### [Importare eventi da un CSV](https://icsmaker.com/it/csv-to-calendar/)
+
+**Quale formato CSV accetta lo strumento di importazione di Google Calendar?**
+
+Google Calendar e Outlook leggono un CSV la cui prima riga è esattamente: Subject, Start Date, Start Time, End Date, End Time, All Day Event, Description, Location. Le date sono in formato MM/GG/AAAA e gli orari sono a dodici ore con un suffisso (09:00 AM); una riga per un evento di un'intera giornata imposta All Day Event su True e lascia vuote entrambe le celle dell'orario. ICS Maker esporta questa intestazione più una riga corretta, su cui incollare il resto del foglio. Quelle otto colonne sono tutto ciò che un CSV può contenere — nessun fuso orario, nessuna regola di ripetizione, nessun elenco di invitati, nessun promemoria, nessun URL — quindi usa un .ics ogni volta che uno di questi elementi conta, e il CSV quando il volume rende assurdo un file per ogni evento.
+
+### [jCal — iCalendar come JSON](https://icsmaker.com/it/jcal/)
+
+**Cos'è jCal e in cosa differisce da un file .ics?**
+
+jCal è iCalendar scritto in JSON, standardizzato come RFC 7265 nel 2014. Contiene esattamente gli stessi dati di un file .ics — le stesse proprietà, parametri e componenti — in array annidati anziché in oggetti, perché un componente può ripetere una proprietà e l'ordine può essere significativo. Un calendario è ["vcalendar", [properties], [components]], ogni proprietà è [name, parameters, valueType, value], quindi SUMMARY:Standup diventa ["summary", {}, "text", "Standup"]. Non è la stessa cosa dello schema.org Event in JSON-LD, che descrive un evento per i motori di ricerca e ne conserva molto meno. ICS Maker scrive .ics e jCal a partire da un unico modello di evento anziché convertire l'uno nell'altro, così i due non possono essere in disaccordo su cosa sia l'evento.
+
+### [Metti il generatore sul tuo sito](https://icsmaker.com/it/add-to-calendar-button/)
+
+**Come posso inserire un pulsante "aggiungi al calendario" o un generatore di eventi sul mio sito?**
+
+Il generatore di ICS Maker viene distribuito come script standalone: un elemento vuoto, un tag script che punta a event-creator.js, e una chiamata a EventCreator.mount() — nessuna fase di build, nessun framework, nessun account, nessuna chiave e nessun limite di visualizzazioni. Il bundle è un'unica IIFE autosufficiente sotto gli 85 kB compressi (gzip), con la libreria di rendering inclusa, e non effettua alcuna richiesta di rete: niente analytics, niente font, nessun CDN, quindi non aggiunge nessuna origine a una Content-Security-Policy e nessun paragrafo a una privacy policy. Ogni colore, raggio e font è una proprietà CSS personalizzata sotto .ec-root, la modalità scura segue le preferenze del visitatore, e un sito React può renderizzare il componente direttamente invece di caricare il bundle.
+
+### [Maak een ICS-agendabestand](https://icsmaker.com/nl/)
+
+**Hoe maak ik een agenda-afspraakbestand (.ics) zonder account?**
+
+ICS Maker is een gratis online generator voor iCalendar-bestanden (.ics). Vul de titel, het begin en het einde van een afspraak in, download het bestand en importeer het in Google Agenda, Outlook of Apple Agenda. Je kunt ook een planning plakken of een document of afbeelding toevoegen, de herkende afspraken controleren en meerdere afspraken samen in één .ics-bestand downloaden. Het formulier ondersteunt tijdzones, herhaling, gasten en herinneringen, plus jCal, CSV, JSON-LD en agendalinks. Je hebt geen account nodig: tekstherkenning, documentverwerking en het maken van bestanden gebeuren in je browser zonder je afspraakgegevens te uploaden.
+
+### [Wat ICS Maker is](https://icsmaker.com/nl/about/)
+
+**Wat is ICS Maker, voor wie is het bedoeld, en hoe verhoudt het zich tot de alternatieven?**
+
+ICS Maker maakt gratis afspraken in je browser. Exporteer elke afspraak als .ics, jCal, CSV of JSON-LD of open een vooraf ingevulde link voor Google Agenda, Outlook.com, Office 365 of Yahoo. Verzamel afspraken uit het formulier, een geplakte planning of een toegevoegd bestand en download ze samen als één .ics-bestand nadat je de herkende gegevens hebt gecontroleerd. Er is geen account, afspraakgegevens worden niet geüpload en afspraken blijven niet bewaard tussen bezoeken. Het is geschikt om agendabestanden te delen of een formulier op een website in te sluiten. Het beheert geen agenda, verzamelt geen reacties op uitnodigingen, host geen agenda-abonnement en garandeert geen foutloze documentherkenning.
+
+### [Het .ics-bestand, uitgelegd](https://icsmaker.com/nl/ics-file/)
+
+**Wat is een .ics-bestand?**
+
+Een .ics-bestand is één kalendergebeurtenis — of meerdere — geschreven als platte tekst in het iCalendar-formaat, in 2009 gestandaardiseerd als RFC 5545 en sindsdien ongewijzigd. De gebeurtenis staat tussen BEGIN:VEVENT en END:VEVENT, waarbij SUMMARY de titel is, DTSTART en DTEND de tijden zijn, LOCATION en DESCRIPTION zijn wat de naam doet vermoeden, en UID de identificatie is waarmee een kalender een update van een nieuwe gebeurtenis onderscheidt. Apple Calendar, Google Agenda, Outlook en Thunderbird lezen het allemaal, en dat is waarom een uitnodiging die tussen twee bedrijven wordt gemaild bij beide correct aankomt. ICS Maker bouwt er een op basis van een formulier en toont daarnaast de exacte bestandstekst terwijl je typt.
+
+### [Links om toe te voegen aan Google Agenda](https://icsmaker.com/nl/add-to-google-calendar/)
+
+**Hoe maak ik een link om 'toe te voegen aan Google Agenda'?**
+
+Een Google Agenda-link is een gewone URL — calendar.google.com/calendar/render — die de titel, tijden, locatie en beschrijving als queryparameters meedraagt. Door erop te klikken opent Google Agenda met de gebeurtenis al ingevuld, en er wordt niets opgeslagen bij Google totdat de persoon op opslaan drukt. ICS Maker bouwt die link op basis van een formulier en genereert de equivalenten voor Outlook.com, Office 365 en Yahoo uit dezelfde gebeurtenis, plus het .ics-bestand voor de agenda's die geen van de vier zijn. Niemand heeft een ICS Maker-account nodig, want die bestaan niet; de ontvanger heeft alleen een Google-account nodig om de gebeurtenis erin op te slaan.
+
+### [Terugkerende afspraken](https://icsmaker.com/nl/recurring-event/)
+
+**Hoe zorg ik dat een agenda-afspraak elke week of elke maand terugkeert?**
+
+Een herhaling is één regel in het .ics-bestand: RRULE:FREQ=WEEKLY, met INTERVAL voor elke tweede of derde periode en COUNT of UNTIL om de reeks te beëindigen. Het formulier van ICS Maker stelt de frequentie in (dagelijks, wekelijks, maandelijks, jaarlijks), het interval, en of de reeks nooit eindigt, stopt na een aantal herhalingen, of doorloopt tot een datum — en schrijft de RRULE naar het gedownloade bestand, dat de lezende agenda zelf uitbreidt, zodat een reeks van elke lengte één klein bestand blijft. Een specifieke dag kiezen zit niet in het formulier en is een bewerking van één regel in het bestand: FREQ=MONTHLY;BYMONTHDAY=-1 voor de laatste dag van de maand, BYDAY=1MO voor de eerste maandag, BYDAY=MO,TU,WE,TH,FR voor alleen werkdagen. Deze pagina bevat twaalf van zulke regels om te plakken.
+
+### [Wanneer het item op het verkeerde tijdstip terechtkomt](https://icsmaker.com/nl/ics-time-zone/)
+
+**Waarom klopt mijn agenda-item een uur, of een dag, niet?**
+
+Een .ics-bestand kan een tijd op drie manieren weergeven, en bijna altijd is de verkeerde de oorzaak. Een zwevende tijd (DTSTART:20260815T090000, zonder zone) is negen uur, waar het ook wordt geopend. Een UTC-tijd (een afsluitende Z) is één absoluut moment. Een benoemde zone (DTSTART;TZID=Europe/London:...) is een moment dat op dezelfde lokale klok­tijd blijft staan, ook bij de overgang naar zomer- of wintertijd. Een import die een uur verschilt, komt meestal door een Windows-achtige zonenaam zoals 'GMT Standard Time' die de lezende agenda niet herkent en dan terugvalt op UTC; een dagvullende gebeurtenis die een dag verschuift, komt meestal door een tijdstempel op middernacht waar VALUE=DATE nodig was, of door een einddatum die op de laatste dag zelf staat in plaats van de dag erna, omdat DTEND exclusief is. ICS Maker schrijft standaard een zwevende tijd, en een TZID met een IANA-zonenaam wanneer er een wordt gekozen — zonder meegeleverd VTIMEZONE-blok, dat elke gangbare agenda toch al afleidt uit de zonenaam zelf.
+
+### [Een agenda-uitnodiging versturen](https://icsmaker.com/nl/calendar-invite/)
+
+**Hoe verstuur ik een agenda-uitnodiging als .ics-bijlage?**
+
+Zet de adressen op het evenement, download het .ics-bestand en voeg het toe aan een gewone e-mail: elke gast wordt een ATTENDEE-regel met ROLE, PARTSTAT en RSVP, en de ontvanger slaat het evenement met één tik op. Wat een gedownload bestand niet kan, is antwoorden verzamelen, want RSVP-tracking vereist iets dat METHOD:REPLY-mail ontvangt. ICS Maker schrijft met opzet geen METHOD:REQUEST of ORGANIZER: het heeft geen mailserver en geen account, dus zich voordoen als organisator zou een leugen zijn waarnaar de agenda van de ontvanger zou kunnen handelen. Importeer het bestand in je eigen agenda en verstuur de uitnodigingen van daaruit om RSVP's te verzamelen.
+
+### [Herinneringen in een .ics-bestand](https://icsmaker.com/nl/ics-reminder/)
+
+**Hoe voeg ik een herinnering of melding toe aan een .ics-item?**
+
+Een herinnering is een VALARM-blok binnen het item: ACTION:DISPLAY voor een melding op het scherm, en TRIGGER:-PT30M voor de offset, waarbij PT een ISO 8601-duur inleidt en het minteken ervoor zorgt dat de melding voor de starttijd afgaat in plaats van erna. ICS Maker biedt meldingen aan vanuit het formulier en schrijft één VALARM per melding, waarbij de offset altijd in minuten wordt uitgedrukt — een dag van tevoren is -PT1440M. Een item kan hier tot tien meldingen bevatten, maar of ze allemaal aankomen is aan de lezende agenda: sommige voegen er hun eigen standaard aan toe, en sommige verwijderen meldingen bij geïmporteerde items volledig, zodat een gedownload bestand geen meldingen op een apparaat kan inplannen.
+
+### [Afspraken importeren vanuit een CSV](https://icsmaker.com/nl/csv-to-calendar/)
+
+**Welk CSV-formaat accepteert de importfunctie van Google Agenda?**
+
+Google Agenda en Outlook lezen een CSV waarvan de eerste rij precies is: Subject, Start Date, Start Time, End Date, End Time, All Day Event, Description, Location. Datums zijn MM/DD/JJJJ en tijden zijn twaalfuurs met een achtervoegsel (09:00 AM); een dagvullende rij zet All Day Event op True en laat beide tijdcellen leeg. ICS Maker exporteert die kop plus één correcte rij, om de rest van het blad eronder te plakken. Die acht kolommen zijn alles wat een CSV bevat — geen tijdzone, geen herhalingsregel, geen gastenlijst, geen herinneringen, geen URL — gebruik dus een .ics wanneer een van die zaken belangrijk is, en CSV wanneer het aantal een bestand per afspraak onhandig maakt.
+
+### [jCal — iCalendar als JSON](https://icsmaker.com/nl/jcal/)
+
+**Wat is jCal, en hoe verschilt het van een .ics-bestand?**
+
+jCal is iCalendar geschreven als JSON, gestandaardiseerd als RFC 7265 in 2014. Het bevat exact dezelfde gegevens als een .ics-bestand — dezelfde eigenschappen, parameters en componenten — in geneste arrays in plaats van objecten, omdat een component een eigenschap kan herhalen en de volgorde van belang kan zijn. Een agenda is ["vcalendar", [eigenschappen], [componenten]], elke eigenschap is [naam, parameters, waardetype, waarde], dus SUMMARY:Standup wordt ["summary", {}, "text", "Standup"]. Dit is niet hetzelfde als schema.org Event in JSON-LD, dat een event beschrijft voor zoekmachines en veel minder gegevens bevat. ICS Maker schrijft .ics en jCal vanuit één en hetzelfde eventmodel in plaats van tussen beide te converteren, zodat de twee nooit met elkaar in tegenspraak kunnen zijn over wat het event inhoudt.
+
+### [Plaats de builder op je eigen site](https://icsmaker.com/nl/add-to-calendar-button/)
+
+**Hoe plaats ik een add-to-calendar-knop of event builder op mijn eigen site?**
+
+De builder van ICS Maker wordt geleverd als op zichzelf staand script: één leeg element, één script-tag die verwijst naar event-creator.js, en één EventCreator.mount()-aanroep — geen buildstap, geen framework, geen account, geen sleutel en geen limiet per weergave. De bundel is een enkele op zichzelf staande IIFE van minder dan 85 kB gzipped met de renderbibliotheek inbegrepen, en doet helemaal geen netwerkverzoeken: geen analytics, geen lettertypen, geen CDN, dus het voegt geen origin toe aan een Content-Security-Policy en geen paragraaf aan een privacybeleid. Elke kleur, radius en lettertype is een CSS custom property onder .ec-root, dark mode volgt de eigen voorkeur van de bezoeker, en een React-site kan de component direct renderen in plaats van de bundel te laden.
+
+### [Utwórz plik kalendarza ICS](https://icsmaker.com/pl/)
+
+**Jak utworzyć plik wydarzenia kalendarzowego (.ics) bez konta?**
+
+ICS Maker to bezpłatny internetowy generator plików iCalendar (.ics). Wpisz tytuł, początek i koniec wydarzenia, pobierz plik i zaimportuj go do Kalendarza Google, Outlooka lub Kalendarza Apple. Możesz też wkleić harmonogram albo dołączyć dokument lub obraz, sprawdzić wykryte wydarzenia i pobrać kilka razem w jednym pliku .ics. Formularz obsługuje strefy czasowe, powtarzanie, gości i przypomnienia, a także jCal, CSV, JSON-LD i linki do kalendarzy. Konto nie jest potrzebne: rozpoznawanie tekstu, odczyt dokumentów i tworzenie plików odbywają się w przeglądarce bez przesyłania danych wydarzeń.
+
+### [Czym jest ICS Maker](https://icsmaker.com/pl/about/)
+
+**Czym jest ICS Maker, dla kogo jest przeznaczony i jak wypada w porównaniu z alternatywami?**
+
+ICS Maker bezpłatnie tworzy wydarzenia w przeglądarce. Eksportuj każde jako .ics, jCal, CSV lub JSON-LD albo otwórz wstępnie wypełniony link do Kalendarza Google, Outlook.com, Office 365 lub Yahoo. Zbieraj wydarzenia z formularza, wklejonego harmonogramu lub załączonego pliku i po sprawdzeniu wykrytych danych pobierz je razem w jednym pliku .ics. Nie ma konta, dane wydarzeń nie są przesyłane, a wydarzenia nie są zachowywane między wizytami. Narzędzie służy do udostępniania plików kalendarza i osadzania formularza na stronie. Nie zarządza kalendarzem, nie zbiera potwierdzeń uczestnictwa, nie udostępnia subskrypcji ani nie gwarantuje bezbłędnego odczytu każdego dokumentu.
+
+### [Plik .ics, wyjaśniony](https://icsmaker.com/pl/ics-file/)
+
+**Czym jest plik .ics?**
+
+Plik .ics to jedno wydarzenie w kalendarzu — lub kilka — zapisane jako zwykły tekst w formacie iCalendar, ustandaryzowanym jako RFC 5545 w 2009 roku i niezmienionym od tamtej pory. Wydarzenie znajduje się między BEGIN:VEVENT a END:VEVENT, gdzie SUMMARY to tytuł, DTSTART i DTEND to godziny, LOCATION i DESCRIPTION oznaczają dokładnie to, na co wskazują ich nazwy, a UID to identyfikator, dzięki któremu kalendarz odróżnia aktualizację od nowego wydarzenia. Apple Calendar, Google Calendar, Outlook i Thunderbird — wszystkie je odczytują, dlatego zaproszenie wysłane mailem między dwiema firmami trafia poprawnie do obu skrzynek. ICS Maker tworzy taki plik na podstawie formularza i pokazuje dokładną treść pliku obok, w miarę jak wpisujesz dane.
+
+### [Linki „Dodaj do Kalendarza Google”](https://icsmaker.com/pl/add-to-google-calendar/)
+
+**Jak utworzyć link „dodaj do Kalendarza Google”?**
+
+Link do Kalendarza Google to zwykły adres URL — calendar.google.com/calendar/render — zawierający tytuł, godziny, lokalizację i opis jako parametry zapytania. Kliknięcie go otwiera Kalendarz Google z już uzupełnionym wydarzeniem, a po stronie Google nic nie jest zapisywane, dopóki użytkownik nie naciśnie przycisku zapisu. ICS Maker tworzy taki link na podstawie formularza i generuje z tego samego wydarzenia odpowiedniki dla Outlook.com, Office 365 i Yahoo, a także plik .ics dla kalendarzy spoza tej czwórki. Nikt nie potrzebuje konta ICS Maker, ponieważ takie konta nie istnieją; odbiorca potrzebuje konta Google tylko po to, by zapisać w nim wydarzenie.
+
+### [Powtarzające się wydarzenia](https://icsmaker.com/pl/recurring-event/)
+
+**Jak sprawić, by wydarzenie w kalendarzu powtarzało się co tydzień lub co miesiąc?**
+
+Powtarzanie to jedna linia w pliku .ics: RRULE:FREQ=WEEKLY, z INTERVAL dla co drugiego lub trzeciego okresu oraz COUNT lub UNTIL, by zakończyć serię. Formularz ICS Maker ustawia częstotliwość (dziennie, co tydzień, co miesiąc, co rok), interwał oraz to, czy seria nigdy się nie kończy, kończy się po określonej liczbie wystąpień, czy trwa do konkretnej daty — i zapisuje regułę RRULE w pobieranym pliku, którą odczytujący kalendarz sam rozwija, dzięki czemu seria dowolnej długości pozostaje jednym niewielkim plikiem. Wybór konkretnego dnia nie jest dostępny w formularzu i wymaga jednolinijkowej edycji pliku: FREQ=MONTHLY;BYMONTHDAY=-1 dla ostatniego dnia miesiąca, BYDAY=1MO dla pierwszego poniedziałku, BYDAY=MO,TU,WE,TH,FR tylko dla dni roboczych. Ta strona zawiera listę dwunastu takich reguł do wklejenia.
+
+### [Gdy zdarzenie ląduje o złej godzinie](https://icsmaker.com/pl/ics-time-zone/)
+
+**Dlaczego moje zdarzenie w kalendarzu jest przesunięte o godzinę lub o dzień?**
+
+Plik .ics może wyrazić czas na trzy sposoby, i to właśnie zły wybór jest niemal zawsze przyczyną. Czas płynny (DTSTART:20260815T090000, bez strefy) to dziewiąta rano niezależnie od tego, gdzie zostanie otwarty. Czas UTC (kończący się na Z) to jeden bezwzględny moment. Nazwana strefa (DTSTART;TZID=Europe/London:...) to moment, który zachowuje tę samą lokalną godzinę zegarową mimo zmiany czasu letniego/zimowego. Przesunięcie o godzinę przy imporcie zazwyczaj wynika z nazwy strefy w stylu Windows, takiej jak „GMT Standard Time”, której odczytujący kalendarz nie rozpoznaje i w efekcie przyjmuje UTC; przesunięcie o dzień w zdarzeniu całodniowym zwykle wynika ze znacznika czasu o północy tam, gdzie potrzebne było VALUE=DATE, albo z daty końcowej zapisanej na ostatni dzień zamiast na dzień następny, ponieważ DTEND jest wyłączające. ICS Maker domyślnie zapisuje czas płynny, a gdy wybrana zostanie strefa — TZID z nazwą strefy IANA — bez dołączonego bloku VTIMEZONE, który każdy popularny kalendarz jest w stanie rozwiązać na podstawie samej nazwy strefy.
+
+### [Wysyłanie zaproszenia do kalendarza](https://icsmaker.com/pl/calendar-invite/)
+
+**Jak wysłać zaproszenie do kalendarza jako załącznik .ics?**
+
+Umieść adresy w wydarzeniu, pobierz plik .ics i dołącz go do zwykłego e-maila: każdy gość staje się linią ATTENDEE zawierającą ROLE, PARTSTAT i RSVP, a odbiorca zapisuje wydarzenie jednym dotknięciem. Czego pobrany plik nie potrafi, to zbierać odpowiedzi, ponieważ śledzenie RSVP wymaga czegoś, co odbiera wiadomości METHOD:REPLY. ICS Maker celowo nie zapisuje ani METHOD:REQUEST, ani ORGANIZER: nie ma serwera pocztowego ani konta, więc podawanie się za organizatora byłoby kłamstwem, na podstawie którego kalendarz odbiorcy mógłby podjąć działanie. Aby zbierać odpowiedzi RSVP, zaimportuj plik do własnego kalendarza i wysyłaj zaproszenia stamtąd.
+
+### [Przypomnienia w pliku .ics](https://icsmaker.com/pl/ics-reminder/)
+
+**Jak dodać przypomnienie lub alarm do wydarzenia .ics?**
+
+Przypomnienie to blok VALARM wewnątrz wydarzenia: ACTION:DISPLAY oznacza powiadomienie na ekranie, a TRIGGER:-PT30M określa przesunięcie, przy czym PT wprowadza czas trwania w formacie ISO 8601, a wiodący minus sprawia, że alarm uruchamia się przed rozpoczęciem, a nie po nim. ICS Maker oferuje alarmy z poziomu formularza i zapisuje jeden blok VALARM na alarm, zawsze podając przesunięcie w minutach — dzień wcześniej to -PT1440M. Wydarzenie może zawierać tu do dziesięciu alarmów, ale to, czy wszystkie dotrą, zależy od kalendarza je odczytującego: niektóre dodają obok nich własny domyślny alarm, a inne całkowicie usuwają alarmy z importowanych wydarzeń, aby pobrany plik nie mógł zaplanować powiadomień na urządzeniu.
+
+### [Importowanie wydarzeń z pliku CSV](https://icsmaker.com/pl/csv-to-calendar/)
+
+**Jaki format CSV akceptuje narzędzie importu Kalendarza Google?**
+
+Kalendarz Google i Outlook odczytują plik CSV, którego pierwszy wiersz brzmi dokładnie: Subject, Start Date, Start Time, End Date, End Time, All Day Event, Description, Location. Daty mają format MM/DD/RRRR, a godziny są w formacie dwunastogodzinnym z sufiksem (09:00 AM); wiersz wydarzenia całodniowego ma w kolumnie All Day Event wartość True, a obie komórki godzin pozostają puste. ICS Maker eksportuje ten nagłówek wraz z jednym poprawnym wierszem, który można wkleić pod resztę arkusza. Te osiem kolumn to wszystko, co przenosi CSV - brak strefy czasowej, reguły powtarzania, listy gości, przypomnień, adresu URL - dlatego warto sięgać po .ics, gdy którekolwiek z tych elementów ma znaczenie, a po CSV, gdy liczba wydarzeń sprawia, że osobny plik dla każdego byłby absurdalny.
+
+### [jCal — iCalendar jako JSON](https://icsmaker.com/pl/jcal/)
+
+**Czym jest jCal i czym różni się od pliku .ics?**
+
+jCal to iCalendar zapisany jako JSON, ustandaryzowany w 2014 roku jako RFC 7265. Zawiera dokładnie te same dane co plik .ics — te same właściwości, parametry i komponenty — w postaci zagnieżdżonych tablic zamiast obiektów, ponieważ komponent może powtarzać właściwość, a kolejność może mieć znaczenie. Kalendarz to ["vcalendar", [właściwości], [komponenty]], każda właściwość to [nazwa, parametry, typWartości, wartość], więc SUMMARY:Standup staje się ["summary", {}, "text", "Standup"]. To nie to samo co schema.org Event w JSON-LD, który opisuje wydarzenie na potrzeby wyszukiwarek i zachowuje znacznie mniej informacji. ICS Maker generuje pliki .ics i jCal z jednego modelu wydarzenia, zamiast konwertować jeden format na drugi, dzięki czemu oba nie mogą być ze sobą niespójne co do tego, czym jest dane wydarzenie.
+
+### [Umieść kreator na własnej stronie](https://icsmaker.com/pl/add-to-calendar-button/)
+
+**Jak umieścić przycisk „Dodaj do kalendarza” lub kreator wydarzeń na własnej stronie?**
+
+Kreator ICS Maker jest dostarczany jako samodzielny skrypt: jeden pusty element, jeden tag script wskazujący na event-creator.js oraz jedno wywołanie EventCreator.mount() — bez etapu budowania, bez frameworka, bez konta, bez klucza i bez limitu wyświetleń. Pakiet to pojedynczy, samodzielny plik IIFE poniżej 85 kB po kompresji gzip, z dołączoną biblioteką renderującą, i nie wykonuje żadnych żądań sieciowych: żadnej analityki, żadnych czcionek, żadnego CDN, dzięki czemu nie dodaje żadnego źródła do polityki bezpieczeństwa treści (Content-Security-Policy) ani żadnego akapitu do polityki prywatności. Każdy kolor, promień zaokrąglenia i czcionka to niestandardowa właściwość CSS w obrębie .ec-root, tryb ciemny podąża za preferencjami samego odwiedzającego, a strona oparta na React może renderować komponent bezpośrednio zamiast wczytywać pakiet.
+
+### [Crie um arquivo de calendário ICS](https://icsmaker.com/pt/)
+
+**Como criar um arquivo de evento de calendário (.ics) sem uma conta?**
+
+ICS Maker é um gerador gratuito de arquivos iCalendar (.ics) online. Insira o título, o início e o fim de um evento, baixe o arquivo e importe-o no Google Agenda, Outlook ou Calendário Apple. Você também pode colar uma programação ou anexar um documento ou imagem, revisar os eventos detectados e baixar vários juntos em um único arquivo .ics. O formulário oferece fusos horários, recorrência, convidados e lembretes, além de jCal, CSV, JSON-LD e links de calendário. Não é preciso criar conta: o reconhecimento de texto, a leitura de documentos e a geração de arquivos acontecem no navegador sem enviar os dados dos seus eventos.
+
+### [O que é o ICS Maker](https://icsmaker.com/pt/about/)
+
+**O que é o ICS Maker, para quem é indicado e como se compara às alternativas?**
+
+ICS Maker cria eventos de calendário gratuitamente no navegador. Exporte cada evento como .ics, jCal, CSV ou JSON-LD ou abra um link preenchido para Google Agenda, Outlook.com, Office 365 ou Yahoo. Reúna eventos do formulário, de uma programação colada ou de um arquivo anexado e baixe-os em um único .ics após conferir os dados detectados. Não há conta, os dados dos eventos não são enviados e os eventos não ficam salvos entre visitas. Serve para compartilhar arquivos de calendário ou incorporar um formulário em um site. Não gerencia calendários, não coleta confirmações de presença nem hospeda assinaturas, e não garante a extração perfeita de todos os documentos.
+
+### [O arquivo .ics, explicado](https://icsmaker.com/pt/ics-file/)
+
+**O que é um arquivo .ics?**
+
+Um arquivo .ics é um evento de calendário — ou vários — escrito em texto simples no formato iCalendar, padronizado como RFC 5545 em 2009 e inalterado desde então. O evento fica entre BEGIN:VEVENT e END:VEVENT, onde SUMMARY é o título, DTSTART e DTEND são os horários, LOCATION e DESCRIPTION são o que parecem ser, e UID é o identificador que um calendário usa para diferenciar uma atualização de um evento novo. Apple Calendar, Google Calendar, Outlook e Thunderbird conseguem lê-lo, motivo pelo qual um convite enviado por e-mail entre duas empresas chega corretamente em ambos. O ICS Maker cria um a partir de um formulário e mostra o texto exato do arquivo ao lado, à medida que você digita.
+
+### [Links de adicionar ao Google Agenda](https://icsmaker.com/pt/add-to-google-calendar/)
+
+**Como faço um link de 'adicionar ao Google Agenda'?**
+
+Um link do Google Agenda é uma URL comum — calendar.google.com/calendar/render — que carrega o título, os horários, o local e a descrição como parâmetros de consulta. Ao clicar nele, o Google Agenda abre com o evento já preenchido, e nada fica armazenado do lado do Google até que a pessoa clique em salvar. O ICS Maker cria esse link a partir de um formulário e gera os equivalentes para Outlook.com, Office 365 e Yahoo a partir do mesmo evento, além do arquivo .ics para as agendas que não são nenhuma das quatro. Ninguém precisa de uma conta no ICS Maker, porque elas não existem; o destinatário só precisa de uma conta do Google para salvar o evento nela.
+
+### [Eventos recorrentes](https://icsmaker.com/pt/recurring-event/)
+
+**Como faço um evento de calendário se repetir toda semana ou todo mês?**
+
+Uma repetição é uma linha no arquivo .ics: RRULE:FREQ=WEEKLY, com INTERVAL para cada segundo ou terceiro período e COUNT ou UNTIL para encerrar a série. O formulário do ICS Maker define a frequência (diária, semanal, mensal, anual), o intervalo e se a série nunca termina, para após um número de ocorrências ou vai até uma data — e grava a RRULE no arquivo baixado, que o calendário leitor expande sozinho, de modo que uma série de qualquer duração continua sendo um arquivo pequeno. Escolher um dia específico não está no formulário e é uma edição de uma linha no arquivo: FREQ=MONTHLY;BYMONTHDAY=-1 para o último dia do mês, BYDAY=1MO para a primeira segunda-feira, BYDAY=MO,TU,WE,TH,FR apenas para dias úteis. Esta página lista doze dessas regras para colar.
+
+### [Quando o evento cai no horário errado](https://icsmaker.com/pt/ics-time-zone/)
+
+**Por que meu evento de calendário está uma hora, ou um dia, errado?**
+
+Um arquivo .ics pode expressar um horário de três formas, e a errada é quase sempre a causa. Um horário flutuante (DTSTART:20260815T090000, sem fuso) é nove horas onde quer que seja aberto. Um horário UTC (um Z ao final) é um instante absoluto. Um fuso nomeado (DTSTART;TZID=Europe/London:...) é um instante que permanece no mesmo horário local do relógio durante o horário de verão. Uma importação uma hora errada geralmente é um nome de fuso no estilo Windows, como 'GMT Standard Time', que o calendário de leitura não reconhece e usa UTC como alternativa; um evento de dia inteiro um dia errado geralmente é um carimbo de data/hora de meia-noite onde era necessário VALUE=DATE, ou uma data de término escrita no último dia em vez do dia seguinte, já que DTEND é exclusivo. O ICS Maker escreve um horário flutuante por padrão e um TZID nomeando um fuso IANA quando um é escolhido — sem um bloco VTIMEZONE incluído, que todo calendário popular resolve a partir do próprio nome do fuso.
+
+### [Enviando um convite de calendário](https://icsmaker.com/pt/calendar-invite/)
+
+**Como envio um convite de calendário como anexo .ics?**
+
+Coloque os endereços no evento, baixe o .ics e anexe-o a um e-mail comum: cada convidado se torna uma linha ATTENDEE carregando ROLE, PARTSTAT e RSVP, e o destinatário salva o evento com um toque. O que um arquivo baixado não pode fazer é coletar respostas, porque o rastreamento de RSVP precisa de algo que receba e-mails METHOD:REPLY. O ICS Maker não escreve METHOD:REQUEST nem ORGANIZER de propósito: ele não tem servidor de e-mail nem conta, então alegar ser o organizador seria uma mentira sobre a qual o calendário do destinatário poderia agir. Para coletar RSVPs, importe o arquivo para o seu próprio calendário e envie os convites a partir de lá.
+
+### [Lembretes dentro de um arquivo .ics](https://icsmaker.com/pt/ics-reminder/)
+
+**Como adiciono um lembrete ou alerta a um evento .ics?**
+
+Um lembrete é um bloco VALARM dentro do evento: ACTION:DISPLAY para uma notificação na tela, e TRIGGER:-PT30M para o deslocamento, em que PT introduz uma duração ISO 8601 e o sinal de menos inicial faz com que ele dispare antes do início, em vez de depois. O ICS Maker oferece alertas a partir do formulário e escreve um VALARM por alerta, sempre expressando o deslocamento em minutos — um dia antes é -PT1440M. Um evento pode conter até dez alarmes aqui, mas se todos chegam ou não é decisão do calendário que faz a leitura: alguns adicionam seu próprio padrão junto, e alguns removem completamente os alarmes de eventos importados para que um arquivo baixado não possa agendar notificações em um dispositivo.
+
+### [Importando eventos de um CSV](https://icsmaker.com/pt/csv-to-calendar/)
+
+**Que formato de CSV o importador do Google Agenda aceita?**
+
+O Google Agenda e o Outlook leem um CSV cuja primeira linha é exatamente: Subject, Start Date, Start Time, End Date, End Time, All Day Event, Description, Location. As datas são MM/DD/YYYY e os horários são no formato de doze horas com sufixo (09:00 AM); uma linha de evento de dia inteiro define All Day Event como True e deixa as duas células de horário vazias. O ICS Maker exporta esse cabeçalho mais uma linha correta, para você colar o restante da planilha logo abaixo. Essas oito colunas são tudo o que um CSV carrega — sem fuso horário, sem regra de repetição, sem lista de convidados, sem lembretes, sem URL — então use um .ics sempre que algum desses detalhes importar, e CSV quando o volume tornar um arquivo por evento algo absurdo.
+
+### [jCal — iCalendar em JSON](https://icsmaker.com/pt/jcal/)
+
+**O que é jCal, e como ele difere de um arquivo .ics?**
+
+jCal é o iCalendar escrito em JSON, padronizado como RFC 7265 em 2014. Ele carrega exatamente os mesmos dados de um arquivo .ics — as mesmas propriedades, parâmetros e componentes — em arrays aninhados em vez de objetos, porque um componente pode repetir uma propriedade e a ordem pode ser significativa. Um calendário é ["vcalendar", [propriedades], [componentes]], cada propriedade é [nome, parâmetros, tipoDeValor, valor], então SUMMARY:Standup se torna ["summary", {}, "text", "Standup"]. Não é o mesmo que o Event do schema.org em JSON-LD, que descreve um evento para mecanismos de busca e mantém muito menos informação. O ICS Maker escreve .ics e jCal a partir de um único modelo de evento em vez de converter entre eles, então os dois não podem discordar sobre o que o evento é.
+
+### [Coloque o criador no seu próprio site](https://icsmaker.com/pt/add-to-calendar-button/)
+
+**Como coloco um botão de adicionar ao calendário ou um criador de eventos no meu próprio site?**
+
+O criador do ICS Maker é distribuído como um script independente: um elemento vazio, uma tag de script apontando para event-creator.js e uma chamada EventCreator.mount() — sem etapa de build, sem framework, sem conta, sem chave e sem limite por visualização. O pacote é uma única IIFE autocontida com menos de 85 kB comprimidos (gzip), incluindo sua biblioteca de renderização, e não faz nenhuma requisição de rede: sem analytics, sem fontes, sem CDN, portanto não adiciona nenhuma origem a uma Content-Security-Policy nem nenhum parágrafo a uma política de privacidade. Toda cor, raio e fonte é uma propriedade personalizada de CSS sob .ec-root, o modo escuro segue a preferência do próprio visitante, e um site em React pode renderizar o componente diretamente em vez de carregar o pacote.
+
+### [ICS takvim dosyası oluşturun](https://icsmaker.com/tr/)
+
+**Hesap olmadan nasıl takvim etkinlik dosyası (.ics) oluşturabilirim?**
+
+ICS Maker, ücretsiz bir çevrimiçi iCalendar (.ics) dosyası oluşturucusudur. Etkinliğin başlığını, başlangıcını ve bitişini girin; dosyayı indirip Google Takvim, Outlook veya Apple Takvim’e aktarın. Ayrıca bir program yapıştırabilir ya da belge veya görsel ekleyebilir, algılanan etkinlikleri kontrol edip birden fazla etkinliği tek bir .ics dosyasında indirebilirsiniz. Form; saat dilimlerini, yinelemeyi, davetlileri ve hatırlatıcıları, ayrıca jCal, CSV, JSON-LD ve takvim bağlantılarını destekler. Hesap gerekmez: metin tanıma, belge okuma ve dosya oluşturma işlemleri, etkinlik verileriniz yüklenmeden tarayıcınızda gerçekleşir.
+
+### [ICS Maker nedir](https://icsmaker.com/tr/about/)
+
+**ICS Maker nedir, kimler için tasarlanmıştır ve alternatiflerle nasıl karşılaştırılır?**
+
+ICS Maker, tarayıcıda ücretsiz takvim etkinlikleri oluşturur. Her etkinliği .ics, jCal, CSV veya JSON-LD olarak dışa aktarın ya da Google Takvim, Outlook.com, Office 365 veya Yahoo için önceden doldurulmuş bir bağlantı açın. Formdan, yapıştırılan programdan veya eklenen dosyadan etkinlik toplayın; algılanan bilgileri kontrol ettikten sonra hepsini tek bir .ics dosyasında indirin. Hesap yoktur, etkinlik verileri yüklenmez ve ziyaretler arasında etkinlik saklanmaz. Takvim dosyası paylaşmak veya bir siteye form yerleştirmek için uygundur. Takvim yönetmez, katılım yanıtları toplamaz, abonelik barındırmaz ve her belgeden hatasız bilgi çıkarılacağını garanti etmez.
+
+### [.ics dosyası, açıklandı](https://icsmaker.com/tr/ics-file/)
+
+**.ics dosyası nedir?**
+
+.ics dosyası, 2009 yılında RFC 5545 olarak standartlaştırılan ve o zamandan beri değişmeyen iCalendar formatında düz metin olarak yazılmış bir veya birden fazla takvim etkinliğidir. Etkinlik, BEGIN:VEVENT ile END:VEVENT arasında yer alır; SUMMARY başlıktır, DTSTART ve DTEND zamanlardır, LOCATION ve DESCRIPTION adlarından anlaşılan bilgilerdir ve UID, bir takvimin bir güncellemeyi yeni bir etkinlikten ayırt etmek için kullandığı tanımlayıcıdır. Apple Calendar, Google Calendar, Outlook ve Thunderbird bunların hepsini okuyabilir; bu yüzden iki şirket arasında e-postayla gönderilen bir davetiye her ikisinde de doğru şekilde görüntülenir. ICS Maker bir formdan yola çıkarak bunu oluşturur ve siz yazarken tam dosya metnini yanında gösterir.
+
+### [Google Takvim'e ekle bağlantıları](https://icsmaker.com/tr/add-to-google-calendar/)
+
+**'Google Takvim'e ekle' bağlantısını nasıl oluştururum?**
+
+Bir Google Takvim bağlantısı, başlığı, saatleri, konumu ve açıklamayı sorgu parametreleri olarak taşıyan sıradan bir URL'dir — calendar.google.com/calendar/render. Ona tıklamak, etkinlik zaten doldurulmuş şekilde Google Takvim'i açar ve kişi kaydet'e basana kadar Google tarafında hiçbir şey depolanmaz. ICS Maker bu bağlantıyı bir formdan oluşturur ve aynı etkinlikten Outlook.com, Office 365 ve Yahoo eşdeğerlerini üretir, ayrıca bu dördü dışındaki takvimler için .ics dosyasını da hazırlar. Kimsenin ICS Maker hesabına ihtiyacı yoktur, çünkü böyle bir hesap yoktur; alıcının etkinliği kaydetmek için yalnızca bir Google hesabına ihtiyacı vardır.
+
+### [Tekrarlanan etkinlikler](https://icsmaker.com/tr/recurring-event/)
+
+**Bir takvim etkinliğini her hafta veya her ay tekrarlanacak şekilde nasıl ayarlarım?**
+
+Bir tekrar, .ics dosyasında tek bir satırdır: RRULE:FREQ=WEEKLY; her ikinci veya üçüncü dönem için INTERVAL, seriyi sonlandırmak için de COUNT veya UNTIL kullanılır. ICS Maker'ın formu sıklığı (günlük, haftalık, aylık, yıllık), aralığı ve serinin hiç bitmeyeceğini mi, belirli bir sayıda tekrardan sonra mı yoksa belirli bir tarihe kadar mı süreceğini ayarlar — ve RRULE'yi indirilen dosyaya yazar; bunu okuyan takvim kendisi genişletir, böylece herhangi bir uzunluktaki seri tek ve küçük bir dosya olarak kalır. Belirli bir günü seçmek formda yer almaz ve dosyada tek satırlık bir düzenlemedir: ayın son günü için FREQ=MONTHLY;BYMONTHDAY=-1, ayın ilk pazartesi günü için BYDAY=1MO, yalnızca hafta içi günler için BYDAY=MO,TU,WE,TH,FR. Bu sayfada yapıştırabileceğiniz on iki böyle kural listelenmektedir.
+
+### [Etkinlik yanlış saatte düştüğünde](https://icsmaker.com/tr/ics-time-zone/)
+
+**Takvim etkinliğim neden bir saat veya bir gün kayıyor?**
+
+Bir .ics dosyası saati üç şekilde ifade edebilir ve neredeyse her zaman sorunun nedeni yanlış olanıdır. Değişken (floating) bir saat (DTSTART:20260815T090000, bölgesiz), nerede açılırsa açılsın saat dokuzdur. UTC saati (sonunda bir Z ile) tek bir mutlak andır. Adlandırılmış bir bölge (DTSTART;TZID=Europe/London:...) ise, yaz saati uygulaması boyunca aynı yerel saatte kalan bir andır. Bir saat kayan bir içe aktarma genellikle okuyan takvimin tanımadığı ve bu yüzden UTC'ye geri döndüğü 'GMT Standard Time' gibi Windows tarzı bir bölge adından kaynaklanır; bir gün kayan tüm gün süren bir etkinlik ise genellikle VALUE=DATE gerekirken gece yarısı zaman damgası kullanılmasından ya da DTEND kapsayıcı olmadığından bitiş tarihinin bir sonraki gün yerine son güne yazılmasından kaynaklanır. ICS Maker varsayılan olarak değişken bir saat yazar ve bir bölge seçildiğinde IANA bölgesini adlandıran bir TZID yazar — ancak her yaygın takvimin bölge adının kendisinden çözümlediği gömülü bir VTIMEZONE bloğu olmadan.
+
+### [Takvim daveti gönderme](https://icsmaker.com/tr/calendar-invite/)
+
+**Takvim davetini .ics eki olarak nasıl gönderirim?**
+
+Adresleri etkinliğe ekleyin, .ics dosyasını indirin ve normal bir e-postaya ekleyin: her katılımcı ROLE, PARTSTAT ve RSVP taşıyan bir ATTENDEE satırına dönüşür ve alıcı etkinliği tek dokunuşla kaydeder. İndirilen bir dosyanın yapamayacağı şey yanıt toplamaktır, çünkü RSVP takibi METHOD:REPLY postası alabilen bir şey gerektirir. ICS Maker bilerek ne METHOD:REQUEST ne de ORGANIZER yazar: ne bir posta sunucusu ne de bir hesabı vardır, bu yüzden organizatör olduğunu iddia etmek alıcının takviminin harekete geçebileceği bir yalan olurdu. RSVP toplamak için dosyayı kendi takviminize aktarın ve davetleri oradan gönderin.
+
+### [Bir .ics dosyasındaki hatırlatıcılar](https://icsmaker.com/tr/ics-reminder/)
+
+**Bir .ics etkinliğine hatırlatıcı veya uyarı nasıl eklerim?**
+
+Bir hatırlatıcı, etkinlik içindeki bir VALARM bloğudur: ekran bildirimi için ACTION:DISPLAY ve kaydırma için TRIGGER:-PT30M; burada PT bir ISO 8601 süresini başlatır ve baştaki eksi işareti, etkinliğin başlangıcından sonra değil önce tetiklenmesini sağlar. ICS Maker, formdan uyarılar sunar ve her uyarı için bir VALARM yazar; kaydırmayı her zaman dakika cinsinden ifade eder — bir gün öncesi -PT1440M'dir. Bir etkinlik burada en fazla on alarm taşıyabilir, ancak hepsinin ulaşıp ulaşmayacağı okuyan takvimin kararıdır: bazıları kendi varsayılanlarını da ekler, bazıları ise indirilen bir dosyanın bir cihazda bildirim zamanlayamaması için içe aktarılan etkinliklerden alarmları tamamen kaldırır.
+
+### [Bir CSV'den etkinlik içe aktarma](https://icsmaker.com/tr/csv-to-calendar/)
+
+**Google Takvim'in içe aktarıcısı hangi CSV formatını kabul eder?**
+
+Google Takvim ve Outlook, ilk satırı tam olarak şu şekilde olan bir CSV'yi okur: Subject, Start Date, Start Time, End Date, End Time, All Day Event, Description, Location. Tarihler AA/GG/YYYY, saatler ise bir son ek ile birlikte on iki saatlik biçimdedir (09:00 AM); tüm gün süren bir satırda All Day Event True olarak ayarlanır ve her iki saat hücresi de boş bırakılır. ICS Maker bu başlığı ve doğru bir satırı dışa aktarır, böylece sayfanın geri kalanını bunun altına yapıştırabilirsiniz. Bu sekiz sütun, bir CSV'nin taşıdığı her şeydir — saat dilimi yok, tekrar kuralı yok, konuk listesi yok, hatırlatıcı yok, URL yok — bu yüzden bunlardan herhangi biri önemliyse bir .ics kullanın, hacim etkinlik başına bir dosyayı saçma kıldığında ise CSV kullanın.
+
+### [jCal — JSON olarak iCalendar](https://icsmaker.com/tr/jcal/)
+
+**jCal nedir ve bir .ics dosyasından farkı nedir?**
+
+jCal, 2014 yılında RFC 7265 olarak standartlaştırılan, JSON olarak yazılmış iCalendar'dır. Bir .ics dosyasıyla tam olarak aynı veriyi — aynı özellikleri, parametreleri ve bileşenleri — nesneler yerine iç içe geçmiş diziler halinde taşır, çünkü bir bileşen bir özelliği tekrar edebilir ve sıra önemli olabilir. Bir takvim ["vcalendar", [özellikler], [bileşenler]] şeklindedir, her özellik [ad, parametreler, değer türü, değer] şeklindedir, böylece SUMMARY:Standup, ["summary", {}, "text", "Standup"] haline gelir. Bu, bir etkinliği arama motorları için tanımlayan ve bunun çok daha azını koruyan JSON-LD'deki schema.org Event ile aynı değildir. ICS Maker, .ics ve jCal'i birbirine dönüştürmek yerine tek bir etkinlik modelinden yazar, böylece ikisi etkinliğin ne olduğu konusunda anlaşmazlığa düşemez.
+
+### [Oluşturucuyu kendi sitenize ekleyin](https://icsmaker.com/tr/add-to-calendar-button/)
+
+**Kendi sitemde nasıl takvime ekle butonu veya etkinlik oluşturucu gösterebilirim?**
+
+ICS Maker'ın oluşturucusu tek başına çalışan bir script olarak sunulur: boş bir element, event-creator.js dosyasına işaret eden bir script etiketi ve bir EventCreator.mount() çağrısı — derleme adımı yok, framework yok, hesap yok, anahtar yok ve görüntüleme başına limit yok. Paket, render kütüphanesi dahil olmak üzere gzip ile 85 kB'ın altında, tek başına çalışan bir IIFE'dir ve hiçbir ağ isteği yapmaz: analitik yok, font yok, CDN yok, dolayısıyla bir Content-Security-Policy'ye yeni bir origin, gizlilik politikanıza da yeni bir paragraf eklemez. Her renk, köşe yuvarlaklığı ve font, .ec-root altında bir CSS özel özelliğidir, karanlık mod ziyaretçinin kendi tercihini takip eder ve bir React sitesi paketi yüklemek yerine bileşeni doğrudan render edebilir.
+
+### [Создайте файл календаря ICS](https://icsmaker.com/ru/)
+
+**Как создать файл календарного события (.ics) без учётной записи?**
+
+ICS Maker — бесплатный онлайн-генератор файлов iCalendar (.ics). Введите название, начало и конец события, скачайте файл и импортируйте его в Google Календарь, Outlook или Календарь Apple. Можно также вставить расписание или прикрепить документ либо изображение, проверить распознанные события и скачать несколько событий вместе в одном файле .ics. Форма поддерживает часовые пояса, повторения, гостей и напоминания, а также jCal, CSV, JSON-LD и ссылки на календари. Аккаунт не нужен: распознавание текста, чтение документов и создание файлов выполняются в браузере без отправки данных ваших событий.
+
+### [Что такое ICS Maker](https://icsmaker.com/ru/about/)
+
+**Что такое ICS Maker, для кого он предназначен и чем он отличается от альтернатив?**
+
+ICS Maker бесплатно создаёт события календаря в браузере. Экспортируйте каждое событие в .ics, jCal, CSV или JSON-LD либо откройте предварительно заполненную ссылку для Google Календаря, Outlook.com, Office 365 или Yahoo. Собирайте события из формы, вставленного расписания или прикреплённого файла и после проверки распознанных данных скачивайте их вместе в одном .ics. Аккаунта нет, данные событий не отправляются, а события не сохраняются между посещениями. Инструмент подходит для обмена файлами календаря и встраивания формы на сайт. Он не управляет календарём, не собирает ответы на приглашения, не размещает подписки и не гарантирует безошибочное извлечение данных из любого документа.
+
+### [Файл .ics: разбор](https://icsmaker.com/ru/ics-file/)
+
+**Что такое файл .ics?**
+
+Файл .ics — это одно или несколько событий календаря, записанных в виде обычного текста в формате iCalendar, стандартизированном как RFC 5545 в 2009 году и не менявшемся с тех пор. Событие располагается между BEGIN:VEVENT и END:VEVENT, где SUMMARY — это название, DTSTART и DTEND — время начала и окончания, LOCATION и DESCRIPTION означают именно то, что следует из их названий, а UID — это идентификатор, по которому календарь отличает обновление от нового события. Apple Calendar, Google Calendar, Outlook и Thunderbird читают такие файлы, поэтому приглашение, отправленное по почте между двумя компаниями, корректно открывается в обоих случаях. ICS Maker создаёт файл на основе заполненной формы и одновременно показывает точный текст файла по мере ввода данных.
+
+### [Ссылки «Добавить в Google Календарь»](https://icsmaker.com/ru/add-to-google-calendar/)
+
+**Как сделать ссылку «добавить в Google Календарь»?**
+
+Ссылка на Google Календарь — это обычный URL — calendar.google.com/calendar/render — который передаёт название, время, место и описание в виде параметров запроса. При переходе по ней открывается Google Календарь с уже заполненным событием, и ничего не сохраняется на стороне Google, пока пользователь не нажмёт «Сохранить». ICS Maker создаёт такую ссылку на основе формы и на базе того же события формирует аналогичные ссылки для Outlook.com, Office 365 и Yahoo, а также файл .ics для календарей, не входящих в эту четвёрку. Аккаунт ICS Maker никому не нужен, потому что таких аккаунтов не существует; получателю нужен аккаунт Google лишь для того, чтобы сохранить в него событие.
+
+### [Повторяющиеся события](https://icsmaker.com/ru/recurring-event/)
+
+**Как сделать так, чтобы событие календаря повторялось каждую неделю или каждый месяц?**
+
+Повтор — это одна строка в файле .ics: RRULE:FREQ=WEEKLY, где INTERVAL задаёт повтор через каждый второй или третий период, а COUNT или UNTIL завершают серию. Форма ICS Maker задаёт частоту (ежедневно, еженедельно, ежемесячно, ежегодно), интервал и то, никогда ли серия не заканчивается, останавливается ли после определённого числа повторов или идёт до конкретной даты — и записывает RRULE в скачиваемый файл, который читающий его календарь разворачивает самостоятельно, поэтому серия любой длины остаётся одним небольшим файлом. Выбор конкретного дня не предусмотрен формой и требует однострочной правки файла: FREQ=MONTHLY;BYMONTHDAY=-1 для последнего дня месяца, BYDAY=1MO для первого понедельника, BYDAY=MO,TU,WE,TH,FR только для будних дней. На этой странице перечислены двенадцать таких правил, которые можно вставить.
+
+### [Когда событие происходит в неверное время](https://icsmaker.com/ru/ics-time-zone/)
+
+**Почему моё событие в календаре сдвинуто на час или на день?**
+
+Файл .ics может задавать время тремя способами, и почти всегда причина в том, что использован не тот способ. Плавающее время (DTSTART:20260815T090000, без пояса) — это девять часов независимо от того, где файл открыт. Время UTC (с завершающей Z) — это один абсолютный момент. Именованный пояс (DTSTART;TZID=Europe/London:...) — это момент, который сохраняет одно и то же местное время по часам при переходе на летнее/зимнее время. Смещение на час при импорте обычно вызвано названием пояса в стиле Windows, например «GMT Standard Time», которое читающий календарь не распознаёт и по умолчанию принимает за UTC; смещение на день для событий «весь день» обычно возникает из-за отметки времени в полночь там, где нужно было указать VALUE=DATE, либо из-за даты окончания, указанной как последний день события, а не следующий за ним, поскольку DTEND не включает указанную дату. ICS Maker по умолчанию записывает плавающее время, а при выборе пояса — TZID с названием пояса IANA, без встроенного блока VTIMEZONE, который любой распространённый календарь определяет по самому названию пояса.
+
+### [Отправка приглашения из календаря](https://icsmaker.com/ru/calendar-invite/)
+
+**Как отправить приглашение из календаря в виде вложения .ics?**
+
+Добавьте адреса к событию, скачайте .ics и прикрепите его к обычному письму: каждый гость станет строкой ATTENDEE с параметрами ROLE, PARTSTAT и RSVP, а получатель сохранит событие одним нажатием. Скачанный файл не умеет собирать ответы, потому что для отслеживания RSVP нужно что-то, что принимает почту METHOD:REPLY. ICS Maker намеренно не пишет ни METHOD:REQUEST, ни ORGANIZER: у него нет почтового сервера и учётной записи, поэтому выдавать себя за организатора было бы ложью, на основании которой календарь получателя мог бы действовать. Чтобы собирать ответы (RSVP), импортируйте файл в свой собственный календарь и отправляйте приглашения уже из него.
+
+### [Напоминания внутри файла .ics](https://icsmaker.com/ru/ics-reminder/)
+
+**Как добавить напоминание или оповещение к событию .ics?**
+
+Напоминание — это блок VALARM внутри события: ACTION:DISPLAY для уведомления на экране и TRIGGER:-PT30M для смещения, где PT указывает на длительность по стандарту ISO 8601, а знак минус в начале означает, что оповещение сработает до начала, а не после него. ICS Maker предлагает оповещения через форму и записывает по одному VALARM на каждое оповещение, всегда указывая смещение в минутах — за день до события это -PT1440M. Событие может содержать до десяти оповещений, но то, дойдут ли они все до пользователя, решает читающий календарь: некоторые добавляют своё собственное оповещение по умолчанию в дополнение к имеющимся, а некоторые полностью удаляют оповещения из импортированных событий, чтобы скачанный файл не мог планировать уведомления на устройстве.
+
+### [Импорт событий из CSV](https://icsmaker.com/ru/csv-to-calendar/)
+
+**Какой формат CSV принимает импортёр Google Календаря?**
+
+Google Календарь и Outlook читают CSV, первая строка которого выглядит ровно так: Subject, Start Date, Start Time, End Date, End Time, All Day Event, Description, Location. Даты указываются в формате MM/DD/YYYY, а время — в 12-часовом формате с суффиксом (09:00 AM); в строке для события на весь день All Day Event устанавливается в True, а обе ячейки времени остаются пустыми. ICS Maker экспортирует этот заголовок вместе с одной корректной строкой, чтобы вы могли вставить остальную часть таблицы под ней. Эти восемь столбцов — это всё, что несёт CSV: ни часового пояса, ни правила повторения, ни списка гостей, ни напоминаний, ни URL, — поэтому используйте .ics всякий раз, когда что-то из этого важно, а CSV — когда объём делает файл на каждое событие абсурдным.
+
+### [jCal — iCalendar в формате JSON](https://icsmaker.com/ru/jcal/)
+
+**Что такое jCal и чем он отличается от файла .ics?**
+
+jCal — это iCalendar, записанный в формате JSON, стандартизированный как RFC 7265 в 2014 году. Он содержит точно такие же данные, что и файл .ics — те же свойства, параметры и компоненты — но в виде вложенных массивов, а не объектов, поскольку компонент может повторять свойство, а порядок может иметь значение. Календарь — это ["vcalendar", [properties], [components]], каждое свойство — это [name, parameters, valueType, value], поэтому SUMMARY:Standup становится ["summary", {}, "text", "Standup"]. Это не то же самое, что schema.org Event в формате JSON-LD, который описывает событие для поисковых систем и сохраняет гораздо меньше данных. ICS Maker создаёт .ics и jCal из единой модели события, а не путём преобразования одного в другое, поэтому эти два формата не могут расходиться в том, что представляет собой событие.
+
+### [Разместите конструктор на своём сайте](https://icsmaker.com/ru/add-to-calendar-button/)
+
+**Как разместить кнопку «Добавить в календарь» или конструктор событий на своём сайте?**
+
+Конструктор ICS Maker поставляется как отдельный скрипт: один пустой элемент, один тег script, указывающий на event-creator.js, и один вызов EventCreator.mount() — без этапа сборки, без фреймворка, без аккаунта, без ключа и без ограничения на количество просмотров. Бандл представляет собой единый самодостаточный IIFE размером менее 85 КБ в сжатом виде вместе со встроенной библиотекой рендеринга, и он вообще не выполняет сетевых запросов: ни аналитики, ни шрифтов, ни CDN, поэтому он не добавляет ни одного источника в Content-Security-Policy и ни одного абзаца в политику конфиденциальности. Каждый цвет, радиус и шрифт задаются как пользовательское CSS-свойство внутри .ec-root, тёмная тема следует системным настройкам посетителя, а на React-сайте компонент можно рендерить напрямую, не загружая бандл.
+
+### [ICSカレンダーファイルを作成](https://icsmaker.com/ja/)
+
+**アカウントなしでカレンダーイベントファイル(.ics)を作成するには?**
+
+ICS Makerは、iCalendar（.ics）ファイルを無料で作成できるオンラインツールです。予定のタイトル、開始、終了を入力し、ファイルをダウンロードしてGoogle カレンダー、Outlook、Appleカレンダーに取り込めます。スケジュールの貼り付けや文書・画像の添付にも対応しており、検出された予定を確認して、複数の予定を1つの.icsファイルとしてダウンロードできます。フォームではタイムゾーン、繰り返し、ゲスト、リマインダーのほか、jCal、CSV、JSON-LD、カレンダーリンクも利用できます。アカウントは不要です。文字認識、文書の読み取り、ファイル生成はブラウザー内で行われ、予定のデータはアップロードされません。
+
+### [ICS Makerとは](https://icsmaker.com/ja/about/)
+
+**ICS Makerとは何か、誰のためのツールで、他の選択肢と比べてどうなのか?**
+
+ICS Makerは、ブラウザー内で無料でカレンダーの予定を作成します。個別の予定を.ics、jCal、CSV、JSON-LDで出力するか、Google カレンダー、Outlook.com、Office 365、Yahoo用の入力済みリンクを開けます。フォーム、貼り付けたスケジュール、添付ファイルから予定を集め、検出内容を確認したうえで1つの.icsファイルにまとめてダウンロードできます。アカウントはなく、予定のデータはアップロードされず、次回の訪問まで予定を保存する機能もありません。カレンダーファイルの共有やサイトへのフォーム埋め込みに適しています。カレンダー管理、出欠回答の収集、購読用フィードのホスティングは行わず、すべての文書からの正確な抽出を保証するものではありません。
+
+### [.icsファイルを解説](https://icsmaker.com/ja/ics-file/)
+
+**.icsファイルとは?**
+
+.icsファイルとは、1件または複数のカレンダーイベントを、iCalendar形式のプレーンテキストで書き表したものです。この形式は2009年にRFC 5545として標準化されて以来、変わっていません。イベントはBEGIN:VEVENTとEND:VEVENTの間に配置され、SUMMARYはタイトル、DTSTARTとDTENDは日時、LOCATIONとDESCRIPTIONはそれぞれ場所と説明、UIDはカレンダーが更新なのか新規イベントなのかを判別するための識別子です。Apple Calendar、Googleカレンダー、Outlook、Thunderbirdはいずれもこれを読み取れるため、企業間でメール送信された招待状が両方に正しく届くのです。ICS Makerはフォームからこれを作成し、入力するそばから正確なファイルのテキストを横に表示します。
+
+### [Googleカレンダー追加リンク](https://icsmaker.com/ja/add-to-google-calendar/)
+
+**「Googleカレンダーに追加」リンクはどう作ればいいですか?**
+
+Googleカレンダーのリンクは、calendar.google.com/calendar/renderという通常のURLに、タイトル・日時・場所・説明をクエリパラメータとして含めたものです。クリックするとイベント情報が入力済みの状態でGoogleカレンダーが開き、相手が保存ボタンを押すまでGoogle側には何も保存されません。ICS Makerはフォームからこのリンクを作成し、同じイベントからOutlook.com、Office 365、Yahoo用のリンクも同時に生成します。さらに、この4つ以外のカレンダー向けに.icsファイルも作成します。ICS Makerにはアカウントというもの自体が存在しないため、誰もアカウントを必要としません。受け取った側も、イベントを自分のカレンダーに保存する場合にのみGoogleアカウントが必要です。
+
+### [繰り返しイベント](https://icsmaker.com/ja/recurring-event/)
+
+**カレンダーイベントを毎週または毎月繰り返すようにするにはどうすればいいですか?**
+
+繰り返しは.icsファイル内の1行、RRULE:FREQ=WEEKLYで表現され、2週間ごとや3週間ごとにはINTERVAL、シリーズを終了させるにはCOUNTまたはUNTILを使います。ICS Makerのフォームでは、頻度(毎日、毎週、毎月、毎年)、間隔、そしてシリーズを無期限にするか、指定回数で終了させるか、指定日まで実行するかを設定でき、そのRRULEをダウンロードファイルに書き込みます。読み込む側のカレンダーがそれを展開するため、どれだけ長いシリーズでも1つの小さなファイルのままです。特定の曜日を選ぶことはフォームにはなく、ファイルを1行編集するだけです。月末日ならFREQ=MONTHLY;BYMONTHDAY=-1、最初の月曜日ならBYDAY=1MO、平日のみならBYDAY=MO,TU,WE,TH,FRです。このページには貼り付けて使える12種類のルールを掲載しています。
+
+### [イベントが間違った時刻に表示されるとき](https://icsmaker.com/ja/ics-time-zone/)
+
+**なぜカレンダーイベントが1時間、あるいは1日ずれるのですか?**
+
+.ics ファイルは時刻を3つの方法で表現でき、原因はほぼ必ずこのうちどれかを間違って使っていることにあります。フロート時刻(DTSTART:20260815T090000、タイムゾーンなし)は、開いた場所がどこであっても9時になります。UTC時刻(末尾のZ)は絶対的な単一の瞬間を表します。名前付きタイムゾーン(DTSTART;TZID=Europe/London:...)は、夏時間の切り替えをまたいでも同じローカル時計の時刻を保ち続ける瞬間を表します。1時間ずれてインポートされる場合、たいていは「GMT Standard Time」のようなWindows形式のタイムゾーン名が原因で、読み込むカレンダーがそれを認識できずUTCにフォールバックしています。1日ずれる終日イベントは、たいていVALUE=DATEが必要な場面で真夜中のタイムスタンプが使われているか、DTENDは排他的であるにもかかわらず、終了日が翌日ではなく最終日そのものに書かれていることが原因です。ICS Makerはデフォルトでフロート時刻を書き出し、タイムゾーンを選択した場合はIANAのタイムゾーン名を指定するTZIDを書き出します — VTIMEZONEブロックは同梱されませんが、主要なカレンダーはいずれもタイムゾーン名自体からこれを解決できます。
+
+### [カレンダー招待の送信](https://icsmaker.com/ja/calendar-invite/)
+
+**カレンダー招待を.ics添付ファイルとして送るにはどうすればいいですか?**
+
+アドレスをイベントに追加し、.icsをダウンロードして、通常のメールに添付します。各ゲストはROLE、PARTSTAT、RSVPを持つATTENDEE行になり、受信者はワンタップでイベントを保存できます。ダウンロードしたファイルにできないのは回答の収集です。なぜならRSVPの追跡にはMETHOD:REPLYメールを受け取る何かが必要だからです。ICS Makerは意図的にMETHOD:REQUESTもORGANIZERも書き込みません。メールサーバーもアカウントも持たないため、主催者を名乗ることは、受信者のカレンダーが実行しかねない虚偽の申告になってしまうからです。RSVPを収集するには、ファイルを自分のカレンダーにインポートし、そこから招待を送信してください。
+
+### [.icsファイル内のリマインダー](https://icsmaker.com/ja/ics-reminder/)
+
+**.icsイベントにリマインダーやアラートを追加するにはどうすればいいですか？**
+
+リマインダーはイベント内のVALARMブロックです。画面上の通知にはACTION:DISPLAY、オフセットにはTRIGGER:-PT30Mを使います。PTはISO 8601の時間の長さ（デュレーション）を表し、先頭のマイナス記号は開始後ではなく開始前に発火させるためのものです。ICS Makerはフォームからアラートを設定でき、アラートごとに1つのVALARMを書き出します。オフセットは常に分単位で表記され、1日前は-PT1440Mとなります。イベントにはここで最大10個のアラームを設定できますが、それらがすべて届くかどうかは読み取る側のカレンダー次第です。独自のデフォルトを併せて追加するカレンダーもあれば、インポートしたイベントからアラームを完全に取り除き、ダウンロードしたファイルがデバイス上で通知をスケジュールできないようにするカレンダーもあります。
+
+### [CSVからイベントをインポートする](https://icsmaker.com/ja/csv-to-calendar/)
+
+**Googleカレンダーのインポーターが受け付けるCSV形式は?**
+
+GoogleカレンダーとOutlookは、1行目が正確に次の通りであるCSVを読み込みます: Subject, Start Date, Start Time, End Date, End Time, All Day Event, Description, Location。日付はMM/DD/YYYY形式、時刻は12時間制で午前・午後の表記付き(09:00 AM)です。終日イベントの行はAll Day EventをTrueにし、両方の時刻セルは空欄にします。ICS Makerはこの見出しに加えて正しい1行分のデータを出力するので、その下に残りのシートを貼り付けてください。この8つの列がCSVに含められる情報のすべてです——タイムゾーンも、繰り返しルールも、招待者リストも、リマインダーも、URLもありません——そのため、これらのいずれかが重要な場合は.icsを使い、件数が多くてイベントごとにファイルを作るのが非現実的な場合はCSVを使ってください。
+
+### [jCal — JSON としての iCalendar](https://icsmaker.com/ja/jcal/)
+
+**jCal とは何か、.ics ファイルとどう違うのか？**
+
+jCal は JSON として書かれた iCalendar であり、2014年に RFC 7265 として標準化されました。.ics ファイルとまったく同じデータ——同じプロパティ、パラメータ、コンポーネント——を、オブジェクトではなくネストした配列で表現します。これは、コンポーネントがプロパティを繰り返し持つことがあり、順序が意味を持つ場合があるためです。カレンダーは ["vcalendar", [properties], [components]] であり、各プロパティは [name, parameters, valueType, value] なので、SUMMARY:Standup は ["summary", {}, "text", "Standup"] になります。これは、検索エンジン向けにイベントを説明し、その情報のごく一部しか保持しない JSON-LD の schema.org Event とは異なります。ICS Maker は、両者を変換するのではなく、単一のイベントモデルから .ics と jCal を出力するため、この2つがイベントの内容について食い違うことはありません。
+
+### [作成ツールを自分のサイトに設置する](https://icsmaker.com/ja/add-to-calendar-button/)
+
+**カレンダー追加ボタンやイベント作成ツールを自分のサイトに設置するにはどうすればよいですか？**
+
+ICS Makerの作成ツールは単体スクリプトとして提供されます。空の要素を1つ、event-creator.jsを指すスクリプトタグを1つ、そしてEventCreator.mount()の呼び出しを1つ用意するだけです ― ビルド作業も、フレームワークも、アカウント登録も、キーも、表示回数の上限も必要ありません。バンドルはレンダリングライブラリを含めてgzip圧縮後85kB未満の、自己完結型の単一IIFEであり、ネットワークリクエストを一切行いません。アナリティクスもフォントもCDNも使用しないため、コンテンツセキュリティポリシーに新たなオリジンを追加する必要もなく、プライバシーポリシーに新たな項目を加える必要もありません。あらゆる色、角丸、フォントは.ec-root配下のCSSカスタムプロパティとして定義されており、ダークモードは訪問者自身の設定に従い、Reactサイトであればバンドルを読み込む代わりにコンポーネントを直接レンダリングできます。
+
+### [ICS 캘린더 파일 만들기](https://icsmaker.com/ko/)
+
+**계정 없이 캘린더 이벤트 파일(.ics)을 만들려면 어떻게 하나요?**
+
+ICS Maker는 무료 온라인 iCalendar(.ics) 파일 생성 도구입니다. 일정 제목과 시작 및 종료 시간을 입력하고 파일을 다운로드한 뒤 Google 캘린더, Outlook 또는 Apple 캘린더로 가져오세요. 시간표를 붙여넣거나 문서 또는 이미지를 첨부한 다음 감지된 일정을 검토하고 여러 일정을 하나의 .ics 파일로 다운로드할 수도 있습니다. 양식은 시간대, 반복, 참석자, 알림과 함께 jCal, CSV, JSON-LD 및 캘린더 링크를 지원합니다. 계정은 필요 없습니다. 문자 인식, 문서 읽기, 파일 생성은 일정 데이터를 업로드하지 않고 브라우저 안에서 실행됩니다.
+
+### [ICS Maker란](https://icsmaker.com/ko/about/)
+
+**ICS Maker는 무엇이고, 누구를 위한 것이며, 대안 도구들과 비교하면 어떤가요?**
+
+ICS Maker는 브라우저에서 무료로 캘린더 일정을 만듭니다. 각 일정을 .ics, jCal, CSV 또는 JSON-LD로 내보내거나 Google 캘린더, Outlook.com, Office 365 또는 Yahoo용으로 미리 채워진 링크를 열 수 있습니다. 양식, 붙여넣은 시간표, 첨부 파일에서 일정을 모아 감지된 내용을 확인한 뒤 하나의 .ics 파일로 다운로드하세요. 계정이 없고 일정 데이터는 업로드되지 않으며 다음 방문까지 일정이 저장되지도 않습니다. 캘린더 파일 공유나 웹사이트에 양식 삽입하기에 적합합니다. 캘린더 관리, 참석 응답 수집, 구독 피드 호스팅은 제공하지 않으며 모든 문서에서 정확하게 추출된다고 보장하지 않습니다.
+
+### [.ics 파일 설명](https://icsmaker.com/ko/ics-file/)
+
+**.ics 파일이란 무엇인가요?**
+
+.ics 파일은 2009년 RFC 5545로 표준화된 이래 변경되지 않은 iCalendar 형식으로 일반 텍스트로 작성된 하나 또는 여러 개의 캘린더 이벤트입니다. 이벤트는 BEGIN:VEVENT와 END:VEVENT 사이에 위치하며, SUMMARY는 제목, DTSTART와 DTEND는 시간, LOCATION과 DESCRIPTION은 이름 그대로의 정보, UID는 캘린더가 업데이트와 새 이벤트를 구분하는 데 사용하는 식별자입니다. Apple Calendar, Google Calendar, Outlook, Thunderbird 모두 이를 읽을 수 있어서, 두 회사 간에 이메일로 전송된 초대장이 양쪽 모두에서 올바르게 표시되는 이유입니다. ICS Maker는 양식을 통해 파일을 만들고, 입력하는 동안 그 옆에 정확한 파일 텍스트를 보여줍니다.
+
+### [Google 캘린더에 추가 링크](https://icsmaker.com/ko/add-to-google-calendar/)
+
+**'Google 캘린더에 추가' 링크는 어떻게 만드나요?**
+
+Google 캘린더 링크는 제목, 시간, 위치, 설명을 쿼리 매개변수로 담은 일반적인 URL인 calendar.google.com/calendar/render입니다. 이 링크를 클릭하면 이벤트가 이미 채워진 상태로 Google 캘린더가 열리며, 사용자가 저장 버튼을 누르기 전까지는 Google 측에 아무것도 저장되지 않습니다. ICS Maker는 이 링크를 폼을 통해 생성하고, 같은 이벤트로부터 Outlook.com, Office 365, Yahoo용 링크도 함께 만들어주며, 이 네 가지에 해당하지 않는 캘린더를 위한 .ics 파일도 제공합니다. ICS Maker 계정은 필요하지 않습니다. 애초에 계정이라는 것이 존재하지 않기 때문입니다. 받는 사람은 이벤트를 자신의 캘린더에 저장할 때만 Google 계정이 필요합니다.
+
+### [반복 일정](https://icsmaker.com/ko/recurring-event/)
+
+**캘린더 일정을 매주 또는 매월 반복되게 하려면 어떻게 하나요?**
+
+반복은 .ics 파일의 한 줄로 표현됩니다: RRULE:FREQ=WEEKLY, 격주나 3주마다 등을 지정하려면 INTERVAL을, 시리즈를 종료하려면 COUNT나 UNTIL을 사용합니다. ICS Maker의 양식에서는 빈도(매일, 매주, 매월, 매년), 간격, 그리고 시리즈가 끝나지 않는지, 특정 횟수 후 멈추는지, 특정 날짜까지 진행되는지를 설정하며, 이 RRULE을 다운로드되는 파일에 기록합니다. 이를 읽는 캘린더 앱이 스스로 시리즈를 전개하므로, 아무리 긴 시리즈라도 하나의 작은 파일로 유지됩니다. 특정 요일을 선택하는 기능은 양식에 없으며, 파일을 한 줄만 수정하면 됩니다: 매월 마지막 날은 FREQ=MONTHLY;BYMONTHDAY=-1, 매월 첫째 월요일은 BYDAY=1MO, 평일만 반복하려면 BYDAY=MO,TU,WE,TH,FR를 사용합니다. 이 페이지에는 그대로 붙여넣을 수 있는 열두 가지 규칙이 정리되어 있습니다.
+
+### [일정이 잘못된 시간에 표시될 때](https://icsmaker.com/ko/ics-time-zone/)
+
+**왜 내 캘린더 일정이 한 시간, 또는 하루 어긋나 있나요?**
+
+.ics 파일은 시간을 세 가지 방식으로 표현할 수 있으며, 잘못된 방식을 사용한 것이 거의 항상 원인입니다. 부동 시간(DTSTART:20260815T090000, 시간대 없음)은 어디에서 열든 9시입니다. UTC 시간(끝에 Z가 붙음)은 하나의 절대적인 순간입니다. 명명된 시간대(DTSTART;TZID=Europe/London:...)는 서머타임이 적용되어도 같은 현지 시각을 유지하는 순간입니다. 한 시간 어긋난 가져오기는 대개 'GMT Standard Time'과 같은 Windows 방식 시간대 이름 때문인데, 읽는 캘린더가 이를 인식하지 못해 UTC로 대체 처리하는 것이 원인입니다. 하루 어긋난 하루 종일 일정은 대개 VALUE=DATE가 필요했던 자정 타임스탬프이거나, DTEND가 배타적이기 때문에 다음 날이 아닌 마지막 날 자체에 종료일을 적어 놓은 경우입니다. ICS Maker는 기본적으로 부동 시간을 작성하며, 선택 시 IANA 시간대 이름을 지정하는 TZID를 작성합니다 — 다만 대부분의 주요 캘린더가 시간대 이름 자체로부터 해석할 수 있는 VTIMEZONE 블록은 포함하지 않습니다.
+
+### [캘린더 초대 보내기](https://icsmaker.com/ko/calendar-invite/)
+
+**캘린더 초대를 .ics 첨부 파일로 보내려면 어떻게 하나요?**
+
+이벤트에 주소를 넣고 .ics 파일을 다운로드한 다음, 일반 이메일에 첨부하세요. 각 참석자는 ROLE, PARTSTAT, RSVP를 포함하는 ATTENDEE 줄이 되며, 수신자는 한 번의 탭으로 이벤트를 저장할 수 있습니다. 다운로드한 파일이 할 수 없는 것은 응답 수집입니다. RSVP 추적에는 METHOD:REPLY 메일을 수신할 무언가가 필요하기 때문입니다. ICS Maker는 METHOD:REQUEST와 ORGANIZER를 의도적으로 작성하지 않습니다. 메일 서버도 계정도 없기 때문에, 주최자인 척하는 것은 수신자의 캘린더가 그대로 실행에 옮길 수 있는 거짓말이 될 것입니다. RSVP를 수집하려면 파일을 본인의 캘린더로 가져와 거기서 초대를 보내세요.
+
+### [.ics 파일 안의 리마인더](https://icsmaker.com/ko/ics-reminder/)
+
+**.ics 이벤트에 리마인더나 알림을 추가하려면 어떻게 하나요?**
+
+리마인더는 이벤트 안에 들어 있는 VALARM 블록입니다: 화면 알림을 위한 ACTION:DISPLAY와 오프셋을 위한 TRIGGER:-PT30M으로 구성되며, 여기서 PT는 ISO 8601 기간(duration)을 나타내고 앞의 마이너스 기호는 시작 이후가 아니라 이전에 알림이 울리도록 만듭니다. ICS Maker는 양식에서 알림을 제공하며 알림마다 하나의 VALARM을 작성하고, 오프셋은 항상 분 단위로 표기합니다 — 하루 전은 -PT1440M입니다. 이벤트는 여기서 최대 열 개의 알람을 가질 수 있지만, 이들이 실제로 모두 도착하는지는 읽어들이는 캘린더의 결정에 달려 있습니다: 일부는 자체 기본 알림을 함께 추가하고, 일부는 다운로드한 파일이 기기에 알림을 예약하지 못하도록 가져온 이벤트에서 알람을 완전히 제거합니다.
+
+### [CSV에서 일정 가져오기](https://icsmaker.com/ko/csv-to-calendar/)
+
+**Google 캘린더의 가져오기 도구는 어떤 CSV 형식을 허용하나요?**
+
+Google 캘린더와 Outlook은 첫 번째 행이 정확히 Subject, Start Date, Start Time, End Date, End Time, All Day Event, Description, Location으로 되어 있는 CSV를 읽습니다. 날짜는 MM/DD/YYYY 형식이고 시간은 접미사가 붙은 12시간제(09:00 AM)이며, 종일 일정 행은 All Day Event를 True로 설정하고 두 시간 셀을 모두 비워 둡니다. ICS Maker는 이 머리글과 올바른 한 행을 내보내므로, 시트의 나머지 부분을 그 아래에 붙여넣으면 됩니다. 이 여덟 개의 열이 CSV가 담을 수 있는 전부입니다 — 시간대도, 반복 규칙도, 참석자 목록도, 알림도, URL도 없습니다 — 그러므로 이러한 항목이 중요할 때는 .ics를 사용하고, 일정 수가 많아 이벤트마다 파일을 만드는 것이 비현실적일 때는 CSV를 사용하세요.
+
+### [jCal — JSON으로 표현한 iCalendar](https://icsmaker.com/ko/jcal/)
+
+**jCal이란 무엇이며, .ics 파일과 어떻게 다른가요?**
+
+jCal은 JSON으로 작성된 iCalendar로, 2014년 RFC 7265로 표준화되었습니다. .ics 파일과 정확히 동일한 데이터 — 동일한 속성(property), 매개변수(parameter), 구성요소(component) — 를 담고 있지만, 객체가 아니라 중첩된 배열로 표현합니다. 구성요소가 속성을 반복할 수 있고 순서가 의미를 가질 수 있기 때문입니다. 캘린더는 ["vcalendar", [properties], [components]] 형태이고, 각 속성은 [name, parameters, valueType, value] 형태이므로 SUMMARY:Standup은 ["summary", {}, "text", "Standup"]이 됩니다. 이는 검색 엔진을 위해 이벤트를 설명하며 훨씬 적은 정보만 담는 JSON-LD의 schema.org Event와는 다릅니다. ICS Maker는 .ics와 jCal을 서로 변환하는 대신 하나의 이벤트 모델로부터 각각 생성하므로, 두 형식이 이벤트의 내용에 대해 서로 어긋날 수 없습니다.
+
+### [빌더를 내 사이트에 직접 넣기](https://icsmaker.com/ko/add-to-calendar-button/)
+
+**내 사이트에 일정 추가 버튼이나 이벤트 빌더를 넣으려면 어떻게 해야 하나요?**
+
+ICS Maker의 빌더는 독립형 스크립트로 제공됩니다: 빈 요소 하나, event-creator.js를 가리키는 스크립트 태그 하나, 그리고 EventCreator.mount() 호출 하나면 됩니다 — 빌드 과정도, 프레임워크도, 계정도, 키도, 뷰당 제한도 필요 없습니다. 이 번들은 렌더링 라이브러리가 포함된 상태로 gzip 압축 시 85kB 미만인 단일 독립형 IIFE이며, 네트워크 요청을 전혀 하지 않습니다 — 분석 도구도, 폰트도, CDN도 없으므로 콘텐츠 보안 정책(CSP)에 추가할 출처도, 개인정보 처리방침에 추가할 문단도 없습니다. 모든 색상, 모서리 반경, 글꼴은 .ec-root 아래의 CSS 사용자 지정 속성으로 정의되며, 다크 모드는 방문자의 설정을 그대로 따르고, React 사이트라면 번들을 불러오는 대신 컴포넌트를 직접 렌더링할 수 있습니다.
+
+### [创建 ICS 日历文件](https://icsmaker.com/zh-Hans/)
+
+**如何在没有账户的情况下创建日历事件文件（.ics）？**
+
+ICS Maker 是免费的在线 iCalendar（.ics）文件生成工具。输入活动标题、开始和结束时间，下载文件后即可导入 Google 日历、Outlook 或 Apple 日历。你也可以粘贴日程表或附加文档、图片，检查识别出的活动，再将多个活动一起下载为一个 .ics 文件。表单支持时区、重复规则、受邀者和提醒，还支持 jCal、CSV、JSON-LD 和日历链接。无需账号：文字识别、文档读取和文件生成均在浏览器中运行，不会上传你的活动数据。
+
+### [ICS Maker 是什么](https://icsmaker.com/zh-Hans/about/)
+
+**ICS Maker 是什么，适合哪些人使用，与其他替代方案相比又如何？**
+
+ICS Maker 可在浏览器中免费创建日历活动。你可以将单个活动导出为 .ics、jCal、CSV 或 JSON-LD，或打开适用于 Google 日历、Outlook.com、Office 365 或 Yahoo 的预填链接。通过表单、粘贴的日程表或附件收集活动，检查识别内容后，将它们一起下载为一个 .ics 文件。无需账号，不上传活动数据，也不会在两次访问之间保存活动。它适合分享日历文件或在网站中嵌入表单，但不管理日历、不收集出席回复、不托管订阅，也不保证能从所有文档中准确提取活动。
+
+### [.ics 文件详解](https://icsmaker.com/zh-Hans/ics-file/)
+
+**什么是 .ics 文件?**
+
+.ics 文件是以纯文本形式写成的一个或多个日历事件,采用 iCalendar 格式,该格式于 2009 年被标准化为 RFC 5545,此后一直未变。事件内容位于 BEGIN:VEVENT 和 END:VEVENT 之间,其中 SUMMARY 是标题,DTSTART 和 DTEND 是时间,LOCATION 和 DESCRIPTION 顾名思义,UID 则是日历用来区分更新事件与新事件的标识符。Apple 日历、Google 日历、Outlook 和 Thunderbird 都能读取该格式,这也是为什么在两家公司之间通过邮件发送的邀请能够正确显示在双方日历中。ICS Maker 可以根据表单生成文件,并在您输入时实时显示文件的确切内容。
+
+### [添加到 Google 日历的链接](https://icsmaker.com/zh-Hans/add-to-google-calendar/)
+
+**如何制作一个"添加到 Google 日历"的链接?**
+
+Google 日历链接就是一个普通的 URL——calendar.google.com/calendar/render——通过查询参数携带标题、时间、地点和描述信息。点击它会打开 Google 日历,活动信息已经填好,在对方点击保存之前,Google 那边不会存储任何内容。ICS Maker 会根据表单生成这个链接,并从同一个活动生成对应的 Outlook.com、Office 365 和 Yahoo 链接,此外还有适用于这四者之外的日历的 .ics 文件。没有人需要 ICS Maker 账户,因为根本不存在这种账户;接收者只有在需要把活动保存到自己的 Google 账户时才需要一个 Google 账户。
+
+### [重复事件](https://icsmaker.com/zh-Hans/recurring-event/)
+
+**如何让日历事件每周或每月重复一次？**
+
+重复只是 .ics 文件中的一行：RRULE:FREQ=WEEKLY，可用 INTERVAL 表示每隔一或两个周期，用 COUNT 或 UNTIL 来结束系列。ICS Maker 的表单可设置频率（每天、每周、每月、每年）、间隔，以及系列是永不结束、在若干次后停止，还是运行到某个日期——并将 RRULE 写入下载的文件，读取该文件的日历会自行展开系列，因此无论运行多久，系列始终只是一个小文件。选择特定的日期不在表单中，需要对文件进行一行编辑：FREQ=MONTHLY;BYMONTHDAY=-1 表示每月最后一天，BYDAY=1MO 表示第一个星期一，BYDAY=MO,TU,WE,TH,FR 表示仅限工作日。本页列出了十二条可直接粘贴的此类规则。
+
+### [事件时间不对时该怎么办](https://icsmaker.com/zh-Hans/ics-time-zone/)
+
+**为什么我的日历事件差了一小时，或者差了一天？**
+
+.ics 文件可以用三种方式表示时间，出错的原因几乎总是选错了方式。浮动时间（DTSTART:20260815T090000，无时区）无论在哪里打开都是九点。UTC 时间（末尾带 Z）表示一个绝对时刻。命名时区（DTSTART;TZID=Europe/London:...）表示的是一个即使经历夏令时切换、本地时钟时间也保持不变的时刻。偏差一小时的导入问题通常是因为使用了 Windows 风格的时区名称（比如“GMT Standard Time”），而读取日历无法识别，于是回退为 UTC；偏差一天的全天事件问题，通常是因为本该使用 VALUE=DATE 的地方写成了午夜时间戳，或者是结束日期写在了最后一天而不是次日，因为 DTEND 是不包含当天的（即排他性的）。ICS Maker 默认写入浮动时间，选定时区时则写入指向 IANA 时区名称的 TZID——但不附带 VTIMEZONE 数据块，因为主流日历都能直接根据时区名称自行解析。
+
+### [发送日历邀请](https://icsmaker.com/zh-Hans/calendar-invite/)
+
+**如何将日历邀请作为 .ics 附件发送？**
+
+将地址添加到事件中，下载 .ics 文件，然后将其附加到普通电子邮件中：每位来宾都会成为一行携带 ROLE、PARTSTAT 和 RSVP 信息的 ATTENDEE，收件人只需轻点一下即可保存该事件。下载的文件无法做到的是收集回复，因为 RSVP 跟踪需要有能够接收 METHOD:REPLY 邮件的系统。ICS Maker 有意不写入 METHOD:REQUEST 或 ORGANIZER：它没有邮件服务器，也没有账户，因此若自称为组织者，将是收件人日历可能据以行动的谎言。如需收集 RSVP，请将文件导入你自己的日历，并从那里发送邀请。
+
+### [.ics 文件中的提醒](https://icsmaker.com/zh-Hans/ics-reminder/)
+
+**如何为 .ics 事件添加提醒或通知?**
+
+提醒是事件内部的一个 VALARM 块:ACTION:DISPLAY 表示屏幕通知,TRIGGER:-PT30M 表示偏移量,其中 PT 引出一个 ISO 8601 时长,前面的减号表示在开始前而非开始后触发。ICS Maker 在表单中提供提醒选项,并为每个提醒写入一个 VALARM,偏移量始终以分钟表示——提前一天就是 -PT1440M。一个事件在此处最多可携带十个提醒,但它们是否都能生效取决于读取文件的日历:有些日历会在此基础上另外添加自己的默认提醒,有些则会完全剥离导入事件中的提醒,以防下载的文件在设备上安排通知。
+
+### [从 CSV 导入事件](https://icsmaker.com/zh-Hans/csv-to-calendar/)
+
+**Google 日历的导入工具接受什么样的 CSV 格式？**
+
+Google 日历和 Outlook 读取的 CSV 文件，其第一行必须恰好是：Subject、Start Date、Start Time、End Date、End Time、All Day Event、Description、Location。日期格式为 MM/DD/YYYY，时间为带后缀的十二小时制（09:00 AM）；全天事件行将 All Day Event 设为 True，并将两个时间单元格留空。ICS Maker 会导出该标题行以及一行正确的数据，供你在其下粘贴其余表格内容。这八列就是 CSV 所能承载的全部内容——没有时区、没有重复规则、没有嘉宾名单、没有提醒、没有网址——因此当这些内容重要时请使用 .ics，而当数据量大到为每个事件建一个文件显得荒谬时则使用 CSV。
+
+### [jCal —— 以 JSON 表示的 iCalendar](https://icsmaker.com/zh-Hans/jcal/)
+
+**什么是 jCal，它与 .ics 文件有何不同？**
+
+jCal 是以 JSON 书写的 iCalendar，于 2014 年标准化为 RFC 7265。它承载的数据与 .ics 文件完全相同——相同的属性、参数和组件——只是用嵌套数组而非对象来表示，因为一个组件中的属性可能重复出现，且顺序可能具有意义。一个日历是 ["vcalendar", [属性], [组件]]，每个属性是 [名称, 参数, 值类型, 值]，因此 SUMMARY:Standup 会变成 ["summary", {}, "text", "Standup"]。它与用于搜索引擎的 JSON-LD 中的 schema.org Event 并不相同，后者所保留的信息要少得多。ICS Maker 是从同一个事件模型直接写出 .ics 和 jCal，而不是在两者之间相互转换，因此这两种格式不会在事件内容上产生分歧。
+
+### [将创建工具放到你自己的网站上](https://icsmaker.com/zh-Hans/add-to-calendar-button/)
+
+**如何在我自己的网站上放置“添加到日历”按钮或事件创建工具?**
+
+ICS Maker 的创建工具以独立脚本的形式发布:一个空元素、一个指向 event-creator.js 的 script 标签,以及一次 EventCreator.mount() 调用——无需构建步骤、无需框架、无需账户、无需密钥,也没有每次查看的次数限制。该打包文件是一个压缩后小于 85 kB 的独立 IIFE,已包含其渲染库,并且完全不发起任何网络请求:没有分析统计、没有字体、没有 CDN,因此它不会为内容安全策略(Content-Security-Policy)增加任何来源,也不会为隐私政策增加任何条款。每种颜色、圆角和字体都是 .ec-root 下的 CSS 自定义属性,深色模式会跟随访客自身的偏好设置,而 React 网站可以直接渲染该组件,而无需加载打包文件。
+
+### [建立 ICS 行事曆檔案](https://icsmaker.com/zh-Hant/)
+
+**如何在不用帳號的情況下建立行事曆事件檔案（.ics）？**
+
+ICS Maker 是免費的線上 iCalendar（.ics）檔案產生工具。輸入活動標題、開始和結束時間，下載檔案後即可匯入 Google 日曆、Outlook 或 Apple 行事曆。你也可以貼上時程表或附加文件、圖片，檢查辨識出的活動，再將多個活動一起下載為一個 .ics 檔案。表單支援時區、重複規則、受邀者和提醒，也支援 jCal、CSV、JSON-LD 和行事曆連結。無須帳號：文字辨識、文件讀取和檔案產生均在瀏覽器中執行，不會上傳你的活動資料。
+
+### [ICS Maker 是什麼](https://icsmaker.com/zh-Hant/about/)
+
+**ICS Maker 是什麼、適合誰使用，和其他替代方案相比又如何？**
+
+ICS Maker 可在瀏覽器中免費建立行事曆活動。你可以將單一活動匯出為 .ics、jCal、CSV 或 JSON-LD，或開啟適用於 Google 日曆、Outlook.com、Office 365 或 Yahoo 的預填連結。透過表單、貼上的時程表或附件收集活動，檢查辨識內容後，將它們一起下載為一個 .ics 檔案。無須帳號，不上傳活動資料，也不會在兩次造訪之間保存活動。它適合分享行事曆檔案或在網站中嵌入表單，但不管理行事曆、不收集出席回覆、不託管訂閱，也不保證能從所有文件中準確擷取活動。
+
+### [.ics 檔案解析](https://icsmaker.com/zh-Hant/ics-file/)
+
+**什麼是 .ics 檔案？**
+
+.ics 檔案是一個（或多個）行事曆事件，以 iCalendar 格式寫成純文字，該格式於 2009 年標準化為 RFC 5545，至今未變。事件內容位於 BEGIN:VEVENT 與 END:VEVENT 之間，其中 SUMMARY 是標題，DTSTART 與 DTEND 是時間，LOCATION 與 DESCRIPTION 顧名思義，而 UID 則是行事曆用來分辨更新事件與新事件的識別碼。Apple Calendar、Google 日曆、Outlook 與 Thunderbird 皆可讀取此格式，這也是為何兩家公司之間以電子郵件寄送的邀請能正確顯示在雙方的行事曆中。ICS Maker 能依表單內容建立檔案，並在您輸入時於旁邊顯示確切的檔案內容。
+
+### [新增至 Google 日曆連結](https://icsmaker.com/zh-Hant/add-to-google-calendar/)
+
+**要如何製作「新增至 Google 日曆」的連結？**
+
+Google 日曆連結其實就是一個普通的網址——calendar.google.com/calendar/render——透過查詢參數帶入標題、時間、地點和描述。點擊它會開啟 Google 日曆並預先填好活動內容，在對方按下儲存之前，Google 端不會儲存任何資料。ICS Maker 會依表單內容建立這個連結，並根據同一筆活動同時產生 Outlook.com、Office 365 和 Yahoo 的對應連結，再加上適用於其他四種以外行事曆的 .ics 檔案。沒有人需要 ICS Maker 帳號，因為根本沒有這種帳號；收件人只有在要把活動存入自己的 Google 帳號時才需要有 Google 帳號。
+
+### [重複事件](https://icsmaker.com/zh-Hant/recurring-event/)
+
+**如何讓行事曆事件每週或每月重複?**
+
+重複只是 .ics 檔案中的一行:RRULE:FREQ=WEEKLY,搭配 INTERVAL 可設定每隔兩期或三期,搭配 COUNT 或 UNTIL 可結束系列。ICS Maker 的表單可設定頻率(每天、每週、每月、每年)、間隔,以及系列是永不結束、在若干次後停止,還是執行到某個日期——並將 RRULE 寫入下載的檔案中,讀取的行事曆會自行展開,因此無論系列多長,都能維持一個小檔案。選擇特定的日子並不在表單中,而是對檔案進行一行編輯:每月最後一天用 FREQ=MONTHLY;BYMONTHDAY=-1,第一個星期一用 BYDAY=1MO,僅限平日用 BYDAY=MO,TU,WE,TH,FR。本頁列出十二條可供貼上的此類規則。
+
+### [當活動時間顯示錯誤時](https://icsmaker.com/zh-Hant/ics-time-zone/)
+
+**為什麼我的行事曆活動時間差了一小時，或是差了一天？**
+
+.ics 檔案有三種方式可以表示時間，而問題幾乎總是出在用錯了其中一種。浮動時間（DTSTART:20260815T090000，沒有時區）不論在哪裡開啟都是九點整。UTC 時間（結尾有 Z）代表一個絕對的時間點。具名時區（DTSTART;TZID=Europe/London:...）則是一個在跨越日光節約時間時，本地時鐘時間仍保持不變的時間點。差一小時的匯入問題，通常是因為使用了像「GMT Standard Time」這類 Windows 風格的時區名稱，讀取的行事曆無法辨識，於是退回使用 UTC；差一天的全天活動問題，通常是因為使用了午夜時間戳記，而其實應該使用 VALUE=DATE，或者是因為結束日期寫在最後一天而非隔天，因為 DTEND 是不含當天的（exclusive）。ICS Maker 預設會寫入浮動時間，若有選擇時區，則會寫入指定 IANA 時區名稱的 TZID——但不會附帶 VTIMEZONE 區塊，因為每個主流行事曆都能單憑時區名稱自行解析。
+
+### [寄送行事曆邀請](https://icsmaker.com/zh-Hant/calendar-invite/)
+
+**我要如何以 .ics 附件寄送行事曆邀請?**
+
+把地址放進活動中,下載 .ics 檔案,然後把它附加到一封普通的電子郵件裡:每位賓客都會成為一行帶有 ROLE、PARTSTAT 與 RSVP 的 ATTENDEE,收件人只需輕點一下即可將活動存入行事曆。下載的檔案無法做到的是收集回覆,因為 RSVP 追蹤需要能接收 METHOD:REPLY 郵件的系統。ICS Maker 刻意不寫入 METHOD:REQUEST 或 ORGANIZER:因為它沒有郵件伺服器,也沒有帳號,若宣稱自己是主辦人,那將是收件人行事曆可能會據此採取行動的謊言。若要收集 RSVP,請將檔案匯入你自己的行事曆,再從那裡寄送邀請。
+
+### [.ics 檔案中的提醒](https://icsmaker.com/zh-Hant/ics-reminder/)
+
+**如何為 .ics 事件新增提醒或通知？**
+
+提醒是事件內的一個 VALARM 區塊：ACTION:DISPLAY 代表螢幕通知，TRIGGER:-PT30M 代表偏移量，其中 PT 用來引入 ISO 8601 的時間長度，開頭的負號則讓它在事件開始之前而非之後觸發。ICS Maker 可從表單設定提醒，並為每個提醒寫入一個 VALARM，偏移量一律以分鐘表示——提前一天就是 -PT1440M。一個事件在此最多可攜帶十個提醒，但這些提醒是否都會出現，取決於讀取端行事曆的決定：有些行事曆會在旁邊額外加上自己的預設提醒，有些則會完全移除匯入事件中的提醒，使下載的檔案無法在裝置上排程通知。
+
+### [從 CSV 匯入活動](https://icsmaker.com/zh-Hant/csv-to-calendar/)
+
+**Google 日曆的匯入工具接受什麼 CSV 格式？**
+
+Google 日曆和 Outlook 讀取的 CSV，其第一列必須完全是：Subject、Start Date、Start Time、End Date、End Time、All Day Event、Description、Location。日期格式為 MM/DD/YYYY，時間為十二小時制並附上前綴（09:00 AM）；全天活動的那一列會將 All Day Event 設為 True，並將兩個時間欄位留空。ICS Maker 會匯出該標題列以及一列正確的資料，供你在下方貼上其餘的表格內容。這八個欄位就是 CSV 所能承載的全部——沒有時區、沒有重複規則、沒有賓客名單、沒有提醒、沒有網址——所以只要這些項目有任何一個很重要，就該使用 .ics；而當活動數量多到為每個活動建立一個檔案顯得荒謬時，才使用 CSV。
+
+### [jCal —— 以 JSON 表示的 iCalendar](https://icsmaker.com/zh-Hant/jcal/)
+
+**什麼是 jCal，它與 .ics 檔案有何不同？**
+
+jCal 是以 JSON 撰寫的 iCalendar，於 2014 年標準化為 RFC 7265。它承載與 .ics 檔案完全相同的資料——相同的屬性、參數與元件——只是以巢狀陣列而非物件表示，因為同一個元件的屬性可能重複出現，且順序可能具有意義。一個行事曆是 ["vcalendar", [屬性], [元件]]，每個屬性則是 [名稱, 參數, 值型別, 值]，因此 SUMMARY:Standup 會變成 ["summary", {}, "text", "Standup"]。這與 JSON-LD 中的 schema.org Event 不同，後者是為搜尋引擎描述事件，保留的資訊遠遠更少。ICS Maker 是從同一個事件模型直接寫出 .ics 與 jCal，而非在兩者之間互相轉換，因此這兩種格式對事件內容不會有分歧。
+
+### [把建立工具放到你自己的網站上](https://icsmaker.com/zh-Hant/add-to-calendar-button/)
+
+**我要如何在自己的網站上放置「加入行事曆」按鈕或活動建立工具？**
+
+ICS Maker 的建立工具以獨立腳本的形式發佈：一個空元素、一個指向 event-creator.js 的 script 標籤、一次 EventCreator.mount() 呼叫——不需建置流程、不需框架、不需帳號、不需金鑰，也沒有單次瀏覽次數上限。此套件是一個壓縮後小於 85 kB 的單一自足 IIFE，已內含其渲染函式庫，且完全不會發出任何網路請求：沒有分析工具、沒有字型、沒有 CDN，因此不會為你的內容安全政策（Content-Security-Policy）新增任何來源，也不需在隱私政策中新增任何段落。每個顏色、圓角與字型都是 .ec-root 下的 CSS 自訂屬性，深色模式會依訪客自己的偏好設定自動切換，而 React 網站則可以直接渲染此元件，而不需載入整個套件。

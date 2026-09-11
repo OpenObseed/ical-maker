@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Czym jest ICS Maker, dla kogo jest przeznaczony i czego nie potrafi</title>
+    <meta name="description" content="Bezpłatny generator plików kalendarza bez konta, działający w przeglądarce. Jego możliwości, ograniczenia i sytuacje, w których warto wybrać inne narzędzie." />
+    <!--
+      The site is a static bundle that talks to nobody: no analytics, no fonts, no CDN. The
+      policy says exactly that, so an injected script has nowhere to load from and nowhere to
+      send to. `style-src 'unsafe-inline'` is required because the component injects its
+      stylesheet as a <style> element (that's what makes the embed bundler-free); scripts stay
+      strictly same-origin. GitHub Pages can't send headers, so the policy rides in a meta tag.
+      `connect-src 'self'` is the site's promise in the only form a browser can enforce: there is
+      no AI endpoint, no analytics and no third party to reach, so nothing typed or attached here
+      can go anywhere. Adding a service back would mean widening this line, which is exactly the
+      argument anyone proposing one should have to make.
+      `'wasm-unsafe-eval'` and `worker-src 'self'` are what reading a picture costs: the text
+      recogniser is WebAssembly running in a worker. Both are scoped to this origin — the worker
+      is a same-origin script rather than a Blob, and the WASM is a file this site serves. The
+      line that matters, `connect-src 'self'`, is untouched: no recogniser is fetched from a CDN,
+      so no third party sees who attached a flyer, and nothing dropped in can be sent anywhere. There's no
+      frame-ancestors here on purpose: browsers ignore it in a meta tag, and GitHub Pages can't
+      send headers — the site holds no session or stored data, so framing it gains an attacker
+      nothing anyway.
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'sha256-+a6bzwtj6t713+myRl46kitZA0T7sdIfvOaCQ3HlntU=' 'wasm-unsafe-eval'; worker-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <link rel="canonical" href="https://icsmaker.com/pl/about/" />
+
+    <!--
+      Link previews. Without these a shared link renders as a bare grey rectangle in Slack,
+      iMessage, and every chat app in between — which is most of how a tool like this travels.
+      The image is committed artwork, generated from the same palette the site uses
+      (`node apps/ical/scripts/make-icons.mjs`); absolute URLs because scrapers do not resolve
+      relative ones. og:title is deliberately shorter than <title>, which carries the SEO tail.
+    -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="ICS Maker" />
+    <meta property="og:title" content="Czym jest ICS Maker, dla kogo jest przeznaczony i czego nie potrafi" />
+    <meta property="og:description" content="Bezpłatny generator plików kalendarza bez konta, działający w przeglądarce. Jego możliwości, ograniczenia i sytuacje, w których warto wybrać inne narzędzie." />
+    <meta property="og:url" content="https://icsmaker.com/pl/about/" />
+    <meta property="og:image" content="https://icsmaker.com/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="ICS Maker — create a calendar event file, no signup" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- SVG for browsers, PNG for the iOS home screen, which ignores SVG favicons. -->
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#2f5bea" />
+    <script type="module" crossorigin src="/assets/index-BFSIdZ1Y.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-D8HNOIch.css">
+    <meta name="twitter:title" content="Czym jest ICS Maker, dla kogo jest przeznaczony i czego nie potrafi" />
+    <meta name="twitter:description" content="Bezpłatny generator plików kalendarza bez konta, działający w przeglądarce. Jego możliwości, ograniczenia i sytuacje, w których warto wybrać inne narzędzie." />
+    <meta name="twitter:image" content="https://icsmaker.com/og.png" />
+  <link rel="alternate" hreflang="en" href="https://icsmaker.com/about/" />
+    <link rel="alternate" hreflang="de" href="https://icsmaker.com/de/about/" />
+    <link rel="alternate" hreflang="es" href="https://icsmaker.com/es/about/" />
+    <link rel="alternate" hreflang="fr" href="https://icsmaker.com/fr/about/" />
+    <link rel="alternate" hreflang="it" href="https://icsmaker.com/it/about/" />
+    <link rel="alternate" hreflang="nl" href="https://icsmaker.com/nl/about/" />
+    <link rel="alternate" hreflang="pl" href="https://icsmaker.com/pl/about/" />
+    <link rel="alternate" hreflang="pt" href="https://icsmaker.com/pt/about/" />
+    <link rel="alternate" hreflang="tr" href="https://icsmaker.com/tr/about/" />
+    <link rel="alternate" hreflang="ru" href="https://icsmaker.com/ru/about/" />
+    <link rel="alternate" hreflang="ja" href="https://icsmaker.com/ja/about/" />
+    <link rel="alternate" hreflang="ko" href="https://icsmaker.com/ko/about/" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://icsmaker.com/zh-Hans/about/" />
+    <link rel="alternate" hreflang="zh-Hant" href="https://icsmaker.com/zh-Hant/about/" />
+    <link rel="alternate" hreflang="x-default" href="https://icsmaker.com/about/" />
+    <style id="ec-tokens">:root {
+  --ec-fg: #16181d;
+  --ec-muted: #626a7a;
+  --ec-bg: #ffffff;
+  --ec-page: #f2f4f8;
+  --ec-surface: #f6f7f9;
+  --ec-border: #d9dde5;
+  --ec-accent: #2f5bea;
+  --ec-accent-soft: #eef2fe;
+  --ec-accent-fg: #ffffff;
+  --ec-danger: #b42318;
+  --ec-code-bg: #16181d;
+  --ec-code-fg: #e9edf5;
+  --ec-caret: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%23626a7a' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  /* The widest the creator lets itself get before it centres in the space it's given. Past
+     this, fields keep growing but nothing reads better — a 540px-wide text input is harder to
+     scan, not easier — and the short side column leaves a void on one side. A host that wants
+     it edge-to-edge can raise this like any other token. */
+  --ec-max-width: 860px;
+  --ec-radius: 10px;
+  --ec-radius-lg: 14px;
+  --ec-shadow: 0 1px 2px rgb(16 24 40 / 6%);
+  --ec-font: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ec-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+  --ec-fg: #e8eaf0;
+  --ec-muted: #9aa3b5;
+  --ec-bg: #14161b;
+  --ec-page: #0e1015;
+  --ec-surface: #1c1f27;
+  --ec-border: #333846;
+  --ec-accent: #7c9bff;
+  --ec-accent-soft: #22283a;
+  --ec-accent-fg: #10131a;
+  --ec-danger: #ff8b80;
+  --ec-code-bg: #0b0d12;
+  --ec-code-fg: #e9edf5;
+  --ec-caret: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%239aa3b5' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  color-scheme: dark;
+}
+}</style>
+    <style id="ec-styles">
+.ec-root {
+  --ec-fg: #16181d;
+  --ec-muted: #626a7a;
+  --ec-bg: #ffffff;
+  --ec-page: #f2f4f8;
+  --ec-surface: #f6f7f9;
+  --ec-border: #d9dde5;
+  --ec-accent: #2f5bea;
+  --ec-accent-soft: #eef2fe;
+  --ec-accent-fg: #ffffff;
+  --ec-danger: #b42318;
+  --ec-code-bg: #16181d;
+  --ec-code-fg: #e9edf5;
+  --ec-caret: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%23626a7a' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  /* The widest the creator lets itself get before it centres in the space it's given. Past
+     this, fields keep growing but nothing reads better — a 540px-wide text input is harder to
+     scan, not easier — and the short side column leaves a void on one side. A host that wants
+     it edge-to-edge can raise this like any other token. */
+  --ec-max-width: 860px;
+  --ec-radius: 10px;
+  --ec-radius-lg: 14px;
+  --ec-shadow: 0 1px 2px rgb(16 24 40 / 6%);
+  --ec-font: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ec-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  .ec-root {
+  --ec-fg: #e8eaf0;
+  --ec-muted: #9aa3b5;
+  --ec-bg: #14161b;
+  --ec-page: #0e1015;
+  --ec-surface: #1c1f27;
+  --ec-border: #333846;
+  --ec-accent: #7c9bff;
+  --ec-accent-soft: #22283a;
+  --ec-accent-fg: #10131a;
+  --ec-danger: #ff8b80;
+  --ec-code-bg: #0b0d12;
+  --ec-code-fg: #e9edf5;
+  --ec-caret: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%239aa3b5' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  color-scheme: dark;
+}
+}
+.ec-root {
+  color: var(--ec-fg);
+  background: var(--ec-bg);
+  font-family: var(--ec-font);
+  font-size: 15px;
+  line-height: 1.45;
+  display: grid;
+  gap: 20px;
+  /* minmax(0, …) — without it a long preview line makes the whole grid overflow its host. */
+  grid-template-columns: minmax(0, 1fr);
+  /* Centre in whatever container it's handed: a wide card, a wide embed host, the page. */
+  max-width: var(--ec-max-width);
+  margin-inline: auto;
+}
+/* Fallback for browsers without container queries (Safari < 16, Firefox < 110). */
+@supports not (container-type: inline-size) {
+  @media (min-width: 860px) {
+    .ec-root[data-preview='on'] { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
+  }
+}
+/* minmax(0, 1fr), not the default auto: a <select> is sized by its widest option in WebKit, so
+   without this the time-zone list pushes the whole form wider than its container (it overflowed
+   a 320px viewport by 12px). The fields track the container; the option text scrolls. */
+.ec-fields { display: grid; gap: 14px; align-content: start; grid-template-columns: minmax(0, 1fr); }
+/* Generic rows wrap; compact date/time and duration groups below opt into their own one-line
+   grids instead of inheriting the old full-width-field behaviour. */
+.ec-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.ec-row > .ec-field { flex: 1 1 200px; }
+/* Two controls whose *values* are short — "None", "Busy" — rather than two that need room to be
+   read. 200px of basis would stack them on a phone for no reason: nothing in either list is wider
+   than the ~140px they get when they share a 320px screen, so they share it. Text inputs are not
+   in here on purpose; a 140px title box is worse than a tall form. */
+.ec-row-tight > .ec-field { flex: 1 1 130px; }
+/* A pair is one side of the event — its date, its time, and the zone that time is in — and it
+   wraps as a unit. 320px of basis, not 200: at 200 two pairs squeeze side by side in a 490px
+   column and every field inside them stacks, which turns the row into two narrow columns. At 320
+   the column gives one side per line with its own fields side by side, and a wide container
+   still puts both sides up together.
+
+   align-content: start because the two pairs are different heights whenever only one carries a
+   zone — the default stretch spreads the shorter pair's rows to match the taller one, and the
+   dates stop lining up. */
+.ec-row > .ec-pair {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  flex: 1 1 320px;
+  min-width: 0;
+}
+.ec-date-time {
+  display: grid;
+  /* Safari keeps a native calendar/clock button inside these controls and paints it over
+     neighbouring text when the track is narrower than its intrinsic control width. Keep both
+     tracks above that floor; the container rule below stacks them only when the whole side cannot
+     accommodate the safe minimum. */
+  grid-template-columns: minmax(150px, 1fr) minmax(140px, 1fr);
+  gap: 10px;
+  min-width: 0;
+}
+.ec-date-time > .ec-field:only-child { grid-column: 1 / -1; }
+.ec-time-control { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.ec-time-control input { flex: 1 1 auto; min-width: 0; }
+.ec-time-offset {
+  flex: 0 0 auto;
+  color: var(--ec-muted);
+  font-size: 12px;
+  line-height: 1;
+  white-space: nowrap;
+}
+.ec-zone-field { min-width: 0; }
+/* An all-day event has no time and no zone, so each pair is a lone date and 320px of basis would
+   push the two dates onto separate lines for no reason. Engines without :has (Safari < 15.4) get
+   the stacked version, which is only a little roomier. */
+.ec-row > .ec-pair:has(.ec-date-time > .ec-field:only-child) { flex-basis: 200px; }
+/* Grouped sections, the way a calendar app groups an event: what it is, when it is, who is
+   coming, what warns you, the details. A real <fieldset>, so the grouping is announced rather
+   than merely drawn, with the browser's default border and padding cleared away. */
+.ec-group {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+.ec-group + .ec-group { margin-top: 6px; padding-top: 18px; border-top: 1px solid var(--ec-border); }
+.ec-group > legend {
+  padding: 0;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ec-muted);
+}
+/* A legend is out of the grid flow, so the gap above the first field has to come from here. */
+.ec-group > legend + * { margin-top: 10px; }
+/* An optional group, folded away until it is wanted (see Optional in EventCreator.tsx). Block
+   rather than the grid its siblings use: display on a <details> is not honoured everywhere, and
+   a summary that lost its row would be a broken control rather than a slightly tighter one. The
+   fields inside get the grid instead, so the gaps match every other group. */
+.ec-optional { display: block; }
+.ec-group-body { display: grid; gap: 14px; margin-top: 12px; min-width: 0; }
+/* The summary is the legend for the group it opens, so it is drawn as one — plus a marker, and a
+   44px row, because on a phone this is the control that has to be hit before anything inside it
+   can be. */
+.ec-optional > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ec-muted);
+  cursor: pointer;
+  /* The native marker goes: a flex summary drops it in WebKit anyway, so drawing our own is what
+     keeps the three engines showing the same control. It is the select's caret, rotated. */
+  list-style: none;
+}
+.ec-optional > summary::-webkit-details-marker { display: none; }
+.ec-optional > summary::before {
+  content: '';
+  flex: 0 0 auto;
+  width: 12px;
+  height: 8px;
+  background: var(--ec-caret) no-repeat center / 12px 8px;
+  transform: rotate(-90deg);
+}
+.ec-optional[open] > summary::before { transform: none; }
+.ec-optional > summary:focus-visible { outline: 2px solid var(--ec-accent); outline-offset: 2px; }
+/* What a closed group is holding. Right-aligned and in sentence case: it is the answer to "is
+   there anything in there", not a second heading. */
+.ec-tally {
+  margin-left: auto;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+}
+/* The event in one sentence, immediately above the buttons it informs. */
+.ec-recap {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: var(--ec-radius);
+  background: var(--ec-surface);
+  color: var(--ec-fg);
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.ec-switch { min-height: 44px; }
+.ec-recap strong { display: block; font-size: 18px; }
+.ec-recap p { margin: 6px 0 0; }
+.ec-technical-preview summary { min-height: 44px; cursor: pointer; overflow-wrap: anywhere; }
+.ec-field { display: grid; gap: 5px; min-width: 0; }
+.ec-field > label { font-size: 13px; font-weight: 600; color: var(--ec-muted); }
+.ec-autocomplete { position: relative; min-width: 0; }
+.ec-autocomplete-list {
+  position: absolute;
+  z-index: 20;
+  inset-inline: 0;
+  max-height: 300px;
+  overflow-y: auto;
+  margin: 4px 0 0;
+  padding: 4px 0;
+  list-style: none;
+  background: var(--ec-bg);
+  border: 1px solid var(--ec-border);
+  border-radius: var(--ec-radius);
+  box-shadow: var(--ec-shadow);
+}
+.ec-autocomplete-option {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  color: inherit;
+  cursor: pointer;
+}
+.ec-autocomplete-option[data-active='true'], .ec-autocomplete-option:hover {
+  background: var(--ec-accent-soft);
+}
+.ec-autocomplete-empty { padding: 10px; color: var(--ec-muted); }
+.ec-root input[type='text'],
+.ec-root input[type='date'],
+.ec-root input[type='time'],
+.ec-root input[type='email'],
+.ec-root input[type='number'],
+.ec-root input[type='url'],
+.ec-root select,
+.ec-root textarea {
+  font-family: inherit;
+  /* 16px, not inherit: iOS Safari zooms the page when a focused field is smaller. It has to
+     live on this selector — the shorthand here would otherwise out-specify a later rule. */
+  font-size: 16px;
+  line-height: 1.35;
+  color: inherit;
+  background: var(--ec-bg);
+  border: 1px solid var(--ec-border);
+  border-radius: var(--ec-radius);
+  padding: 9px 10px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+/* WebKit sizes a <select> to its widest option and ignores min-width:0 when doing it, so the
+   time-zone list widened the page until the element was capped explicitly. text-overflow keeps
+   the closed control readable when a long zone name doesn't fit.
+
+   appearance:none is what makes the dropdown a rounded rectangle like the text fields: a native
+   select paints its own corners and ignores border-radius, so the two controls sat side by side
+   with different silhouettes. Dropping the native look means drawing the chevron ourselves, and
+   reserving room for it on the right so a long value never runs underneath it. */
+.ec-root select {
+  appearance: none;
+  -webkit-appearance: none;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  background-image: var(--ec-caret);
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px 8px;
+  padding-right: 30px;
+}
+.ec-root textarea { min-height: 76px; resize: vertical; }
+.ec-root input:focus-visible, .ec-root select:focus-visible, .ec-root textarea:focus-visible {
+  outline: 2px solid var(--ec-accent);
+  outline-offset: 1px;
+}
+.ec-inline { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+/* The guest field and its Add button share a row: the input flexes, the button keeps its size,
+   and both wrap to their own lines only when the container is genuinely too narrow. */
+.ec-inline input[type='email'] { flex: 1 1 160px; width: auto; }
+.ec-inline .ec-chip { flex: 0 0 auto; }
+/* "Every [2] weeks" — the number keeps its own width instead of stretching across the row, and
+   the unit sits beside it as text rather than pretending to be a second control. A count field
+   on its own line is capped for the same reason: a four-digit answer in a 480px box reads as a
+   mistake. */
+.ec-inline input[type='number'] { flex: 0 0 88px; width: auto; }
+.ec-field > input[type='number'] { max-width: 140px; }
+/* Three boxes that mean one thing: grouped like a field, sized like the number inputs they are.
+   The browser's fieldset border and padding are cleared, the same way .ec-group clears them. */
+.ec-duration { display: grid; gap: 5px; min-width: 0; border: 0; margin: 0; padding: 0; }
+.ec-duration > legend { padding: 0; font-size: 13px; font-weight: 600; color: var(--ec-muted); }
+/* A legend is out of the grid flow, so the gap under it has to come from here. */
+.ec-duration > legend + * { margin-top: 5px; }
+.ec-duration .ec-inline { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.ec-duration-part { min-width: 0; }
+.ec-duration-part > label { font-size: 12px; font-weight: 400; }
+.ec-duration .ec-inline input[type='number'] { width: 100%; max-width: none; }
+.ec-unit { color: var(--ec-muted); font-size: 14px; }
+/* Not bold: the mark says "don't empty this", and a red bold star on five of fourteen labels
+   reads as five errors on a form nobody has touched yet. */
+.ec-required { margin-left: 2px; color: var(--ec-danger); }
+.ec-problem { color: var(--ec-danger); font-size: 13px; }
+.ec-hint { margin: 0; color: var(--ec-muted); font-size: 12px; }
+.ec-chip {
+  border: 1px solid var(--ec-border);
+  background: var(--ec-bg);
+  color: inherit;
+  border-radius: 999px;
+  /* 44px is the smallest comfortable touch target on both iOS and Android guidance. */
+  min-height: 44px;
+  padding: 5px 14px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.ec-chip[aria-pressed='true'] { border-color: var(--ec-accent); color: var(--ec-accent); background: var(--ec-accent-soft); }
+.ec-attendee { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+/* The × beside a guest. Bare text is a ~20px target next to the address it deletes, which on a
+   phone is a mis-tap away from removing the wrong person. */
+.ec-remove { min-height: 44px; padding: 0 8px; border: 0; background: none; color: var(--ec-muted); cursor: pointer; font: inherit; }
+.ec-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.ec-button {
+  font: inherit;
+  min-height: 44px;
+  font-weight: 600;
+  border: 1px solid var(--ec-accent);
+  background: var(--ec-accent);
+  color: var(--ec-accent-fg);
+  border-radius: var(--ec-radius);
+  padding: 10px 16px;
+  cursor: pointer;
+}
+.ec-button.ec-secondary { background: var(--ec-bg); color: var(--ec-accent); }
+.ec-side { display: grid; gap: 14px; align-content: start; }
+.ec-panel { background: var(--ec-surface); border: 1px solid var(--ec-border); border-radius: var(--ec-radius); padding: 14px; }
+.ec-panel h2 { margin: 0 0 8px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ec-muted); }
+.ec-preview { margin: 0; overflow-wrap: anywhere; font-family: var(--ec-mono); font-size: 12px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; max-height: 340px; overflow: auto; }
+/* On a phone these four links are the whole point of the panel — they open the event in the
+   calendar app without a file changing hands at all — so each is a row you can hit, not a line
+   of text stacked 6px from the next one. */
+.ec-links { display: grid; gap: 2px; }
+.ec-links a { display: flex; align-items: center; min-height: 44px; color: var(--ec-accent); }
+.ec-attendee span { overflow-wrap: anywhere; }
+.ec-describe textarea { min-height: 66px; }
+.ec-describe .ec-actions { margin-top: 8px; }
+.ec-assumptions { margin: 10px 0 0; padding-left: 18px; color: var(--ec-muted); font-size: 13px; }
+@media (forced-colors: active) {
+  .ec-chip[aria-pressed='true'] { border: 2px solid; }
+}
+</style>
+    <style id="ec-styles-container">
+/* The shell exists purely to be the query container: an element can't answer a container
+   query about itself, so the width question is asked one level up. Container-relative rather
+   than viewport-relative because an embed can sit in a narrow column on a wide screen, where
+   a viewport query would hand it a two-column layout it has no room for. */
+.ec-shell { container-type: inline-size; }
+/* Narrow enough that three side-by-side buttons each end up a couple of words wide: give them a
+   row each instead, primary first. Container-relative like the rule below — an embed in a narrow
+   column on a desktop has the same problem a phone does. */
+@container (max-width: 420px) {
+  .ec-actions > .ec-button { flex: 1 1 100%; }
+  /* Keep the two native pickers the same width on phones. The time control owns the GMT label,
+     so its input can shrink inside the track without pushing the label below the picker. */
+  .ec-date-time { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@container (max-width: 300px) {
+  /* Native Safari controls need more room than a very narrow embed can provide. Stacking here
+     avoids the calendar/clock button overlap while preserving the compact row everywhere else. */
+  .ec-date-time { grid-template-columns: minmax(0, 1fr); }
+}
+@container (min-width: 720px) {
+  /* 1.4fr/1fr, not 1fr/0.8fr: the form is the work, the panels are reference. This keeps the
+     inputs near 480px — comfortable to scan — instead of stretching them to fill. */
+  .ec-root[data-preview='on'] { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
+}
+</style>
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://icsmaker.com/#website","name":"ICS Maker","url":"https://icsmaker.com/","inLanguage":["en","de","es","fr","it","nl","pl","pt","tr","ru","ja","ko","zh-Hans","zh-Hant"]},{"@type":"WebPage","@id":"https://icsmaker.com/pl/about/#webpage","url":"https://icsmaker.com/pl/about/","name":"Czym jest ICS Maker, dla kogo jest przeznaczony i czego nie potrafi","headline":"Czym jest ICS Maker","description":"ICS Maker bezpłatnie tworzy wydarzenia w przeglądarce. Eksportuj każde jako .ics, jCal, CSV lub JSON-LD albo otwórz wstępnie wypełniony link do Kalendarza Google, Outlook.com, Office 365 lub Yahoo. Zbieraj wydarzenia z formularza, wklejonego harmonogramu lub załączonego pliku i po sprawdzeniu wykrytych danych pobierz je razem w jednym pliku .ics. Nie ma konta, dane wydarzeń nie są przesyłane, a wydarzenia nie są zachowywane między wizytami. Narzędzie służy do udostępniania plików kalendarza i osadzania formularza na stronie. Nie zarządza kalendarzem, nie zbiera potwierdzeń uczestnictwa, nie udostępnia subskrypcji ani nie gwarantuje bezbłędnego odczytu każdego dokumentu.","inLanguage":"pl","isPartOf":{"@id":"https://icsmaker.com/#website"},"mainEntity":{"@id":"https://icsmaker.com/#app"},"breadcrumb":{"@id":"https://icsmaker.com/pl/about/#breadcrumb"}},{"@type":"FAQPage","@id":"https://icsmaker.com/pl/about/#faq","isPartOf":{"@id":"https://icsmaker.com/pl/about/#webpage"},"mainEntity":[{"@id":"https://icsmaker.com/pl/about/#answer-question","@type":"Question","name":"Czym jest ICS Maker, dla kogo jest przeznaczony i jak wypada w porównaniu z alternatywami?","acceptedAnswer":{"@type":"Answer","text":"ICS Maker bezpłatnie tworzy wydarzenia w przeglądarce. Eksportuj każde jako .ics, jCal, CSV lub JSON-LD albo otwórz wstępnie wypełniony link do Kalendarza Google, Outlook.com, Office 365 lub Yahoo. Zbieraj wydarzenia z formularza, wklejonego harmonogramu lub załączonego pliku i po sprawdzeniu wykrytych danych pobierz je razem w jednym pliku .ics. Nie ma konta, dane wydarzeń nie są przesyłane, a wydarzenia nie są zachowywane między wizytami. Narzędzie służy do udostępniania plików kalendarza i osadzania formularza na stronie. Nie zarządza kalendarzem, nie zbiera potwierdzeń uczestnictwa, nie udostępnia subskrypcji ani nie gwarantuje bezbłędnego odczytu każdego dokumentu."}},{"@id":"https://icsmaker.com/pl/about/#faq-1","@type":"Question","name":"Czy ICS Maker jest darmowy?","acceptedAnswer":{"@type":"Answer","text":"Tak, i nie ma płatnego poziomu ograniczającego funkcje, konta do założenia ani limitu użycia. Wersja do osadzenia jest taka sama: statyczny plik skryptu bez klucza i bez opłaty za wyświetlenie."}},{"@id":"https://icsmaker.com/pl/about/#faq-2","@type":"Question","name":"Czy ICS Maker przechowuje lub widzi tworzone przeze mnie wydarzenia?","acceptedAnswer":{"@type":"Answer","text":"Nie. Wydarzenie jest składane z tego, co wpisałeś/wpisałaś, przez JavaScript działający w Twojej własnej przeglądarce i przekazywane do folderu pobierania: nie ma serwera, na którym mogłoby być przechowywane, nic nie jest zachowywane między wizytami, a zamknięcie karty nie zostawia nigdzie żadnej kopii. Jedyne żądania, jakie strona kiedykolwiek wysyła, dotyczą jej własnych plików na icsmaker.com — w tym rozpoznawacza tekstu, który pobiera z tej strony przy pierwszym dołączeniu zdjęcia, dzięki czemu odczyt ulotki również odbywa się na Twoim komputerze. Nic, co wpiszesz lub dołączysz, nie opuszcza karty, a polityka bezpieczeństwa treści (Content-Security-Policy) na tej stronie potwierdza to w formie, którą egzekwuje przeglądarka, a nie obietnicy, której musisz zaufać na słowo."}},{"@id":"https://icsmaker.com/pl/about/#faq-3","@type":"Question","name":"Czy ICS Maker może wysyłać zaproszenia lub śledzić, kto je zaakceptował?","acceptedAnswer":{"@type":"Answer","text":"Nie. Nie ma serwera pocztowego ani konta, więc zapisuje gości w pliku jako linie ATTENDEE i na tym poprzestaje. Aby uzyskać potwierdzenia RSVP, zaimportuj pobrany plik do własnego kalendarza i wyślij zaproszenia z niego — to Twój kalendarz staje się organizatorem i zbiera odpowiedzi."}},{"@id":"https://icsmaker.com/pl/about/#faq-4","@type":"Question","name":"Kiedy powinienem/powinnam zamiast tego użyć czegoś innego?","acceptedAnswer":{"@type":"Answer","text":"Użyj własnego kalendarza, gdy potrzebujesz potwierdzeń RSVP lub chcesz zmienić wydarzenie po jego wysłaniu. Użyj hostowanej usługi „dodaj do kalendarza”, gdy potrzebujesz analityki kliknięć dla kampanii. Użyj biblioteki takiej jak ical.js lub Pythonowej icalendar, gdy Twoje oprogramowanie musi generować wydarzenia na dużą skalę. ICS Maker jest przeznaczony na przypadek, w którym całym wymaganiem jest jeden poprawny plik, zbudowany w przeglądarce i nigdzie nieprzechowywany."}},{"@id":"https://icsmaker.com/pl/about/#faq-5","@type":"Question","name":"Czy mogę wykorzystywać tworzone przez niego wydarzenia komercyjnie?","acceptedAnswer":{"@type":"Answer","text":"Tak. Plik jest Twoimi danymi — narzędzie jedynie zapisuje je w formacie iCalendar — i nie wiąże się z tym żaden wymóg podania źródła, znak wodny ani licencja dotycząca tego, co zostaje wygenerowane."}}]},{"@type":"BreadcrumbList","@id":"https://icsmaker.com/pl/about/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"ICS Maker","item":"https://icsmaker.com/pl/"},{"@type":"ListItem","position":2,"name":"Czym jest i jakie są alternatywy","item":"https://icsmaker.com/pl/about/"}]},{"@type":"SoftwareApplication","@id":"https://icsmaker.com/#app","name":"ICS Maker","url":"https://icsmaker.com/","applicationCategory":"BusinessApplication","applicationSubCategory":"Calendar event file generator","operatingSystem":"Any (web browser)","browserRequirements":"Requires JavaScript","description":"Twórz pliki .ics dla Kalendarza Google, Outlooka i Kalendarza Apple. Wpisz wydarzenie lub przekształć harmonogram. Bezpłatnie, bez konta i przesyłania danych.","isAccessibleForFree":true,"featureList":["Builds and collects events: Create an event with title, location, notes and a URL; collect multiple events and download them together as one .ics file.","Reads schedules locally: Paste text or attach a document, spreadsheet or image, then review and correct the detected events before downloading. No event data is uploaded.","Times, all-day, and zones: A start and an end, a duration that follows either, an all-day switch, and an IANA time zone — with a second, different zone on the end for a flight.","Repeats: Daily, weekly, monthly, or yearly, every N periods, ending never, after a count, or on a date — written as a standard RRULE line.","Guests, alerts, and availability: Up to 100 invitee addresses as ATTENDEE lines, up to 10 alerts as VALARM blocks, and busy or free as TRANSP.","Four formats and four links: .ics, jCal, CSV, and schema.org JSON-LD to download; Google Calendar, Outlook.com, Office 365, and Yahoo to open.","An embed for your own site: The same builder as one script tag, under 85 kB gzipped, with no network calls of its own."],"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}]}</script>
+  </head>
+  <body>
+    <div id="root"><div class="site"><header class="site-header"><div class="site-header-top"><p class="crumb"><a href="/pl/">ICS Maker</a><span aria-hidden="true"> / </span><span aria-current="page">Czym jest i jakie są alternatywy</span></p><div class="language-pick"><label for="site-language">Język</label><select id="site-language"><option value="en">English</option><option value="de">Deutsch</option><option value="es">Español</option><option value="fr">Français</option><option value="it">Italiano</option><option value="nl">Nederlands</option><option value="pl" selected="">Polski</option><option value="pt">Português</option><option value="tr">Türkçe</option><option value="ru">Русский</option><option value="ja">日本語</option><option value="ko">한국어</option><option value="zh-Hans">简体中文</option><option value="zh-Hant">繁體中文</option></select></div></div><div class="site-heading"><h1>Czym jest ICS Maker</h1><p class="lede">Bezpłatny generator plików kalendarza bez konta, działający w przeglądarce. Jego możliwości, ograniczenia i sytuacje, w których warto wybrać inne narzędzie.</p></div></header><main><section class="maker-workspace"><div class="card"><div class="creator-placeholder"><p>Tytuł, miejsce, data i godzina, strefa czasowa, powtarzanie, zaproszeni, przypomnienia i notatki — następnie pobierz plik .ics lub otwórz go bezpośrednio w kalendarzu. Możesz też wkleić harmonogram albo dołączyć dokument lub zdjęcie, aby utworzyć wiele wydarzeń naraz.</p><noscript><p class="muted">Kreator wymaga JavaScriptu, ponieważ tworzenie pliku w przeglądarce sprawia, że wydarzenie nie trafia na cudzy serwer.</p></noscript></div></div></section><section class="answer" aria-labelledby="answer-question"><h2 id="answer-question">Czym jest ICS Maker, dla kogo jest przeznaczony i jak wypada w porównaniu z alternatywami?</h2><p>ICS Maker bezpłatnie tworzy wydarzenia w przeglądarce. Eksportuj każde jako .ics, jCal, CSV lub JSON-LD albo otwórz wstępnie wypełniony link do Kalendarza Google, Outlook.com, Office 365 lub Yahoo. Zbieraj wydarzenia z formularza, wklejonego harmonogramu lub załączonego pliku i po sprawdzeniu wykrytych danych pobierz je razem w jednym pliku .ics. Nie ma konta, dane wydarzeń nie są przesyłane, a wydarzenia nie są zachowywane między wizytami. Narzędzie służy do udostępniania plików kalendarza i osadzania formularza na stronie. Nie zarządza kalendarzem, nie zbiera potwierdzeń uczestnictwa, nie udostępnia subskrypcji ani nie gwarantuje bezbłędnego odczytu każdego dokumentu.</p></section><section class="prose"><div class="localized-body"><h2>Co robi</h2><dl><div><dt>Tworzy i zbiera wydarzenia</dt><dd>Utwórz wydarzenie z tytułem, miejscem, notatkami i adresem URL; zbierz wiele wydarzeń i pobierz je razem jako jeden plik .ics.</dd></div><div><dt>Odczytuje harmonogramy lokalnie</dt><dd>Wklej tekst lub dołącz dokument, arkusz albo obraz, a następnie sprawdź i popraw wykryte wydarzenia przed pobraniem. Dane wydarzeń nie są przesyłane.</dd></div><div><dt>Godziny, cały dzień i strefy czasowe</dt><dd>Początek i koniec, czas trwania zgodny z jednym lub drugim, przełącznik „cały dzień” oraz strefę czasową IANA — z drugą, inną strefą na końcu w przypadku lotu.</dd></div><div><dt>Powtórzenia</dt><dd>Codziennie, co tydzień, co miesiąc lub co rok, co N okresów, bez końca, po określonej liczbie powtórzeń lub do konkretnej daty — zapisane jako standardowa linia RRULE.</dd></div><div><dt>Goście, przypomnienia i dostępność</dt><dd>Do 100 adresów zaproszonych jako linie ATTENDEE, do 10 przypomnień jako bloki VALARM oraz status zajęty lub wolny jako TRANSP.</dd></div><div><dt>Cztery formaty i cztery linki</dt><dd>Do pobrania: .ics, jCal, CSV i schema.org JSON-LD; do otwarcia: Google Calendar, Outlook.com, Office 365 i Yahoo.</dd></div><div><dt>Wersja do osadzenia na własnej stronie</dt><dd>Ten sam kreator jako jeden tag script, poniżej 85 kB po kompresji gzip, bez własnych połączeń sieciowych.</dd></div></dl><h2>Czego nie robi</h2><p>Większość z tych ograniczeń to konsekwencja braku serwera — to kompromis, na którym opiera się całe narzędzie. Są tu wymienione, ponieważ narzędzie opisane jako zdolne do ich wykonania bywa polecane komuś, kto właśnie tego potrzebuje, po czym go zawodzi.</p><dl><div><dt>Nie wysyła niczego</dt><dd>Nie ma serwera pocztowego. Adresy zaproszonych są zapisywane w pliku; nikt nie otrzymuje e-maila i żadne zaproszenie nie zostaje wysłane, dopóki nie dołączysz pliku lub nie zaimportujesz go do kalendarza, który potrafi wysyłać wiadomości.</dd></div><div><dt>Nie zbiera potwierdzeń uczestnictwa (RSVP)</dt><dd>Odpowiedzi trafiają jako e-mail do organizatora. Pobrany plik nie ma skrzynki pocztowej, więc PARTSTAT pozostaje dla wszystkich na wartości NEEDS-ACTION.</dd></div><div><dt>Nie udostępnia subskrybowanego kanału</dt><dd>Subskrypcja kalendarza to adres URL, który kalendarz pobiera ponownie. ICS Maker przekazuje plik; utrzymywanie go pod stałym, aktualizowanym adresem URL to zadanie dla hostingu, nie dla kreatora.</dd></div><div><dt>Nie przechowuje, nie wyświetla listy ani nie edytuje wcześniejszych wydarzeń</dt><dd>Nic nie jest zapisywane — ani na serwerze, ani w przeglądarce między wizytami. Zamknięcie karty kończy tutaj żywot wydarzenia.</dd></div><div><dt>Gwarantować automatyczne rozpoznawanie</dt><dd>Dokumenty i arkusze są odczytywane jako tekst, bez importera z mapowaniem kolumn. Sprawdź tytuły, daty i godziny. Proza oraz zeskanowane PDF-y mogą wymagać wklejenia tekstu lub dołączenia zdjęcia.</dd></div><div><dt>Nie pozwala wybrać, na który dzień miesiąca ma przypadać seria</dt><dd>BYDAY, BYMONTHDAY, BYSETPOS i EXDATE to jednowierszowe edycje pobranego pliku, a nie elementy formularza.</dd></div></dl><h2>Dla kogo jest przeznaczony</h2><p>Dla kogoś, kto wysyła wydarzenie osobom, których kalendarzy nie da się z góry przewidzieć — plik działa wszędzie, podczas gdy zaproszenie z serwera kalendarza jednej firmy do drugiej czasem nie działa. Dla kogoś, kto chce, by wydarzenie trafiło wyłącznie do kalendarza odbiorcy, bez tworzenia konta i bez linku śledzącego po drodze. Dla dewelopera, który chce zobaczyć, jak wygląda poprawnie zapisane <code>RRULE</code>, <code>VALARM</code> lub <code>TZID</code>. I dla każdego, kto chce umieścić na stronie kreator wydarzeń bez dodawania zewnętrznego dostawcy, skryptu „dzwoniącego do domu” czy miesięcznej opłaty.</p><p>Użyj swojego kalendarza, aby śledzić potwierdzenia uczestnictwa lub zmieniać wydarzenia po zapisaniu ich przez inne osoby. ICS Maker tworzy pliki do pobrania; nie zarządza kalendarzem ani go nie synchronizuje.</p><h2>Jak wypada w porównaniu</h2><dl><div><dt>Eksport z własnego kalendarza</dt><dd>Darmowy, już zainstalowany i właściwa odpowiedź, gdy zależy Ci na potwierdzeniach RSVP — utwórz wydarzenie, zaproś ludzi, wyeksportuj plik .ics. Haczyk polega na tym, że wymaga konta, oznacza Cię jako organizatora, a Outlook i Google każdy na swój sposób zapisują strefy czasowe, co jest źródłem sporej części importów przesuniętych o godzinę.</dd></div><div><dt>Hostowana usługa „dodaj do kalendarza”</dt><dd>Daje Ci analitykę kliknięć, zaprojektowany przycisk i panel — warta swojej ceny, jeśli mierzysz skuteczność kampanii. Oznacza to też skrypt zewnętrznego dostawcy na Twojej stronie, cenę zależną od liczby wyświetleń lub miejsc oraz dane wydarzeń Twoich odwiedzających przechodzące przez czyjś serwer. Wersja ICS Maker do osadzenia nie ma ani analityki, ani kosztów.</dd></div><div><dt>Biblioteka we własnym kodzie</dt><dd>ical.js, ics czy Pythonowa icalendar generują pliki programistycznie i pasują do wszystkiego, co emituje wydarzenia na dużą skalę. Są niewłaściwym rozwiązaniem dla osoby, która potrzebuje dziś jednego poprawnego pliku, a każda z nich i tak pozostawia Tobie poprawne zastosowanie reguł RFC dotyczących escapowania i zawijania linii.</dd></div><div><dt>Ręczne napisanie pliku</dt><dd>Całkowicie możliwe — to zwykły tekst — i dobry sposób na naukę tego formatu. To także miejsce, w którym końcówki linii CRLF, zawijanie linii co 75 oktetów, escapowane przecinki i brakujący VTIMEZONE po cichu psują plik, który w edytorze tekstu wygląda poprawnie.</dd></div></dl></div><h2>Pytania</h2><dl class="faq"><div id="faq-1"><dt>Czy ICS Maker jest darmowy?</dt><dd>Tak, i nie ma płatnego poziomu ograniczającego funkcje, konta do założenia ani limitu użycia. Wersja do osadzenia jest taka sama: statyczny plik skryptu bez klucza i bez opłaty za wyświetlenie.</dd></div><div id="faq-2"><dt>Czy ICS Maker przechowuje lub widzi tworzone przeze mnie wydarzenia?</dt><dd>Nie. Wydarzenie jest składane z tego, co wpisałeś/wpisałaś, przez JavaScript działający w Twojej własnej przeglądarce i przekazywane do folderu pobierania: nie ma serwera, na którym mogłoby być przechowywane, nic nie jest zachowywane między wizytami, a zamknięcie karty nie zostawia nigdzie żadnej kopii. Jedyne żądania, jakie strona kiedykolwiek wysyła, dotyczą jej własnych plików na icsmaker.com — w tym rozpoznawacza tekstu, który pobiera z tej strony przy pierwszym dołączeniu zdjęcia, dzięki czemu odczyt ulotki również odbywa się na Twoim komputerze. Nic, co wpiszesz lub dołączysz, nie opuszcza karty, a polityka bezpieczeństwa treści (Content-Security-Policy) na tej stronie potwierdza to w formie, którą egzekwuje przeglądarka, a nie obietnicy, której musisz zaufać na słowo.</dd></div><div id="faq-3"><dt>Czy ICS Maker może wysyłać zaproszenia lub śledzić, kto je zaakceptował?</dt><dd>Nie. Nie ma serwera pocztowego ani konta, więc zapisuje gości w pliku jako linie ATTENDEE i na tym poprzestaje. Aby uzyskać potwierdzenia RSVP, zaimportuj pobrany plik do własnego kalendarza i wyślij zaproszenia z niego — to Twój kalendarz staje się organizatorem i zbiera odpowiedzi.</dd></div><div id="faq-4"><dt>Kiedy powinienem/powinnam zamiast tego użyć czegoś innego?</dt><dd>Użyj własnego kalendarza, gdy potrzebujesz potwierdzeń RSVP lub chcesz zmienić wydarzenie po jego wysłaniu. Użyj hostowanej usługi „dodaj do kalendarza”, gdy potrzebujesz analityki kliknięć dla kampanii. Użyj biblioteki takiej jak ical.js lub Pythonowej icalendar, gdy Twoje oprogramowanie musi generować wydarzenia na dużą skalę. ICS Maker jest przeznaczony na przypadek, w którym całym wymaganiem jest jeden poprawny plik, zbudowany w przeglądarce i nigdzie nieprzechowywany.</dd></div><div id="faq-5"><dt>Czy mogę wykorzystywać tworzone przez niego wydarzenia komercyjnie?</dt><dd>Tak. Plik jest Twoimi danymi — narzędzie jedynie zapisuje je w formacie iCalendar — i nie wiąże się z tym żaden wymóg podania źródła, znak wodny ani licencja dotycząca tego, co zostaje wygenerowane.</dd></div></dl></section></main><footer class="site-footer"><nav aria-label="Strony"><ul><li><a href="/pl/">Utwórz wydarzenie</a></li><li><a href="/pl/ics-file/">Czym jest plik .ics</a></li><li><a href="/pl/add-to-google-calendar/">Dodaj do Kalendarza Google</a></li><li><a href="/pl/recurring-event/">Powtarzające się wydarzenia</a></li><li><a href="/pl/ics-time-zone/">Zła strefa czasowa</a></li><li><a href="/pl/calendar-invite/">Wysyłanie zaproszenia</a></li><li><a href="/pl/ics-reminder/">Alarmy i przypomnienia</a></li><li><a href="/pl/csv-to-calendar/">Import CSV</a></li><li><a href="/pl/jcal/">jCal (JSON)</a></li><li><a href="/pl/add-to-calendar-button/">Umieść to na swojej stronie</a></li></ul></nav><p>Wydarzenia są tworzone lokalnie. Nic, co tu wpiszesz, nie jest wysyłane.</p></footer></div></div>
+  </body>
+</html>

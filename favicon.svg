@@ -1,0 +1,21 @@
+<!--
+  The mark: the component's accent blue, a calendar face, no text. Drawn on a 64px grid with
+  nothing thinner than 2px so it survives a 16px tab, and as a single SVG rather than a stack
+  of .ico sizes — every browser that matters reads SVG favicons, and Safari gets the PNG
+  touch icon beside it. Regenerate the PNGs with `node apps/ical/scripts/make-icons.mjs`.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="ICS Maker">
+  <rect width="64" height="64" rx="14" fill="#2f5bea" />
+  <rect x="21" y="9" width="6" height="14" rx="3" fill="#ffffff" />
+  <rect x="37" y="9" width="6" height="14" rx="3" fill="#ffffff" />
+  <rect x="12" y="16" width="40" height="38" rx="7" fill="#ffffff" />
+  <rect x="12" y="27" width="40" height="2" fill="#2f5bea" />
+  <g fill="#2f5bea">
+    <circle cx="22" cy="37" r="2.8" />
+    <circle cx="32" cy="37" r="2.8" />
+    <circle cx="42" cy="37" r="2.8" />
+    <circle cx="22" cy="46" r="2.8" />
+    <circle cx="32" cy="46" r="2.8" />
+    <circle cx="42" cy="46" r="2.8" />
+  </g>
+</svg>

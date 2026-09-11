@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Takvim etkinliği yanlış saatte mi? .ics saat dilimlerini düzeltmek</title>
+    <meta name="description" content="Bir .ics etkinliği bir saat veya bir gün kayabilir. Bir dosyanın saati ifade edebileceği üç yol, hangisini istediğiniz ve size gönderilen dosyayı nasıl okuyacağınız." />
+    <!--
+      The site is a static bundle that talks to nobody: no analytics, no fonts, no CDN. The
+      policy says exactly that, so an injected script has nowhere to load from and nowhere to
+      send to. `style-src 'unsafe-inline'` is required because the component injects its
+      stylesheet as a <style> element (that's what makes the embed bundler-free); scripts stay
+      strictly same-origin. GitHub Pages can't send headers, so the policy rides in a meta tag.
+      `connect-src 'self'` is the site's promise in the only form a browser can enforce: there is
+      no AI endpoint, no analytics and no third party to reach, so nothing typed or attached here
+      can go anywhere. Adding a service back would mean widening this line, which is exactly the
+      argument anyone proposing one should have to make.
+      `'wasm-unsafe-eval'` and `worker-src 'self'` are what reading a picture costs: the text
+      recogniser is WebAssembly running in a worker. Both are scoped to this origin — the worker
+      is a same-origin script rather than a Blob, and the WASM is a file this site serves. The
+      line that matters, `connect-src 'self'`, is untouched: no recogniser is fetched from a CDN,
+      so no third party sees who attached a flyer, and nothing dropped in can be sent anywhere. There's no
+      frame-ancestors here on purpose: browsers ignore it in a meta tag, and GitHub Pages can't
+      send headers — the site holds no session or stored data, so framing it gains an attacker
+      nothing anyway.
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'sha256-33JD4YNE0ebuAA0TEggWbk43LobypQrwGWWn4iX/mXU=' 'wasm-unsafe-eval'; worker-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <link rel="canonical" href="https://icsmaker.com/tr/ics-time-zone/" />
+
+    <!--
+      Link previews. Without these a shared link renders as a bare grey rectangle in Slack,
+      iMessage, and every chat app in between — which is most of how a tool like this travels.
+      The image is committed artwork, generated from the same palette the site uses
+      (`node apps/ical/scripts/make-icons.mjs`); absolute URLs because scrapers do not resolve
+      relative ones. og:title is deliberately shorter than <title>, which carries the SEO tail.
+    -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="ICS Maker" />
+    <meta property="og:title" content="Takvim etkinliği yanlış saatte mi? .ics saat dilimlerini düzeltmek" />
+    <meta property="og:description" content="Bir .ics etkinliği bir saat veya bir gün kayabilir. Bir dosyanın saati ifade edebileceği üç yol, hangisini istediğiniz ve size gönderilen dosyayı nasıl okuyacağınız." />
+    <meta property="og:url" content="https://icsmaker.com/tr/ics-time-zone/" />
+    <meta property="og:image" content="https://icsmaker.com/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="ICS Maker — create a calendar event file, no signup" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- SVG for browsers, PNG for the iOS home screen, which ignores SVG favicons. -->
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#2f5bea" />
+    <script type="module" crossorigin src="/assets/index-BFSIdZ1Y.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-D8HNOIch.css">
+    <meta name="twitter:title" content="Takvim etkinliği yanlış saatte mi? .ics saat dilimlerini düzeltmek" />
+    <meta name="twitter:description" content="Bir .ics etkinliği bir saat veya bir gün kayabilir. Bir dosyanın saati ifade edebileceği üç yol, hangisini istediğiniz ve size gönderilen dosyayı nasıl okuyacağınız." />
+    <meta name="twitter:image" content="https://icsmaker.com/og.png" />
+  <link rel="alternate" hreflang="en" href="https://icsmaker.com/ics-time-zone/" />
+    <link rel="alternate" hreflang="de" href="https://icsmaker.com/de/ics-time-zone/" />
+    <link rel="alternate" hreflang="es" href="https://icsmaker.com/es/ics-time-zone/" />
+    <link rel="alternate" hreflang="fr" href="https://icsmaker.com/fr/ics-time-zone/" />
+    <link rel="alternate" hreflang="it" href="https://icsmaker.com/it/ics-time-zone/" />
+    <link rel="alternate" hreflang="nl" href="https://icsmaker.com/nl/ics-time-zone/" />
+    <link rel="alternate" hreflang="pl" href="https://icsmaker.com/pl/ics-time-zone/" />
+    <link rel="alternate" hreflang="pt" href="https://icsmaker.com/pt/ics-time-zone/" />
+    <link rel="alternate" hreflang="tr" href="https://icsmaker.com/tr/ics-time-zone/" />
+    <link rel="alternate" hreflang="ru" href="https://icsmaker.com/ru/ics-time-zone/" />
+    <link rel="alternate" hreflang="ja" href="https://icsmaker.com/ja/ics-time-zone/" />
+    <link rel="alternate" hreflang="ko" href="https://icsmaker.com/ko/ics-time-zone/" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://icsmaker.com/zh-Hans/ics-time-zone/" />
+    <link rel="alternate" hreflang="zh-Hant" href="https://icsmaker.com/zh-Hant/ics-time-zone/" />
+    <link rel="alternate" hreflang="x-default" href="https://icsmaker.com/ics-time-zone/" />
+    <style id="ec-tokens">:root {
+  --ec-fg: #16181d;
+  --ec-muted: #626a7a;
+  --ec-bg: #ffffff;
+  --ec-page: #f2f4f8;
+  --ec-surface: #f6f7f9;
+  --ec-border: #d9dde5;
+  --ec-accent: #2f5bea;
+  --ec-accent-soft: #eef2fe;
+  --ec-accent-fg: #ffffff;
+  --ec-danger: #b42318;
+  --ec-code-bg: #16181d;
+  --ec-code-fg: #e9edf5;
+  --ec-caret: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%23626a7a' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  /* The widest the creator lets itself get before it centres in the space it's given. Past
+     this, fields keep growing but nothing reads better — a 540px-wide text input is harder to
+     scan, not easier — and the short side column leaves a void on one side. A host that wants
+     it edge-to-edge can raise this like any other token. */
+  --ec-max-width: 860px;
+  --ec-radius: 10px;
+  --ec-radius-lg: 14px;
+  --ec-shadow: 0 1px 2px rgb(16 24 40 / 6%);
+  --ec-font: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ec-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+  --ec-fg: #e8eaf0;
+  --ec-muted: #9aa3b5;
+  --ec-bg: #14161b;
+  --ec-page: #0e1015;
+  --ec-surface: #1c1f27;
+  --ec-border: #333846;
+  --ec-accent: #7c9bff;
+  --ec-accent-soft: #22283a;
+  --ec-accent-fg: #10131a;
+  --ec-danger: #ff8b80;
+  --ec-code-bg: #0b0d12;
+  --ec-code-fg: #e9edf5;
+  --ec-caret: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%239aa3b5' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  color-scheme: dark;
+}
+}</style>
+    <style id="ec-styles">
+.ec-root {
+  --ec-fg: #16181d;
+  --ec-muted: #626a7a;
+  --ec-bg: #ffffff;
+  --ec-page: #f2f4f8;
+  --ec-surface: #f6f7f9;
+  --ec-border: #d9dde5;
+  --ec-accent: #2f5bea;
+  --ec-accent-soft: #eef2fe;
+  --ec-accent-fg: #ffffff;
+  --ec-danger: #b42318;
+  --ec-code-bg: #16181d;
+  --ec-code-fg: #e9edf5;
+  --ec-caret: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%23626a7a' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  /* The widest the creator lets itself get before it centres in the space it's given. Past
+     this, fields keep growing but nothing reads better — a 540px-wide text input is harder to
+     scan, not easier — and the short side column leaves a void on one side. A host that wants
+     it edge-to-edge can raise this like any other token. */
+  --ec-max-width: 860px;
+  --ec-radius: 10px;
+  --ec-radius-lg: 14px;
+  --ec-shadow: 0 1px 2px rgb(16 24 40 / 6%);
+  --ec-font: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ec-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  .ec-root {
+  --ec-fg: #e8eaf0;
+  --ec-muted: #9aa3b5;
+  --ec-bg: #14161b;
+  --ec-page: #0e1015;
+  --ec-surface: #1c1f27;
+  --ec-border: #333846;
+  --ec-accent: #7c9bff;
+  --ec-accent-soft: #22283a;
+  --ec-accent-fg: #10131a;
+  --ec-danger: #ff8b80;
+  --ec-code-bg: #0b0d12;
+  --ec-code-fg: #e9edf5;
+  --ec-caret: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%239aa3b5' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  color-scheme: dark;
+}
+}
+.ec-root {
+  color: var(--ec-fg);
+  background: var(--ec-bg);
+  font-family: var(--ec-font);
+  font-size: 15px;
+  line-height: 1.45;
+  display: grid;
+  gap: 20px;
+  /* minmax(0, …) — without it a long preview line makes the whole grid overflow its host. */
+  grid-template-columns: minmax(0, 1fr);
+  /* Centre in whatever container it's handed: a wide card, a wide embed host, the page. */
+  max-width: var(--ec-max-width);
+  margin-inline: auto;
+}
+/* Fallback for browsers without container queries (Safari < 16, Firefox < 110). */
+@supports not (container-type: inline-size) {
+  @media (min-width: 860px) {
+    .ec-root[data-preview='on'] { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
+  }
+}
+/* minmax(0, 1fr), not the default auto: a <select> is sized by its widest option in WebKit, so
+   without this the time-zone list pushes the whole form wider than its container (it overflowed
+   a 320px viewport by 12px). The fields track the container; the option text scrolls. */
+.ec-fields { display: grid; gap: 14px; align-content: start; grid-template-columns: minmax(0, 1fr); }
+/* Generic rows wrap; compact date/time and duration groups below opt into their own one-line
+   grids instead of inheriting the old full-width-field behaviour. */
+.ec-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.ec-row > .ec-field { flex: 1 1 200px; }
+/* Two controls whose *values* are short — "None", "Busy" — rather than two that need room to be
+   read. 200px of basis would stack them on a phone for no reason: nothing in either list is wider
+   than the ~140px they get when they share a 320px screen, so they share it. Text inputs are not
+   in here on purpose; a 140px title box is worse than a tall form. */
+.ec-row-tight > .ec-field { flex: 1 1 130px; }
+/* A pair is one side of the event — its date, its time, and the zone that time is in — and it
+   wraps as a unit. 320px of basis, not 200: at 200 two pairs squeeze side by side in a 490px
+   column and every field inside them stacks, which turns the row into two narrow columns. At 320
+   the column gives one side per line with its own fields side by side, and a wide container
+   still puts both sides up together.
+
+   align-content: start because the two pairs are different heights whenever only one carries a
+   zone — the default stretch spreads the shorter pair's rows to match the taller one, and the
+   dates stop lining up. */
+.ec-row > .ec-pair {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  flex: 1 1 320px;
+  min-width: 0;
+}
+.ec-date-time {
+  display: grid;
+  /* Safari keeps a native calendar/clock button inside these controls and paints it over
+     neighbouring text when the track is narrower than its intrinsic control width. Keep both
+     tracks above that floor; the container rule below stacks them only when the whole side cannot
+     accommodate the safe minimum. */
+  grid-template-columns: minmax(150px, 1fr) minmax(140px, 1fr);
+  gap: 10px;
+  min-width: 0;
+}
+.ec-date-time > .ec-field:only-child { grid-column: 1 / -1; }
+.ec-time-control { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.ec-time-control input { flex: 1 1 auto; min-width: 0; }
+.ec-time-offset {
+  flex: 0 0 auto;
+  color: var(--ec-muted);
+  font-size: 12px;
+  line-height: 1;
+  white-space: nowrap;
+}
+.ec-zone-field { min-width: 0; }
+/* An all-day event has no time and no zone, so each pair is a lone date and 320px of basis would
+   push the two dates onto separate lines for no reason. Engines without :has (Safari < 15.4) get
+   the stacked version, which is only a little roomier. */
+.ec-row > .ec-pair:has(.ec-date-time > .ec-field:only-child) { flex-basis: 200px; }
+/* Grouped sections, the way a calendar app groups an event: what it is, when it is, who is
+   coming, what warns you, the details. A real <fieldset>, so the grouping is announced rather
+   than merely drawn, with the browser's default border and padding cleared away. */
+.ec-group {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+.ec-group + .ec-group { margin-top: 6px; padding-top: 18px; border-top: 1px solid var(--ec-border); }
+.ec-group > legend {
+  padding: 0;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ec-muted);
+}
+/* A legend is out of the grid flow, so the gap above the first field has to come from here. */
+.ec-group > legend + * { margin-top: 10px; }
+/* An optional group, folded away until it is wanted (see Optional in EventCreator.tsx). Block
+   rather than the grid its siblings use: display on a <details> is not honoured everywhere, and
+   a summary that lost its row would be a broken control rather than a slightly tighter one. The
+   fields inside get the grid instead, so the gaps match every other group. */
+.ec-optional { display: block; }
+.ec-group-body { display: grid; gap: 14px; margin-top: 12px; min-width: 0; }
+/* The summary is the legend for the group it opens, so it is drawn as one — plus a marker, and a
+   44px row, because on a phone this is the control that has to be hit before anything inside it
+   can be. */
+.ec-optional > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ec-muted);
+  cursor: pointer;
+  /* The native marker goes: a flex summary drops it in WebKit anyway, so drawing our own is what
+     keeps the three engines showing the same control. It is the select's caret, rotated. */
+  list-style: none;
+}
+.ec-optional > summary::-webkit-details-marker { display: none; }
+.ec-optional > summary::before {
+  content: '';
+  flex: 0 0 auto;
+  width: 12px;
+  height: 8px;
+  background: var(--ec-caret) no-repeat center / 12px 8px;
+  transform: rotate(-90deg);
+}
+.ec-optional[open] > summary::before { transform: none; }
+.ec-optional > summary:focus-visible { outline: 2px solid var(--ec-accent); outline-offset: 2px; }
+/* What a closed group is holding. Right-aligned and in sentence case: it is the answer to "is
+   there anything in there", not a second heading. */
+.ec-tally {
+  margin-left: auto;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+}
+/* The event in one sentence, immediately above the buttons it informs. */
+.ec-recap {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: var(--ec-radius);
+  background: var(--ec-surface);
+  color: var(--ec-fg);
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.ec-switch { min-height: 44px; }
+.ec-recap strong { display: block; font-size: 18px; }
+.ec-recap p { margin: 6px 0 0; }
+.ec-technical-preview summary { min-height: 44px; cursor: pointer; overflow-wrap: anywhere; }
+.ec-field { display: grid; gap: 5px; min-width: 0; }
+.ec-field > label { font-size: 13px; font-weight: 600; color: var(--ec-muted); }
+.ec-autocomplete { position: relative; min-width: 0; }
+.ec-autocomplete-list {
+  position: absolute;
+  z-index: 20;
+  inset-inline: 0;
+  max-height: 300px;
+  overflow-y: auto;
+  margin: 4px 0 0;
+  padding: 4px 0;
+  list-style: none;
+  background: var(--ec-bg);
+  border: 1px solid var(--ec-border);
+  border-radius: var(--ec-radius);
+  box-shadow: var(--ec-shadow);
+}
+.ec-autocomplete-option {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  color: inherit;
+  cursor: pointer;
+}
+.ec-autocomplete-option[data-active='true'], .ec-autocomplete-option:hover {
+  background: var(--ec-accent-soft);
+}
+.ec-autocomplete-empty { padding: 10px; color: var(--ec-muted); }
+.ec-root input[type='text'],
+.ec-root input[type='date'],
+.ec-root input[type='time'],
+.ec-root input[type='email'],
+.ec-root input[type='number'],
+.ec-root input[type='url'],
+.ec-root select,
+.ec-root textarea {
+  font-family: inherit;
+  /* 16px, not inherit: iOS Safari zooms the page when a focused field is smaller. It has to
+     live on this selector — the shorthand here would otherwise out-specify a later rule. */
+  font-size: 16px;
+  line-height: 1.35;
+  color: inherit;
+  background: var(--ec-bg);
+  border: 1px solid var(--ec-border);
+  border-radius: var(--ec-radius);
+  padding: 9px 10px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+/* WebKit sizes a <select> to its widest option and ignores min-width:0 when doing it, so the
+   time-zone list widened the page until the element was capped explicitly. text-overflow keeps
+   the closed control readable when a long zone name doesn't fit.
+
+   appearance:none is what makes the dropdown a rounded rectangle like the text fields: a native
+   select paints its own corners and ignores border-radius, so the two controls sat side by side
+   with different silhouettes. Dropping the native look means drawing the chevron ourselves, and
+   reserving room for it on the right so a long value never runs underneath it. */
+.ec-root select {
+  appearance: none;
+  -webkit-appearance: none;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  background-image: var(--ec-caret);
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px 8px;
+  padding-right: 30px;
+}
+.ec-root textarea { min-height: 76px; resize: vertical; }
+.ec-root input:focus-visible, .ec-root select:focus-visible, .ec-root textarea:focus-visible {
+  outline: 2px solid var(--ec-accent);
+  outline-offset: 1px;
+}
+.ec-inline { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+/* The guest field and its Add button share a row: the input flexes, the button keeps its size,
+   and both wrap to their own lines only when the container is genuinely too narrow. */
+.ec-inline input[type='email'] { flex: 1 1 160px; width: auto; }
+.ec-inline .ec-chip { flex: 0 0 auto; }
+/* "Every [2] weeks" — the number keeps its own width instead of stretching across the row, and
+   the unit sits beside it as text rather than pretending to be a second control. A count field
+   on its own line is capped for the same reason: a four-digit answer in a 480px box reads as a
+   mistake. */
+.ec-inline input[type='number'] { flex: 0 0 88px; width: auto; }
+.ec-field > input[type='number'] { max-width: 140px; }
+/* Three boxes that mean one thing: grouped like a field, sized like the number inputs they are.
+   The browser's fieldset border and padding are cleared, the same way .ec-group clears them. */
+.ec-duration { display: grid; gap: 5px; min-width: 0; border: 0; margin: 0; padding: 0; }
+.ec-duration > legend { padding: 0; font-size: 13px; font-weight: 600; color: var(--ec-muted); }
+/* A legend is out of the grid flow, so the gap under it has to come from here. */
+.ec-duration > legend + * { margin-top: 5px; }
+.ec-duration .ec-inline { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.ec-duration-part { min-width: 0; }
+.ec-duration-part > label { font-size: 12px; font-weight: 400; }
+.ec-duration .ec-inline input[type='number'] { width: 100%; max-width: none; }
+.ec-unit { color: var(--ec-muted); font-size: 14px; }
+/* Not bold: the mark says "don't empty this", and a red bold star on five of fourteen labels
+   reads as five errors on a form nobody has touched yet. */
+.ec-required { margin-left: 2px; color: var(--ec-danger); }
+.ec-problem { color: var(--ec-danger); font-size: 13px; }
+.ec-hint { margin: 0; color: var(--ec-muted); font-size: 12px; }
+.ec-chip {
+  border: 1px solid var(--ec-border);
+  background: var(--ec-bg);
+  color: inherit;
+  border-radius: 999px;
+  /* 44px is the smallest comfortable touch target on both iOS and Android guidance. */
+  min-height: 44px;
+  padding: 5px 14px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.ec-chip[aria-pressed='true'] { border-color: var(--ec-accent); color: var(--ec-accent); background: var(--ec-accent-soft); }
+.ec-attendee { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+/* The × beside a guest. Bare text is a ~20px target next to the address it deletes, which on a
+   phone is a mis-tap away from removing the wrong person. */
+.ec-remove { min-height: 44px; padding: 0 8px; border: 0; background: none; color: var(--ec-muted); cursor: pointer; font: inherit; }
+.ec-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.ec-button {
+  font: inherit;
+  min-height: 44px;
+  font-weight: 600;
+  border: 1px solid var(--ec-accent);
+  background: var(--ec-accent);
+  color: var(--ec-accent-fg);
+  border-radius: var(--ec-radius);
+  padding: 10px 16px;
+  cursor: pointer;
+}
+.ec-button.ec-secondary { background: var(--ec-bg); color: var(--ec-accent); }
+.ec-side { display: grid; gap: 14px; align-content: start; }
+.ec-panel { background: var(--ec-surface); border: 1px solid var(--ec-border); border-radius: var(--ec-radius); padding: 14px; }
+.ec-panel h2 { margin: 0 0 8px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ec-muted); }
+.ec-preview { margin: 0; overflow-wrap: anywhere; font-family: var(--ec-mono); font-size: 12px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; max-height: 340px; overflow: auto; }
+/* On a phone these four links are the whole point of the panel — they open the event in the
+   calendar app without a file changing hands at all — so each is a row you can hit, not a line
+   of text stacked 6px from the next one. */
+.ec-links { display: grid; gap: 2px; }
+.ec-links a { display: flex; align-items: center; min-height: 44px; color: var(--ec-accent); }
+.ec-attendee span { overflow-wrap: anywhere; }
+.ec-describe textarea { min-height: 66px; }
+.ec-describe .ec-actions { margin-top: 8px; }
+.ec-assumptions { margin: 10px 0 0; padding-left: 18px; color: var(--ec-muted); font-size: 13px; }
+@media (forced-colors: active) {
+  .ec-chip[aria-pressed='true'] { border: 2px solid; }
+}
+</style>
+    <style id="ec-styles-container">
+/* The shell exists purely to be the query container: an element can't answer a container
+   query about itself, so the width question is asked one level up. Container-relative rather
+   than viewport-relative because an embed can sit in a narrow column on a wide screen, where
+   a viewport query would hand it a two-column layout it has no room for. */
+.ec-shell { container-type: inline-size; }
+/* Narrow enough that three side-by-side buttons each end up a couple of words wide: give them a
+   row each instead, primary first. Container-relative like the rule below — an embed in a narrow
+   column on a desktop has the same problem a phone does. */
+@container (max-width: 420px) {
+  .ec-actions > .ec-button { flex: 1 1 100%; }
+  /* Keep the two native pickers the same width on phones. The time control owns the GMT label,
+     so its input can shrink inside the track without pushing the label below the picker. */
+  .ec-date-time { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@container (max-width: 300px) {
+  /* Native Safari controls need more room than a very narrow embed can provide. Stacking here
+     avoids the calendar/clock button overlap while preserving the compact row everywhere else. */
+  .ec-date-time { grid-template-columns: minmax(0, 1fr); }
+}
+@container (min-width: 720px) {
+  /* 1.4fr/1fr, not 1fr/0.8fr: the form is the work, the panels are reference. This keeps the
+     inputs near 480px — comfortable to scan — instead of stretching them to fill. */
+  .ec-root[data-preview='on'] { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
+}
+</style>
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://icsmaker.com/#website","name":"ICS Maker","url":"https://icsmaker.com/","inLanguage":["en","de","es","fr","it","nl","pl","pt","tr","ru","ja","ko","zh-Hans","zh-Hant"]},{"@type":"WebPage","@id":"https://icsmaker.com/tr/ics-time-zone/#webpage","url":"https://icsmaker.com/tr/ics-time-zone/","name":"Takvim etkinliği yanlış saatte mi? .ics saat dilimlerini düzeltmek","headline":"Etkinlik yanlış saatte düştüğünde","description":"Bir .ics dosyası saati üç şekilde ifade edebilir ve neredeyse her zaman sorunun nedeni yanlış olanıdır. Değişken (floating) bir saat (DTSTART:20260815T090000, bölgesiz), nerede açılırsa açılsın saat dokuzdur. UTC saati (sonunda bir Z ile) tek bir mutlak andır. Adlandırılmış bir bölge (DTSTART;TZID=Europe/London:...) ise, yaz saati uygulaması boyunca aynı yerel saatte kalan bir andır. Bir saat kayan bir içe aktarma genellikle okuyan takvimin tanımadığı ve bu yüzden UTC'ye geri döndüğü 'GMT Standard Time' gibi Windows tarzı bir bölge adından kaynaklanır; bir gün kayan tüm gün süren bir etkinlik ise genellikle VALUE=DATE gerekirken gece yarısı zaman damgası kullanılmasından ya da DTEND kapsayıcı olmadığından bitiş tarihinin bir sonraki gün yerine son güne yazılmasından kaynaklanır. ICS Maker varsayılan olarak değişken bir saat yazar ve bir bölge seçildiğinde IANA bölgesini adlandıran bir TZID yazar — ancak her yaygın takvimin bölge adının kendisinden çözümlediği gömülü bir VTIMEZONE bloğu olmadan.","inLanguage":"tr","isPartOf":{"@id":"https://icsmaker.com/#website"},"breadcrumb":{"@id":"https://icsmaker.com/tr/ics-time-zone/#breadcrumb"}},{"@type":"FAQPage","@id":"https://icsmaker.com/tr/ics-time-zone/#faq","isPartOf":{"@id":"https://icsmaker.com/tr/ics-time-zone/#webpage"},"mainEntity":[{"@id":"https://icsmaker.com/tr/ics-time-zone/#answer-question","@type":"Question","name":"Takvim etkinliğim neden bir saat veya bir gün kayıyor?","acceptedAnswer":{"@type":"Answer","text":"Bir .ics dosyası saati üç şekilde ifade edebilir ve neredeyse her zaman sorunun nedeni yanlış olanıdır. Değişken (floating) bir saat (DTSTART:20260815T090000, bölgesiz), nerede açılırsa açılsın saat dokuzdur. UTC saati (sonunda bir Z ile) tek bir mutlak andır. Adlandırılmış bir bölge (DTSTART;TZID=Europe/London:...) ise, yaz saati uygulaması boyunca aynı yerel saatte kalan bir andır. Bir saat kayan bir içe aktarma genellikle okuyan takvimin tanımadığı ve bu yüzden UTC'ye geri döndüğü 'GMT Standard Time' gibi Windows tarzı bir bölge adından kaynaklanır; bir gün kayan tüm gün süren bir etkinlik ise genellikle VALUE=DATE gerekirken gece yarısı zaman damgası kullanılmasından ya da DTEND kapsayıcı olmadığından bitiş tarihinin bir sonraki gün yerine son güne yazılmasından kaynaklanır. ICS Maker varsayılan olarak değişken bir saat yazar ve bir bölge seçildiğinde IANA bölgesini adlandıran bir TZID yazar — ancak her yaygın takvimin bölge adının kendisinden çözümlediği gömülü bir VTIMEZONE bloğu olmadan."}},{"@id":"https://icsmaker.com/tr/ics-time-zone/#faq-1","@type":"Question","name":"Takvim etkinliğim neden bir saat kaymış?","acceptedAnswer":{"@type":"Answer","text":"Neredeyse her zaman bir yaz saati uyuşmazlığıdır: dosya sabit bir UTC ofseti veya okuyan takvimin tanımadığı Windows tarzı bir bölge adı belirtir ve okuyucu UTC'ye geri döner. DTSTART satırını kontrol edin — eğer Z ile bitiyorsa saat mutlak UTC'dir ve eğer bir TZID taşıyorsa o bölgenin Europe/Paris gibi bir IANA adı olarak yazılması ya da aynı dosyada bir VTIMEZONE bloğu tarafından tanımlanması gerekir. Yaygın takvimler IANA adını kendi saat dilimi veritabanı kopyalarından çözümler ve böyle bir bloğa ihtiyaç duymaz."}},{"@id":"https://icsmaker.com/tr/ics-time-zone/#faq-2","@type":"Question","name":"Bir saat dilimi ayarlamalı mıyım yoksa boş mu bırakmalıyım?","acceptedAnswer":{"@type":"Answer","text":"Etkinlik yerel saatle tanımlandığında boş bırakın — bir randevu, bir hatırlatıcı, nerede olursanız olun dokuzda başlayan bir ders. Etkinlik, diğer bölgelerdeki konukların dönüştürmesi gereken tek bir anda gerçekleştiğinde, örneğin bir görüşme, bir web semineri veya bir yayın olduğunda bir tane ayarlayın."}},{"@id":"https://icsmaker.com/tr/ics-time-zone/#faq-3","@type":"Question","name":"Değişken (floating) saat nedir?","acceptedAnswer":{"@type":"Answer","text":"Bölgesi ve sonunda Z'si olmadan yazılan, RFC 5545'in okunduğu her yerde yerel saat olarak yorumlanmasını söylediği bir tarih-saattir. İnsanların beklediğinden daha sık doğru seçimdir ve farklı bölgelerdeki iki okuyucunun bir an üzerinde anlaşması gerektiğinde yanlış olanıdır."}},{"@id":"https://icsmaker.com/tr/ics-time-zone/#faq-4","@type":"Question","name":"Tüm gün süren etkinliğim neden yanlış günde görünüyor?","acceptedAnswer":{"@type":"Answer","text":"Çünkü bir tarih değeri olarak değil, gece yarısında bir zaman damgası olarak yazılmıştır. Gerçek bir tüm gün etkinliği, hiç saat içermeyen VALUE=DATE kullanır, bu yüzden dönüştürülecek bir şey yoktur. Ayrıca bitiş tarihinin kapsayıcı olmadığını unutmayın: 15'indeki tek günlük bir etkinliğin DTEND'i 16'sındadır."}}]},{"@type":"BreadcrumbList","@id":"https://icsmaker.com/tr/ics-time-zone/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"ICS Maker","item":"https://icsmaker.com/tr/"},{"@type":"ListItem","position":2,"name":"Yanlış saat dilimi","item":"https://icsmaker.com/tr/ics-time-zone/"}]}]}</script>
+  </head>
+  <body>
+    <div id="root"><div class="site"><header class="site-header"><div class="site-header-top"><p class="crumb"><a href="/tr/">ICS Maker</a><span aria-hidden="true"> / </span><span aria-current="page">Yanlış saat dilimi</span></p><div class="language-pick"><label for="site-language">Dil</label><select id="site-language"><option value="en">English</option><option value="de">Deutsch</option><option value="es">Español</option><option value="fr">Français</option><option value="it">Italiano</option><option value="nl">Nederlands</option><option value="pl">Polski</option><option value="pt">Português</option><option value="tr" selected="">Türkçe</option><option value="ru">Русский</option><option value="ja">日本語</option><option value="ko">한국어</option><option value="zh-Hans">简体中文</option><option value="zh-Hant">繁體中文</option></select></div></div><div class="site-heading"><h1>Etkinlik yanlış saatte düştüğünde</h1><p class="lede">Neredeyse her &quot;davet bir saat kaymış&quot; sorunu şu üç şeyden biridir: bölgesi olmayan bir saat, okuyan takvimin tanımadığı bir bölge veya tüm gün süren bir etkinliğin saatli bir etkinlik gibi ele alınması.</p></div></header><main><section class="maker-workspace"><div class="card"><div class="creator-placeholder"><p>Başlık, konum, tarih ve saat, saat dilimi, tekrar, davetliler, uyarılar ve notlar — ardından .ics dosyasını indirin veya doğrudan takviminizde açın. Aynı anda birden çok etkinlik oluşturmak için bir program yapıştırabilir ya da belge veya fotoğraf ekleyebilirsiniz.</p><noscript><p class="muted">Oluşturucu JavaScript gerektirir; dosyanın tarayıcınızda oluşturulması etkinliğin başka birinin sunucusuna gitmesini engeller.</p></noscript></div></div></section><section class="answer" aria-labelledby="answer-question"><h2 id="answer-question">Takvim etkinliğim neden bir saat veya bir gün kayıyor?</h2><p>Bir .ics dosyası saati üç şekilde ifade edebilir ve neredeyse her zaman sorunun nedeni yanlış olanıdır. Değişken (floating) bir saat (DTSTART:20260815T090000, bölgesiz), nerede açılırsa açılsın saat dokuzdur. UTC saati (sonunda bir Z ile) tek bir mutlak andır. Adlandırılmış bir bölge (DTSTART;TZID=Europe/London:...) ise, yaz saati uygulaması boyunca aynı yerel saatte kalan bir andır. Bir saat kayan bir içe aktarma genellikle okuyan takvimin tanımadığı ve bu yüzden UTC&#x27;ye geri döndüğü &#x27;GMT Standard Time&#x27; gibi Windows tarzı bir bölge adından kaynaklanır; bir gün kayan tüm gün süren bir etkinlik ise genellikle VALUE=DATE gerekirken gece yarısı zaman damgası kullanılmasından ya da DTEND kapsayıcı olmadığından bitiş tarihinin bir sonraki gün yerine son güne yazılmasından kaynaklanır. ICS Maker varsayılan olarak değişken bir saat yazar ve bir bölge seçildiğinde IANA bölgesini adlandıran bir TZID yazar — ancak her yaygın takvimin bölge adının kendisinden çözümlediği gömülü bir VTIMEZONE bloğu olmadan.</p></section><section class="prose"><div class="localized-body"><h2>Bir dosyanın zamanı ifade edebileceği üç yol</h2><dl><div><dt>Değişken (floating) — bölge yok</dt><dd><code>DTSTART:20260815T090000</code>. Nerede açılırsa açılsın sabah dokuz. Yerel bir randevu, bir hatırlatıcı veya okuyucunun kendi saatiyle tanımlanan herhangi bir şey için doğrudur; farklı ülkelerdeki iki kişinin buluşması gerektiği anda yanlış olur.</dd></div><div><dt>UTC — mutlak bir an</dt><dd><code>DTSTART:20260815T090000Z</code>, sonundaki <code>Z</code> ile. Zamanda tek bir an, onu her ne açıyorsa yerel saate çevrilir. Belirsizlik taşımaz, ancak toplantının "Londra'da saat on" olduğu bilgisini kaybeder, bu yüzden bir yaz saati değişikliği onu kaydırır.</dd></div><div><dt>Adlandırılmış bölge — yaz saati uygulamasında hayatta kalan bir an</dt><dd><code>DTSTART;TZID=Europe/London:20260815T090000</code>. Tekrarlanan bir toplantının istediği tam olarak budur: ofset altta kaysa bile seri yerel saatle on'da kalır. RFC 5545, o bölgenin ofsetlerini tanımlayan eşleşen bir <code>VTIMEZONE</code> bloğunun yanında bulunmasını ister.</dd></div></dl><p>Bu oluşturucu varsayılan olarak ilkini, listeden bir bölge seçtiğinizde ise üçüncüsünü yazar. Bu varsayılan bilinçli bir seçimdir: saat dokuzdaki bir diş randevusu dokuzda olmalıdır ve dosyayı oluşturan makinenin bölgesini eklemek, etkinliğin onu okuyan kişi için bir saat kaymasına yol açan şeydir.</p><p><code>TZID</code> bölgesini gömülü bir <code>VTIMEZONE</code> bloğu olmadan yazar, bu da dosyayı alışılmadık bir yere göndermeden önce bilinmesi gereken bir noktadır. Apple Calendar, Google Calendar, Outlook ve Thunderbird'ün tümü IANA saat dilimi veritabanını taşır ve <code>Europe/London</code>'yi yalnızca isimden çözümler, bu yüzden söz konusu blok, okuyucunun zaten bildiği şeyi yeniden ifade eden yüzlerce satır olurdu. Yalnızca dosyanın kendisinde tanımlanan bölgeleri çözümleyen katı bir ayrıştırıcı, bu değiş tokuşun karşılığını vermediği durumdur — birine böyle bir dosya besliyorsanız <code>VTIMEZONE</code> bloğunu elle yapıştırın.</p><h2>Yanlış gelen bir dosyayı okumak</h2><p>Bir metin düzenleyicide açın ve <code>DTSTART</code> satırına bakın, çünkü cevap her zaman oradadır. Beklemediğiniz bir ofsetle biten bir <code>Z</code>, gönderenin paylaşmadığınız bir bölgeden UTC'ye dönüştürdüğü anlamına gelir. <code>Europe/London</code> yerine <code>GMT Standard Time</code> gibi bir şey adlandıran bir <code>TZID</code>, Microsoft Exchange'in yazımıdır ve yalnızca IANA isimlerini bilen takvimler UTC'ye geri dönebilir — ki bu klasik bir saat kaymış içe aktarmadır. Ne bir IANA adı ne de aynı dosyada bir <code>VTIMEZONE</code> bloğu tarafından tanımlanan bir bölgeyi adlandıran bir <code>TZID</code>, her okuyucunun farklı şekilde tahmin ettiği ve yeterince sık UTC'yi tahmin ettiği durumdur, bu yüzden kontrol edilecek ikinci şeydir.</p><h2>Bir gün kayan tüm gün süren etkinlik</h2><p>Tüm gün süren bir etkinlik bir saat değil, bir tarihtir: <code>DTSTART;VALUE=DATE:20260815</code>. Bunun yerine gece yarısı bir zaman damgası olarak yazıldığında, gerçek bir an haline gelir ve batıya doğru herhangi bir dönüşüm onu önceki güne sürükler. Bitiş tarihi tuzağın diğer yarısıdır — kapsayıcı değildir, bu yüzden 15'indeki tek bir gün 16'sında biter ve 15'inde biten bir dosya bazı takvimlerde hiçbir şey göstermez.</p></div><h2>Sorular</h2><dl class="faq"><div id="faq-1"><dt>Takvim etkinliğim neden bir saat kaymış?</dt><dd>Neredeyse her zaman bir yaz saati uyuşmazlığıdır: dosya sabit bir UTC ofseti veya okuyan takvimin tanımadığı Windows tarzı bir bölge adı belirtir ve okuyucu UTC&#x27;ye geri döner. DTSTART satırını kontrol edin — eğer Z ile bitiyorsa saat mutlak UTC&#x27;dir ve eğer bir TZID taşıyorsa o bölgenin Europe/Paris gibi bir IANA adı olarak yazılması ya da aynı dosyada bir VTIMEZONE bloğu tarafından tanımlanması gerekir. Yaygın takvimler IANA adını kendi saat dilimi veritabanı kopyalarından çözümler ve böyle bir bloğa ihtiyaç duymaz.</dd></div><div id="faq-2"><dt>Bir saat dilimi ayarlamalı mıyım yoksa boş mu bırakmalıyım?</dt><dd>Etkinlik yerel saatle tanımlandığında boş bırakın — bir randevu, bir hatırlatıcı, nerede olursanız olun dokuzda başlayan bir ders. Etkinlik, diğer bölgelerdeki konukların dönüştürmesi gereken tek bir anda gerçekleştiğinde, örneğin bir görüşme, bir web semineri veya bir yayın olduğunda bir tane ayarlayın.</dd></div><div id="faq-3"><dt>Değişken (floating) saat nedir?</dt><dd>Bölgesi ve sonunda Z&#x27;si olmadan yazılan, RFC 5545&#x27;in okunduğu her yerde yerel saat olarak yorumlanmasını söylediği bir tarih-saattir. İnsanların beklediğinden daha sık doğru seçimdir ve farklı bölgelerdeki iki okuyucunun bir an üzerinde anlaşması gerektiğinde yanlış olanıdır.</dd></div><div id="faq-4"><dt>Tüm gün süren etkinliğim neden yanlış günde görünüyor?</dt><dd>Çünkü bir tarih değeri olarak değil, gece yarısında bir zaman damgası olarak yazılmıştır. Gerçek bir tüm gün etkinliği, hiç saat içermeyen VALUE=DATE kullanır, bu yüzden dönüştürülecek bir şey yoktur. Ayrıca bitiş tarihinin kapsayıcı olmadığını unutmayın: 15&#x27;indeki tek günlük bir etkinliğin DTEND&#x27;i 16&#x27;sındadır.</dd></div></dl></section></main><footer class="site-footer"><nav aria-label="Sayfalar"><ul><li><a href="/tr/">Etkinlik oluştur</a></li><li><a href="/tr/about/">Ne olduğu ve alternatifler</a></li><li><a href="/tr/ics-file/">.ics dosyası nedir</a></li><li><a href="/tr/add-to-google-calendar/">Google Takvim&#x27;e ekle</a></li><li><a href="/tr/recurring-event/">Tekrarlanan etkinlikler</a></li><li><a href="/tr/calendar-invite/">Davet gönderme</a></li><li><a href="/tr/ics-reminder/">Uyarılar ve hatırlatıcılar</a></li><li><a href="/tr/csv-to-calendar/">CSV içe aktarma</a></li><li><a href="/tr/jcal/">jCal (JSON)</a></li><li><a href="/tr/add-to-calendar-button/">Sitenize ekleyin</a></li></ul></nav><p>Etkinlikler yerel olarak oluşturulur. Buraya yazdığınız hiçbir şey gönderilmez.</p></footer></div></div>
+  </body>
+</html>
